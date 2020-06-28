@@ -1,0 +1,15 @@
+.mat-form-field {
+    margin-top: 16px;
+    width: 25%;
+  }
+.example-spacer {
+    position: relative;
+    margin-left: 20%;
+}
+ .mat-radio-button ~ .mat-radio-button {
+    margin-left: 100px;
+  }
+
+.mat-raised-button {
+    margin-top: 30px;
+}
