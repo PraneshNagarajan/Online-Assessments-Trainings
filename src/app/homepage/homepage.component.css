@@ -1,0 +1,28 @@
+
+.example-spacer1 {
+    flex: 0.5 1 auto;
+}
+mat-card {
+    margin-top: 20%;
+    flex: 0.5 1 auto;
+    height: 120px;
+    text-align: center;
+}
+
+.text {
+    display: inline-flex;
+    font-size: 30px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+div mat-card {
+    padding: 0px;
+    width: 20%;
+    border: 2px solid orangered;
+    
+}
+mat-icon {
+    display:flex;
+    font-size: 750%;
+    color: orangered;
+}

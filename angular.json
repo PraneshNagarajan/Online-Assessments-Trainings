@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "DataForm"
+    }
+  },
+  "defaultProject": "DataForm",
+  "cli": {
+    "analytics": "fbdb3f48-5a65-4e8b-8c60-d6b97d322329"
+  }
 }

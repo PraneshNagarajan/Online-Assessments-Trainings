@@ -1,0 +1,87 @@
+<div fxLayoutAlign="center center">
+    <mat-card fxFlex="28">
+        <mat-toolbar fxLayoutAlign="center center" color="primary">SignIN/SignUp</mat-toolbar>
+        <mat-tab-group>
+            <mat-tab label="SignIN">
+                <mat-card-content>
+                    <form #f="ngForm" (ngSubmit)="Authenticate(f)" fxLayoutAlign="strecth" fxLayout="column">
+                        <mat-form-field>
+                            <input ngModel name="id" #id="ngModel" matInput placeholder="Enter your UserID:" required>
+                            <span matSuffix>@ginger.com</span>
+                            <mat-error>
+                                UserId is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input ngModel name="password" #password="ngModel" type="password" matInput
+                                placeholder="Enter your Password:" required>
+                            <mat-error>
+                                Password is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="alert alert-success" *ngIf="isSuccess">
+                            Login Successfully
+                        </div>
+                        <button mat-raised-button color="primary" [disabled]="f.invalid"> Submit </button>
+                    </form>
+                </mat-card-content>
+            </mat-tab>
+            <mat-tab label="SignUp">
+                <mat-card-content>
+                    <form #f1="ngForm" (ngSubmit)="save(f1)" fxLayoutAlign="strecth" fxLayout="column">
+                        <mat-form-field>
+                            <input ngModel name="Name" #Name="ngModel" matInput placeholder="Enter your Name:" required>
+                            <mat-error>
+                                UserName is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input ngModel name="FName" #FName="ngModel" matInput placeholder="Enter your FatherName:"
+                                required>
+                            <mat-error>
+                                FatherName is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="example-full-width" appearance="fill">
+                            <mat-label>Choose DOB:</mat-label>
+                            <input
+                            ngModel
+                            name="dob"
+                            #dob="ngModel" 
+                            matInput [matDatepicker]="picker" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker></mat-datepicker>
+                            <mat-error>
+                                DOB is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <label>Gender :</label>
+                        <mat-radio-group ngModel name="gender" #gender="ngModel" required>
+                            <mat-radio-button value="male">Male</mat-radio-button>
+                            <mat-radio-button value="female">female</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-form-field>
+                            <input ngModel name="id" #id="ngModel" matInput placeholder="Enter your UserID:" required>
+                            <span matSuffix>@ginger.com</span>
+                            <mat-error>
+                                UserId is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input ngModel name="password" #password="ngModel" type="password" matInput
+                                placeholder="Enter your Password:" required>
+                            <mat-error>
+                                Password is Required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-spinner *ngIf="isSpinner" fxLayoutAlign="space-around center"></mat-spinner>
+                        <div class="alert alert-success" *ngIf="isSuccess1">
+                            Data has been saved Sucessfully.
+                        </div>
+                        <button mat-raised-button color="primary" [disabled]="f1.invalid" > Submit </button>
+                    </form>
+                </mat-card-content>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</div>

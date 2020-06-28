@@ -1,0 +1,16 @@
+div {
+    display: flex;
+    margin-top: 15%;
+}
+div mat-card{
+    padding: 0px;
+}
+
+form {
+    padding: 20px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
+  

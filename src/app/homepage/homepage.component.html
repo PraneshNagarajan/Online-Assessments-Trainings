@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+    <mat-card fxFlex="30">
+        <div fxLayout="row" class="form">
+            <mat-icon>account_circle</mat-icon>
+            <span class="example-spacer1"></span>
+            <span class="text" fxLayoutAlign="stretch" (click)="onAuth()">UserPage</span>
+        </div>
+
+    </mat-card>
+    <mat-card fxFlex="30" *ngIf="user === 'GingerAdmin'">
+        <div fxLayout="row" fxLayoutAlign="stretch">
+            <mat-icon>supervised_user_circle</mat-icon>
+            <span class="example-spacer1"></span>
+            <span class="text" fxLayoutAlign="stretch" routerLink="/main">AdminPage</span>
+        </div>
+    </mat-card>
+</div>
