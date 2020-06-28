@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -30,19 +31,22 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { RouterGuardService } from './router-guard.service';
 import { DataService } from './data.service';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignINUPComponent,
     HomepageComponent,
-    MainpageComponent
+    MainpageComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule, 
+    ReactiveFormsModule,
     FlexLayoutModule,
     MatCardModule,
     MatButtonModule,
@@ -64,6 +68,7 @@ import { DataService } from './data.service';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent},
+      { path: 'signUp', component: SignupComponent},
       { path: 'home', component: HomepageComponent},
       { path: 'main', component: MainpageComponent, canActivate:[RouterGuardService]}
     ])
