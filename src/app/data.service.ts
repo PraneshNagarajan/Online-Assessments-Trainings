@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class DataService {
   datas: any = [];
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { 
-    this.db.list('/RegisterTable').snapshotChanges()
+    this.db.list('/UserTable').snapshotChanges()
     .subscribe(user => {
       user.map(data => {
         this.datas.push({ id: data.key, value: data.payload.val() });
@@ -26,10 +26,10 @@ export class DataService {
       console.log( user['id'] )
       if(user.value['id'] === id) {
         if(user.value['role'] === "user" || !user.value['role']){
-          localStorage.setItem('GingerUser', id);
+          localStorage.setItem('DomainUser', id);
         } 
         else if(user.value['role'] === "admin") {
-          localStorage.setItem('GingerAdmin', id);
+          localStorage.setItem('DomainAdmin', id);
         }
         this.router.navigate(['\home']);
       }

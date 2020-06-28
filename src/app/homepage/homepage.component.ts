@@ -9,15 +9,15 @@ import { Router } from '@angular/router';
 export class HomepageComponent  {
   user;
   constructor(private router:Router) {
-    if (localStorage.getItem('GingerUser')) {
-      this.user = 'GingerUser';
+    if (localStorage.getItem('DomainUser')) {
+      this.user = 'DomainUser';
     }
-    else if(localStorage.getItem('GingerAdmin')) {
-      this.user = 'GingerAdmin';
+    else if(localStorage.getItem('DomainAdmin')) {
+      this.user = 'DomainAdmin';
     }
   }
   onAuth() {
-    if (localStorage.getItem('GingerUser')) {
+    if (localStorage.getItem('DomainUser') || localStorage.getItem('DomainAdmin')) {
         this.router.navigate(['/main']);
     } else {
       this.router.navigate(['']);

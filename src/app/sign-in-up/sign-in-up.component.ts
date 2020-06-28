@@ -23,22 +23,22 @@ export class SignINUPComponent implements OnInit {
   ngOnInit(): void {
   }
   Authenticate(cred) {
-    let Uid = cred.value.id+'@ginger.com';
+    let Uid = cred.value.id+'@domain.com';
       this.afAuth.auth.signInWithEmailAndPassword(Uid, cred.value.password)
       .then( () => {
         this.service.loginAuth(Uid);
-
+        
       }, error => {
          alert(error);
       });
 }
 
   save(data) {
-    let Uid = data.value.id+'@ginger.com';
+    let Uid = data.value.id+'@domain.com';
     let Dob = moment(data.value.dob).format("DD/MM/YYYY");
     this.afAuth.auth.createUserWithEmailAndPassword(Uid, data.value.password).then( () => {
       this.isSpinner = true;
-      this.db.list('/RegisterTable').push({
+      this.db.list('/UserTable').push({
         name: data.value.Name,
         fname: data.value.FName,
         dob: Dob,

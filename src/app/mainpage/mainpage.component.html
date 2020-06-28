@@ -11,17 +11,17 @@
     </button>
 </mat-toolbar>
 <div *ngFor="let data of datas" fxLayoutAlign="space-evenly center">
-    <mat-card fxFlex="30">
-        <mat-toolbar color="primary"> <b>User ID : </b>{{ data.value.id}}</mat-toolbar>
-        <div class="menu" fxLayout="column" fxLayoutAlign="stretch">
+    <mat-card fxFlex="32">
+        <mat-toolbar color="primary"><p><b>Name : </b>{{ data.value.name}}</p> </mat-toolbar>
+        <div class="menu" fxLayout="column" >
             <p *ngIf="Arole"><b>Table ID : </b>{{ data.id}}</p>
-            <p><b>User Name : </b>{{ data.value.name}}</p>
+            <p><b>User ID : </b>{{ data.value.id}}</p>
             <p *ngIf="data.value.role"><b>Role : </b>{{ data.value.role}}</p>
             <p *ngIf="!data.value.role"><b>Role : </b>Not Assign</p>
             <p><b>Father Name : </b>{{ data.value.fname}}</p>
             <p><b>DOB : </b>{{ data.value.dob}}</p>
             <p><b>Gender : </b>{{ data.value.gender}}</p>
-            <div *ngIf="Arole">
+            <div *ngIf="Arole" fxLayout="column" fxLayoutAlign="stretch">
                 <mat-form-field >
                     <mat-label>Assign Role : </mat-label>
                     <mat-select 

@@ -65,7 +65,7 @@ import { DataService } from './data.service';
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent},
       { path: 'home', component: HomepageComponent},
-      { path: 'main', component: MainpageComponent}
+      { path: 'main', component: MainpageComponent, canActivate:[RouterGuardService]}
     ])
   ],
   providers: [
