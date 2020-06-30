@@ -5,12 +5,11 @@ div {
 div mat-card{
     padding: 0px;
 }
-
 form {
     padding: 20px;
 }
-
-.mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
-  }
+.mat-raised-button ~ .mat-raised-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
   

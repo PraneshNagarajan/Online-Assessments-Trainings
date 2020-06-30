@@ -11,13 +11,8 @@ import { DataService } from '../data.service';
   styleUrls: ['./sign-in-up.component.css']
 })
 export class SignINUPComponent implements OnInit {
-  isSuccess: boolean;
-  isSuccess1: boolean;
-  isSpinner: boolean;
-  user: any;
-  datas = [];
 
-  constructor(private db: AngularFireDatabase, private afAuth: AngularFireAuth, private router: Router, private service: DataService) { 
+  constructor(private afAuth: AngularFireAuth, private service: DataService) { 
   }
 
   ngOnInit(): void {
@@ -26,31 +21,10 @@ export class SignINUPComponent implements OnInit {
     let Uid = cred.value.id+'@domain.com';
       this.afAuth.auth.signInWithEmailAndPassword(Uid, cred.value.password)
       .then( () => {
-        this.service.loginAuth(Uid);
-        
+        this.service.loginAuth(Uid);  
       }, error => {
          alert(error);
       });
 }
-
-  save(data) {
-    let Uid = data.value.id+'@domain.com';
-    let Dob = moment(data.value.dob).format("DD/MM/YYYY");
-    this.afAuth.auth.createUserWithEmailAndPassword(Uid, data.value.password).then( () => {
-      this.isSpinner = true;
-      this.db.list('/UserTable').push({
-        name: data.value.Name,
-        fname: data.value.FName,
-        dob: Dob,
-        gender: data.value.gender,
-        id: Uid,
-        password: data.value.password
-      });
-      this.isSpinner = false;
-      this.isSuccess1 = true;
-    }).catch( error => {
-      alert(error);
-    })
   }
 
-}

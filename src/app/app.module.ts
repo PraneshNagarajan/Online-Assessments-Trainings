@@ -26,6 +26,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SignINUPComponent } from './sign-in-up/sign-in-up.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
@@ -63,13 +64,13 @@ import { SignupComponent } from './signup/signup.component';
     MatIconModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent},
       { path: 'signUp', component: SignupComponent},
-      { path: 'home', component: HomepageComponent},
       { path: 'main', component: MainpageComponent, canActivate:[RouterGuardService]}
     ])
   ],

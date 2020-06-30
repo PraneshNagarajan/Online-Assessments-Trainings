@@ -47,10 +47,10 @@ export class MainpageComponent implements OnDestroy {
 
   onUpdate(id, sel_role) {
     console.log("role : ", sel_role);
-    this.db.object('/UserTable/' + id).update({ role: sel_role }).then(() => {
+    this.db.object('/UserTable/' + id+'/account').update({ roles: sel_role }).then(() => {
       let index = this.datas.findIndex(user => user['id'] === id);
       console.log(this.datas[index]);
-      this.datas[index]['value']['role'] = sel_role;
+      this.datas[index]['value']['account']['role'] = sel_role;
       alert("Updated Sucessfully");
     }, error => {
       alert(error);

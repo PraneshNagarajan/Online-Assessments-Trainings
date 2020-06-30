@@ -1,73 +1,397 @@
+<div class="example-loading-shadow" *ngIf="isSpinner">
+  <mat-spinner></mat-spinner>
+</div>
 <mat-horizontal-stepper labelPosition="bottom" #stepper>
-    <mat-step [stepControl]="firstFormGroup">
+  <mat-step [stepControl]="firstFormGroup">
+    <ng-template matStepLabel>Fill out your details</ng-template>
+    <mat-card>
+      <mat-card-title>Personal Details <mat-icon>person_add_alt_1</mat-icon>
+      </mat-card-title>
       <form [formGroup]="firstFormGroup" fxLayout="column">
-        <ng-template matStepLabel>Fill out your name</ng-template>
         <div>
-                <mat-form-field>
-                    <input matInput placeholder="First name" formControlName="firstname" required>
-                    <mat-error>
-                        FirstName is Required.
-                    </mat-error>
-                </mat-form-field>
-              <span class="example-spacer"></span>
-              <mat-form-field>
-                <input matInput placeholder="Last name" formControlName="lastname">
-              </mat-form-field>
-        </div>
-            <mat-form-field>
-                <input matInput placeholder="Father Name" formControlName="fathername" required>
-              </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
-            <mat-label>Choose DOB:</mat-label>
-            <input formControlName="dob"
-            matInput [matDatepicker]="picker" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-            <mat-error>
-                DOB is Required.
+          <mat-form-field>
+            <input matInput placeholder="First name" formControlName="firstname" required>
+            <mat-error *ngIf="firstname.touched && firstname.invalid">
+              <li *ngIf="firstname.errors.required">FirstName is Required.</li>
+              <li *ngIf="firstname.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="firstname.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="firstname.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="firstname.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
+          </mat-form-field>
+          <span class="example-spacer"></span>
+          <mat-form-field>
+            <input matInput placeholder="Last name" formControlName="lastname">
+            <mat-error *ngIf="lastname.touched && lastname.invalid">
+              <li *ngIf="lastname.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="lastname.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="lastname.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="lastname.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <mat-form-field>
+          <input matInput placeholder="Father Name" formControlName="fathername" required>
+          <mat-error *ngIf="fathername.touched && fathername.invalid">
+            <li *ngIf="fathername.errors.required">FatherName is Required.</li>
+            <li *ngIf="fathername.errors.firstCaps"> FirstCharacter should be caps.</li>
+            <li *ngIf="fathername.errors.notFoundInteger"> Integers not allowed.</li>
+            <li *ngIf="fathername.errors.noSpace"> WhiteSpaces not allowed.</li>
+            <li *ngIf="fathername.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Choose DOB:</mat-label>
+          <input formControlName="dob" matInput [matDatepicker]="picker" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+          <mat-error>
+            DOB is Required.
+          </mat-error>
         </mat-form-field>
         <label>Gender :</label>
         <mat-radio-group formControlName="gender" required>
-            <mat-radio-button value="male">male</mat-radio-button>
-            <mat-radio-button value="female">female</mat-radio-button>
+          <mat-radio-button value="male">male</mat-radio-button>
+          <mat-radio-button value="female">female</mat-radio-button>
         </mat-radio-group>
+        <mat-form-field>
+          <mat-label>Telephone</mat-label>
+          <input type="tel" matInput placeholder="555-555-1234" formControlName="phone" required>
+          <mat-icon matSuffix>mode_edit</mat-icon>
+          <mat-hint> Enter with country code</mat-hint>
+          <mat-error *ngIf="phone.touched && phone.invalid">
+            <li *ngIf="phone.errors.required">PhoneNumber is Required.</li>
+            <li *ngIf="phone.errors.minlength">PhoneNumber should be minimum {{phone.errors.minlength.requiredLength}}
+              character.</li>
+            <li *ngIf="phone.errors.maxlength">PhoneNumber should not be more than
+              {{phone.errors.maxlength.requiredLength}} character.</li>
+            <li *ngIf="phone.errors.notFoundText"> Alphabets not allowed.</li>
+            <li *ngIf="phone.errors.noSpace"> WhiteSpaces not allowed.</li>
+            <li *ngIf="phone.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input type="email" matInput formControlName="email" required>
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="email.touched && email.invalid">
+            <li *ngIf="email.errors.required">Email is Required.</li>
+            <li *ngIf="email.errors.noSpace"> WhiteSpaces not allowed.</li>
+            <li *ngIf="email.errors.foundEmailCharPattern || email.errors.foundEmailTextPattern">Email is Invalid.</li>
+          </mat-error>
+        </mat-form-field>
+      </form>
+      <div>
+        <button mat-raised-button matStepperNext color="primary" [disabled]="firstFormGroup.invalid">Next</button>
+      </div>
+    </mat-card>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <ng-template matStepLabel>Fill out your Address</ng-template>
+    <mat-card>
+      <mat-card-title> Premanent Address <mat-icon> add_location_alt</mat-icon>
+      </mat-card-title>
+      <form [formGroup]="secondFormGroup" fxLayout="column">
         <div>
-          <button mat-raised-button matStepperNext color="primary" [disabled]="firstFormGroup.invalid">Next</button>
+          <mat-form-field>
+            <input matInput placeholder="Flat no:" formControlName="flat" required>
+            <mat-error *ngIf="Pflat.touched && Pflat.invalid">
+              <li *ngIf="Pflat.errors.required">FlatNo is Required.</li>
+              <li *ngIf="Pflat.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Pflat.errors.foundDashCharacter"> Only '-/' Characters allowed.</li>
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer1"></span>
+          <mat-form-field>
+            <input matInput placeholder="Street:" formControlName="street" required>
+            <mat-error *ngIf="Pstreet.touched && Pstreet.invalid">
+              <li *ngIf="Pstreet.errors.required">StreetName is Required.</li>
+              <li *ngIf="Pstreet.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="Landmark:" formControlName="landmark" required>
+            <mat-error *ngIf="Plandmark.touched && Plandmark.invalid">
+              <li *ngIf="Plandmark.errors.required">Landmark is Required.</li>
+              <li *ngIf="Plandmark.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer1"></span>
+          <mat-form-field>
+            <input matInput placeholder="City:" formControlName="city" required>
+            <mat-error *ngIf="Pcity.touched && Pcity.invalid">
+              <li *ngIf="Pcity.errors.required">CityName is Required.</li>
+              <li *ngIf="Pcity.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="Pcity.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="Pcity.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Pcity.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="District:" formControlName="district" required>
+            <mat-error *ngIf="Pdistrict.touched && Pdistrict.invalid">
+              <li *ngIf="Pdistrict.errors.required">DistrictName is Required.</li>
+              <li *ngIf="Pdistrict.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="Pdistrict.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="Pdistrict.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Pdistrict.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer1"></span>
+          <mat-form-field>
+            <input matInput placeholder="State:" formControlName="state" required>
+            <mat-error *ngIf="Pstate.touched && Pstate.invalid">
+              <li *ngIf="Pstate.errors.required">StateName is Required.</li>
+              <li *ngIf="Pstate.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="Pstate.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="Pstate.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Pstate.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="space">
+          <mat-form-field>
+            <input matInput placeholder="Country:" formControlName="country" required>
+            <mat-error *ngIf="Pcountry.touched && Pcountry.invalid">
+              <li *ngIf="Pcountry.errors.required">CountryName is Required.</li>
+              <li *ngIf="Pcountry.errors.firstCaps"> FirstCharacter should be caps.</li>
+              <li *ngIf="Pcountry.errors.notFoundInteger"> Integers not allowed.</li>
+              <li *ngIf="Pcountry.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Pcountry.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer1"></span>
+          <mat-form-field>
+            <input matInput placeholder="Pincode:" formControlName="pincode" required>
+            <mat-error *ngIf="Ppincode.touched && Ppincode.invalid">
+              <li *ngIf="Ppincode.errors.required">CountryName is Required.</li>
+              <li *ngIf="Ppincode.errors.notFoundText"> Alphabets not allowed.</li>
+              <li *ngIf="Ppincode.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="Ppincode.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
         </div>
       </form>
-    </mat-step>
-    <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>Fill out your Address</ng-template>
-          <mat-form-field>
-            <mat-label><Address></Address></mat-label>
-            <input matInput placeholder="Last name, First name" formControlName="userAddress">
-          </mat-form-field>
+    </mat-card>
+    <mat-card>
+      <mat-card-title> Present Address <mat-icon>my_location</mat-icon>
+      </mat-card-title>
+      <form [formGroup]="secondFormGroup1" fxLayout="column">
+        <mat-checkbox (click)="onCheckbox()">same as Premanent address</mat-checkbox>
+        <div *ngIf="!isChecked">
           <div>
-            <button mat-raised-button matStepperPrevious>Back</button>
-            <button mat-raised-button matStepperNext [disabled]="secondFormGroup.invalid">Next</button>
+            <mat-form-field>
+              <input matInput placeholder="Flat no:" formControlName="flat" required>
+              <mat-error *ngIf="Cflat.touched && Cflat.invalid">
+                <li *ngIf="Cflat.errors.required">FlatNo is Required.</li>
+                <li *ngIf="Cflat.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Cflat.errors.foundDashCharacter"> Only '-/' Characters allowed.</li>
+              </mat-error>
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="Street:" formControlName="street" required>
+              <mat-error *ngIf="Cstreet.touched && Cstreet.invalid">
+                <li *ngIf="Cstreet.errors.required">StreetName is Required.</li>
+                <li *ngIf="Cstreet.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
           </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="thirdFormGroup" >
-        <form [formGroup]="thirdFormGroup" fxLayout="column">
-          <ng-template matStepLabel>Create your account</ng-template>
-          <mat-form-field>
-            <input matInput placeholder="Enter your userID" formControlName="userID" required>
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput placeholder="Enter your password" formControlName="password" required>
-          </mat-form-field>
-          <mat-label> Security questions :</mat-label>
-              <mat-form-field *ngFor="let question of questions" >
-                  <input matInput [placeholder]="question.name" required>
-              </mat-form-field>
           <div>
-            <button mat-raised-button matStepperPrevious>Back</button>
-            <button mat-raised-button [disabled]="thirdFormGroup.invalid">Save</button>
+            <mat-form-field>
+              <input matInput placeholder="Landmark:" formControlName="street" required>
+              <mat-error *ngIf="Clandmark.touched && Clandmark.invalid">
+                <li *ngIf="Clandmark.errors.required">Landmark is Required.</li>
+                <li *ngIf="Clandmark.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="City:" formControlName="city" required>
+              <mat-error *ngIf="Ccity.touched && Ccity.invalid">
+                <li *ngIf="Ccity.errors.required">CityName is Required.</li>
+                <li *ngIf="Ccity.errors.firstCaps"> FirstCharacter should be caps.</li>
+                <li *ngIf="Ccity.errors.notFoundInteger"> Integers not allowed.</li>
+                <li *ngIf="Ccity.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Ccity.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
           </div>
-        </form>
-      </mat-step>
-  </mat-horizontal-stepper>
-  
+          <div>
+            <mat-form-field>
+              <input matInput placeholder="District:" formControlName="district" required>
+              <mat-error *ngIf="Cdistrict.touched && Cdistrict.invalid">
+                <li *ngIf="Cdistrict.errors.required">DistrictName is Required.</li>
+                <li *ngIf="Cdistrict.errors.firstCaps"> FirstCharacter should be caps.</li>
+                <li *ngIf="Cdistrict.errors.notFoundInteger"> Integers not allowed.</li>
+                <li *ngIf="Cdistrict.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Cdistrict.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="State:" formControlName="state" required>
+              <mat-error *ngIf="Cstate.touched && Cstate.invalid">
+                <li *ngIf="Cstate.errors.required">StateName is Required.</li>
+                <li *ngIf="Cstate.errors.firstCaps"> FirstCharacter should be caps.</li>
+                <li *ngIf="Cstate.errors.notFoundInteger"> Integers not allowed.</li>
+                <li *ngIf="Cstate.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Cstate.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="space">
+            <mat-form-field>
+              <input matInput placeholder="Country:" formControlName="country" required>
+              <mat-error *ngIf="Ccountry.touched && Ccountry.invalid">
+                <li *ngIf="Ccountry.errors.required">CountryName is Required.</li>
+                <li *ngIf="Ccountry.errors.firstCaps"> FirstCharacter should be caps.</li>
+                <li *ngIf="Ccountry.errors.notFoundInteger"> Integers not allowed.</li>
+                <li *ngIf="Ccountry.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Ccountry.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="Pincode:" formControlName="pincode" required>
+              <mat-error *ngIf="Cpincode.touched && Cpincode.invalid">
+                <li *ngIf="Cpincode.errors.required">CountryName is Required.</li>
+                <li *ngIf="Cpincode.errors.notFoundText"> Alphabets not allowed.</li>
+                <li *ngIf="Cpincode.errors.noSpace"> WhiteSpaces not allowed.</li>
+                <li *ngIf="Cpincode.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <form [formGroup]="secondFormGroup2" fxLayout="column">
+        <div [hidden]="!isChecked">
+          <div>
+            <mat-form-field>
+              <input matInput placeholder="Flat no:" formControlName="flat" [value]="Pflat.value">
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="Street:" formControlName="street" [value]="Pstreet.value">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput placeholder="Landmark:" formControlName="landmark" [value]="Plandmark.value">
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="City:" formControlName="city" [value]="Pcity.value">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput placeholder="District:" formControlName="district" [value]="Pdistrict.value">
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="State:" formControlName="state" [value]="Pstate.value">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput placeholder="Country:" formControlName="country" [value]="Pcountry.value">
+            </mat-form-field>
+            <span class="example-spacer1"></span>
+            <mat-form-field>
+              <input matInput placeholder="Pincode:" formControlName="pincode" [value]="Ppincode.value">
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <div>
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" matStepperNext
+          [disabled]="((secondFormGroup.invalid || ( secondFormGroup1.invalid && !isChecked)) || (secondFormGroup.invalid))">Next</button>
+      </div>
+    </mat-card>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup">
+    <ng-template matStepLabel>Create your account</ng-template>
+    <mat-card>
+      <form [formGroup]="thirdFormGroup" fxLayout="column">
+        <mat-form-field>
+          <input matInput placeholder="Enter your userID" formControlName="userID" required>
+          <span matSuffix>@domain.com</span>
+          <mat-error *ngIf="userid.touched && userid.invalid">
+            <li *ngIf="userid.errors.required">UserID is Required.</li>
+            <li *ngIf="userid.errors.noSpace"> WhiteSpaces not allowed.</li>
+            <li *ngIf="userid.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="password">
+          <input matInput placeholder="Enter your password" type="password" formControlName="password" required>
+          <mat-error *ngIf="password.touched && password.invalid">
+            <li *ngIf="password.errors.required">Password is Required.</li>
+            <li *ngIf="password.errors.minlength">password should be minimum
+              {{password.errors.minlength.requiredLength}} characters.</li>
+            <li *ngIf="password.errors.foundCaps"> One character should be uppercase.</li>
+            <li *ngIf="password.errors.foundLower"> One character should be lowercase.</li>
+            <li *ngIf="password.errors.foundInteger"> One character should be integer.</li>
+            <li *ngIf="password.errors.noSpace"> WhiteSpaces not allowed.</li>
+            <li *ngIf="password.errors.foundCharacter"> One character should be special character.</li>
+          </mat-error>
+        </mat-form-field>
+        <div fxLayout="row">
+          <mat-form-field>
+            <mat-label>Security Question1:</mat-label>
+            <mat-select formControlName="securityQA1" #qa required>
+              <mat-option *ngFor="let question of questions" [value]="question.name"> {{question.name}}</mat-option>
+            </mat-select>
+            <mat-error>
+              Security question1 is rquired.
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer"></span>
+          <mat-form-field>
+            <input matInput placeholder="Enter your answer1" formControlName="answer1" required>
+            <mat-error *ngIf="answer1.touched && answer1.invalid">
+              <li *ngIf="answer1.errors.required">Answer is Required.</li>
+              <li *ngIf="answer1.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="answer1.errors.notFoundInteger">Integers not allowed.</li>
+              <li *ngIf="answer1.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row">
+          <mat-form-field>
+            <mat-label>Security Question2:</mat-label>
+            <mat-select formControlName="securityQA2" required>
+              <mat-option *ngFor="let question of questions" [hidden]="qa1.value === question.name"
+                [value]="question.name"> {{question.name}}</mat-option>
+            </mat-select>
+            <mat-error>
+              Security question2 is rquired.
+            </mat-error>
+          </mat-form-field>
+          <span class="example-spacer"></span>
+          <mat-form-field>
+            <input matInput placeholder="Enter your answer2" formControlName="answer2" required>
+            <mat-error *ngIf="answer2.touched && answer2.invalid">
+              <li *ngIf="answer2.errors.required">Answer is Required.</li>
+              <li *ngIf="answer2.errors.noSpace"> WhiteSpaces not allowed.</li>
+              <li *ngIf="answer2.errors.notFoundInteger">Integers not allowed.</li>
+              <li *ngIf="answer2.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        </div>
+      </form>
+    </mat-card>
+    <div fxLayoutAlign="center center">
+      <button mat-raised-button color="primary" (click)="onSave()"
+        [disabled]="firstFormGroup.invalid || secondFormGroup.invalid || (secondFormGroup1.invalid && !isChecked)  || thirdFormGroup.invalid">Save</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
