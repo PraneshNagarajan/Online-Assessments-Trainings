@@ -30,7 +30,7 @@ export class DataService {
         else if(user.value['account']['role'] === "admin") {
           localStorage.setItem('DomainAdmin', id);
         }
-        this.router.navigate(['\main']);
+        this.router.navigate(['/main']);
       }
     });
   }
