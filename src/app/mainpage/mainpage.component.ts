@@ -4,6 +4,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
 
 @Component({
   selector: 'app-mainpage',
@@ -11,28 +12,37 @@ import { DataService } from '../data.service';
   styleUrls: ['./mainpage.component.css']
 })
 export class MainpageComponent implements OnDestroy {
-  Urole;
   Arole;
   isSpinner:boolean;
   datas = [];
+  deviceXs;
+  deviceStyle;
+  mediaSubscribe: Subscription;
   subscription: Subscription;
   roles = [
     { name: 'admin' },
     { name: 'user' }
   ];
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
+  constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     this.subscription = db.list('/UserTable').snapshotChanges()
     .subscribe(user => {
       user.map(data => {
         this.datas.push({ id: data.key, value: data.payload.val() });
       });
     });
-  if(localStorage.getItem('DomainUser')) {
-    this.Urole = 'DomainUser';
-  } else {
+
+  if(localStorage.getItem('DomainAdmin')) {
     this.Arole = 'DomainAdmin';
   }
+}
+
+  ngOnInit() {
+    this.mediaSubscribe = this.mediaObserver.media$.subscribe((device: MediaChange) => {
+      this.deviceXs = device.mqAlias === 'xs' ? '90%' : '35%';
+      this.deviceStyle = (device.mqAlias === 'xs') ? 'column' : 'row';
+      console.log(this.deviceStyle);
+    });
   }
 
   signOut() {

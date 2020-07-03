@@ -11,7 +11,7 @@
     </button>
 </mat-toolbar>
 <div *ngFor="let data of datas" fxLayoutAlign="space-evenly center">
-    <mat-card fxFlex="32">
+    <mat-card [fxFlex]="deviceXs">
         <mat-toolbar color="primary"><p><b>Name : </b>{{ data.value.firstname}}</p> </mat-toolbar>
         <div class="menu" fxLayout="column" >
             <p *ngIf="Arole"><b>Table ID : </b>{{ data.id}}</p>
@@ -23,8 +23,8 @@
             <p><b>Gender : </b>{{ data.value.gender}}</p>
             <p><b>DOB : </b>{{ data.value.phone}}</p>
             <p><b>Gender : </b>{{ data.value.email}}</p>
-            <div *ngIf="Arole" fxLayout="column" fxLayoutAlign="stretch">
-                <mat-form-field >
+            <div *ngIf="Arole" fxLayout="column">
+                <mat-form-field fxFlex="100">
                     <mat-label>Assign Role : </mat-label>
                     <mat-select 
                     ngModel
@@ -35,14 +35,12 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <div fxLayout="row" *ngIf="Arole">
-                    <span class="example-spacer1"></span>
+                <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="Arole">
                     <div class="example-button-container">
                         <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)" (click)="ngOnDestroy()">
                             <mat-icon>update</mat-icon>
                         </button>
                     </div>
-                    <span class="example-spacer1"></span>
                     <div class="example-button-container">
                         <button mat-mini-fab color="warn" (click)="onDelete(data.id)" (click)="ngOnDestroy()">
                             <mat-icon>delete</mat-icon>
