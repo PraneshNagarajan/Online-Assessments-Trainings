@@ -4,7 +4,7 @@
 
 <mat-toolbar color=primary>
     <span *ngIf="Arole"> AdminPage</span>
-    <span *ngIf="Urole"> UserPage</span>
+    <span *ngIf="!Arole"> UserPage</span>
     <span class="example-spacer"></span>
     <button mat-flat-button color="primary" (click)="signOut()">Logout
         <mat-icon>exit_to_app</mat-icon>
@@ -35,7 +35,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <div fxLayout="row">
+                <div fxLayout="row" *ngIf="Arole">
                     <span class="example-spacer1"></span>
                     <div class="example-button-container">
                         <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)" (click)="ngOnDestroy()">

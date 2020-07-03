@@ -24,11 +24,10 @@ export class DataService {
   loginAuth(id) {
     this.datas.find( user => { 
       if(user.value['account']['userid'] === id) {
-        if(user.value['account']['role'] === "user" || !user.value['account']['role']){
-          localStorage.setItem('DomainUser', id);
-        } 
-        else if(user.value['account']['role'] === "admin") {
+        if(user.value['account']['role'] === "admin") {
           localStorage.setItem('DomainAdmin', id);
+        } else {
+          localStorage.setItem('DomainUser', id);
         }
         this.router.navigate(['/main']);
       }
