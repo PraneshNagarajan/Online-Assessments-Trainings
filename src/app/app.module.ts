@@ -10,7 +10,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { RouterModule } from '@angular/router';
 import { environment } from '../environments/environment';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule, MediaChange } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -76,7 +76,8 @@ import { SignupComponent } from './signup/signup.component';
   ],
   providers: [
     RouterGuardService,
-    DataService
+    DataService,
+    MediaChange
   ],
   bootstrap: [AppComponent]
 })

@@ -12,6 +12,8 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { MediaObserver, MediaChange} from '@angular/flex-layout';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -26,15 +28,25 @@ export class SignupComponent implements OnInit {
   isSpinner: boolean;
   panelOpenState: boolean;
   isChecked: boolean;
+  mediaSubscribe: Subscription;
+  deviceXs;
+  deviceStyle;
   questions = [
     { name: 'Who is your favourite person?' },
     { name: 'What is your favourite color?' },
     { name: 'What is your High school name?' },
     { name: 'Who is your favourite sport player?' }
   ]
-  constructor(private db: AngularFireDatabase, private afAuth: AngularFireAuth, private router: Router, private service: DataService) {
+  constructor(private db: AngularFireDatabase, private afAuth: AngularFireAuth, private router: Router, private service: DataService, public mediaObserver: MediaObserver, private mediaChange: MediaChange) {
 
   }
+  ngOnInit() {
+    this.mediaSubscribe = this.mediaObserver.media$.subscribe((device: MediaChange) => {
+      this.deviceXs = device.mqAlias === 'xs' ? '100%' : '30%';
+      this.deviceStyle = (device.mqAlias === 'xs') ? 'column' : 'row';
+      console.log(this.deviceStyle);
+    })
+  }  
   firstFormGroup = new FormGroup({
     firstname: new FormControl("", [
       Validators.required,
@@ -209,8 +221,7 @@ export class SignupComponent implements OnInit {
   });
 
 
-  ngOnInit() {
-  }
+ 
 
   onCheckbox() {
     this.isChecked = !this.isChecked;

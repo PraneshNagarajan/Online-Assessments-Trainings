@@ -8,8 +8,8 @@
       <mat-card-title>Personal Details <mat-icon>person_add_alt_1</mat-icon>
       </mat-card-title>
       <form [formGroup]="firstFormGroup" fxLayout="column">
-        <div>
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="First name" formControlName="firstname" required>
             <mat-error *ngIf="firstname.touched && firstname.invalid">
               <li *ngIf="firstname.errors.required">FirstName is Required.</li>
@@ -19,8 +19,7 @@
               <li *ngIf="firstname.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer"></span>
-          <mat-form-field>
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Last name" formControlName="lastname">
             <mat-error *ngIf="lastname.touched && lastname.invalid">
               <li *ngIf="lastname.errors.firstCaps"> FirstCharacter should be caps.</li>
@@ -29,8 +28,9 @@
               <li *ngIf="lastname.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
-        <mat-form-field>
+        <mat-form-field [ngStyle]="{'width': deviceXs}">
           <input matInput placeholder="Father Name" formControlName="fathername" required>
           <mat-error *ngIf="fathername.touched && fathername.invalid">
             <li *ngIf="fathername.errors.required">FatherName is Required.</li>
@@ -40,7 +40,7 @@
             <li *ngIf="fathername.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
           </mat-error>
         </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="fill">
+        <mat-form-field  [ngStyle]="{'width': deviceXs}">
           <mat-label>Choose DOB:</mat-label>
           <input formControlName="dob" matInput [matDatepicker]="picker" required>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -54,7 +54,7 @@
           <mat-radio-button value="male">male</mat-radio-button>
           <mat-radio-button value="female">female</mat-radio-button>
         </mat-radio-group>
-        <mat-form-field>
+        <mat-form-field [ngStyle]="{'width': deviceXs}">
           <mat-label>Telephone</mat-label>
           <input type="tel" matInput placeholder="555-555-1234" formControlName="phone" required>
           <mat-icon matSuffix>mode_edit</mat-icon>
@@ -70,7 +70,7 @@
             <li *ngIf="phone.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
           </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field [ngStyle]="{'width': deviceXs}">
           <mat-label>Email</mat-label>
           <input type="email" matInput formControlName="email" required>
           <mat-icon matSuffix>email</mat-icon>
@@ -92,8 +92,8 @@
       <mat-card-title> Premanent Address <mat-icon> add_location_alt</mat-icon>
       </mat-card-title>
       <form [formGroup]="secondFormGroup" fxLayout="column">
-        <div>
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Flat no:" formControlName="flat" required>
             <mat-error *ngIf="Pflat.touched && Pflat.invalid">
               <li *ngIf="Pflat.errors.required">FlatNo is Required.</li>
@@ -101,25 +101,24 @@
               <li *ngIf="Pflat.errors.foundDashCharacter"> Only '-/' Characters allowed.</li>
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer1"></span>
-          <mat-form-field>
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Street:" formControlName="street" required>
             <mat-error *ngIf="Pstreet.touched && Pstreet.invalid">
               <li *ngIf="Pstreet.errors.required">StreetName is Required.</li>
               <li *ngIf="Pstreet.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field>
+        <div></div>
+      </div>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Landmark:" formControlName="landmark" required>
             <mat-error *ngIf="Plandmark.touched && Plandmark.invalid">
               <li *ngIf="Plandmark.errors.required">Landmark is Required.</li>
               <li *ngIf="Plandmark.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer1"></span>
-          <mat-form-field>
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="City:" formControlName="city" required>
             <mat-error *ngIf="Pcity.touched && Pcity.invalid">
               <li *ngIf="Pcity.errors.required">CityName is Required.</li>
@@ -129,9 +128,10 @@
               <li *ngIf="Pcity.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
-        <div>
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="District:" formControlName="district" required>
             <mat-error *ngIf="Pdistrict.touched && Pdistrict.invalid">
               <li *ngIf="Pdistrict.errors.required">DistrictName is Required.</li>
@@ -141,8 +141,7 @@
               <li *ngIf="Pdistrict.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer1"></span>
-          <mat-form-field>
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="State:" formControlName="state" required>
             <mat-error *ngIf="Pstate.touched && Pstate.invalid">
               <li *ngIf="Pstate.errors.required">StateName is Required.</li>
@@ -152,9 +151,10 @@
               <li *ngIf="Pstate.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
-        <div class="space">
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Country:" formControlName="country" required>
             <mat-error *ngIf="Pcountry.touched && Pcountry.invalid">
               <li *ngIf="Pcountry.errors.required">CountryName is Required.</li>
@@ -164,8 +164,7 @@
               <li *ngIf="Pcountry.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer1"></span>
-          <mat-form-field>
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <input matInput placeholder="Pincode:" formControlName="pincode" required>
             <mat-error *ngIf="Ppincode.touched && Ppincode.invalid">
               <li *ngIf="Ppincode.errors.required">CountryName is Required.</li>
@@ -174,6 +173,7 @@
               <li *ngIf="Ppincode.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
       </form>
     </mat-card>
@@ -183,8 +183,8 @@
       <form [formGroup]="secondFormGroup1" fxLayout="column">
         <mat-checkbox (click)="onCheckbox()">same as Premanent address</mat-checkbox>
         <div *ngIf="!isChecked">
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Flat no:" formControlName="flat" required>
               <mat-error *ngIf="Cflat.touched && Cflat.invalid">
                 <li *ngIf="Cflat.errors.required">FlatNo is Required.</li>
@@ -192,7 +192,6 @@
                 <li *ngIf="Cflat.errors.foundDashCharacter"> Only '-/' Characters allowed.</li>
               </mat-error>
             </mat-form-field>
-            <span class="example-spacer1"></span>
             <mat-form-field>
               <input matInput placeholder="Street:" formControlName="street" required>
               <mat-error *ngIf="Cstreet.touched && Cstreet.invalid">
@@ -200,16 +199,16 @@
                 <li *ngIf="Cstreet.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
+            <div></div>
           </div>
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Landmark:" formControlName="street" required>
               <mat-error *ngIf="Clandmark.touched && Clandmark.invalid">
                 <li *ngIf="Clandmark.errors.required">Landmark is Required.</li>
                 <li *ngIf="Clandmark.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <span class="example-spacer1"></span>
             <mat-form-field>
               <input matInput placeholder="City:" formControlName="city" required>
               <mat-error *ngIf="Ccity.touched && Ccity.invalid">
@@ -220,9 +219,10 @@
                 <li *ngIf="Ccity.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
+            <div></div>
           </div>
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" >
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="District:" formControlName="district" required>
               <mat-error *ngIf="Cdistrict.touched && Cdistrict.invalid">
                 <li *ngIf="Cdistrict.errors.required">DistrictName is Required.</li>
@@ -232,7 +232,6 @@
                 <li *ngIf="Cdistrict.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <span class="example-spacer1"></span>
             <mat-form-field>
               <input matInput placeholder="State:" formControlName="state" required>
               <mat-error *ngIf="Cstate.touched && Cstate.invalid">
@@ -243,9 +242,10 @@
                 <li *ngIf="Cstate.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
+            <div></div>
           </div>
-          <div class="space">
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Country:" formControlName="country" required>
               <mat-error *ngIf="Ccountry.touched && Ccountry.invalid">
                 <li *ngIf="Ccountry.errors.required">CountryName is Required.</li>
@@ -255,7 +255,6 @@
                 <li *ngIf="Ccountry.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <span class="example-spacer1"></span>
             <mat-form-field>
               <input matInput placeholder="Pincode:" formControlName="pincode" required>
               <mat-error *ngIf="Cpincode.touched && Cpincode.invalid">
@@ -265,50 +264,51 @@
                 <li *ngIf="Cpincode.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
+            <div></div>
           </div>
         </div>
       </form>
       <form [formGroup]="secondFormGroup2" fxLayout="column">
         <div [hidden]="!isChecked">
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Flat no:" formControlName="flat" [value]="Pflat.value">
             </mat-form-field>
-            <span class="example-spacer1"></span>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Street:" formControlName="street" [value]="Pstreet.value">
             </mat-form-field>
+            <div></div>
           </div>
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Landmark:" formControlName="landmark" [value]="Plandmark.value">
             </mat-form-field>
-            <span class="example-spacer1"></span>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="City:" formControlName="city" [value]="Pcity.value">
             </mat-form-field>
+            <div></div>
           </div>
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="District:" formControlName="district" [value]="Pdistrict.value">
             </mat-form-field>
-            <span class="example-spacer1"></span>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="State:" formControlName="state" [value]="Pstate.value">
             </mat-form-field>
+            <div></div>
           </div>
-          <div>
-            <mat-form-field>
+          <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Country:" formControlName="country" [value]="Pcountry.value">
             </mat-form-field>
-            <span class="example-spacer1"></span>
             <mat-form-field>
               <input matInput placeholder="Pincode:" formControlName="pincode" [value]="Ppincode.value">
             </mat-form-field>
+            <div></div>
           </div>
         </div>
       </form>
-      <div>
+      <div fxLayout="row" fxLayoutAlign="space-between">
         <button mat-raised-button color="primary" matStepperPrevious>Back</button>
         <button mat-raised-button color="primary" matStepperNext
           [disabled]="((secondFormGroup.invalid || ( secondFormGroup1.invalid && !isChecked)) || (secondFormGroup.invalid))">Next</button>
@@ -318,8 +318,9 @@
   <mat-step [stepControl]="thirdFormGroup">
     <ng-template matStepLabel>Create your account</ng-template>
     <mat-card>
+      <mat-card-title> Create Account <mat-icon>person_add_alt_1</mat-icon></mat-card-title>
       <form [formGroup]="thirdFormGroup" fxLayout="column">
-        <mat-form-field>
+        <mat-form-field [ngStyle]="{'width': deviceXs}">
           <input matInput placeholder="Enter your userID" formControlName="userID" required>
           <span matSuffix>@domain.com</span>
           <mat-error *ngIf="userid.touched && userid.invalid">
@@ -328,7 +329,7 @@
             <li *ngIf="userid.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
           </mat-error>
         </mat-form-field>
-        <mat-form-field class="password">
+        <mat-form-field [ngStyle]="{'width': deviceXs}"  class="space">
           <input matInput placeholder="Enter your password" type="password" formControlName="password" required>
           <mat-error *ngIf="password.touched && password.invalid">
             <li *ngIf="password.errors.required">Password is Required.</li>
@@ -341,8 +342,8 @@
             <li *ngIf="password.errors.foundCharacter"> One character should be special character.</li>
           </mat-error>
         </mat-form-field>
-        <div fxLayout="row">
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between">
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <mat-label>Security Question1:</mat-label>
             <mat-select formControlName="securityQA1" #qa required>
               <mat-option *ngFor="let question of questions" [value]="question.name"> {{question.name}}</mat-option>
@@ -351,7 +352,6 @@
               Security question1 is rquired.
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer"></span>
           <mat-form-field>
             <input matInput placeholder="Enter your answer1" formControlName="answer1" required>
             <mat-error *ngIf="answer1.touched && answer1.invalid">
@@ -361,9 +361,10 @@
               <li *ngIf="answer1.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
-        <div fxLayout="row">
-          <mat-form-field>
+        <div [fxLayout]="deviceStyle" fxLayoutAlign="space-between" class="space">
+          <mat-form-field [ngStyle]="{'width': deviceXs}">
             <mat-label>Security Question2:</mat-label>
             <mat-select formControlName="securityQA2" required>
               <mat-option *ngFor="let question of questions" [hidden]="qa1.value === question.name"
@@ -373,7 +374,6 @@
               Security question2 is rquired.
             </mat-error>
           </mat-form-field>
-          <span class="example-spacer"></span>
           <mat-form-field>
             <input matInput placeholder="Enter your answer2" formControlName="answer2" required>
             <mat-error *ngIf="answer2.touched && answer2.invalid">
@@ -383,6 +383,7 @@
               <li *ngIf="answer2.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
             </mat-error>
           </mat-form-field>
+          <div></div>
         </div>
         <div>
           <button mat-raised-button color="primary" matStepperPrevious>Back</button>

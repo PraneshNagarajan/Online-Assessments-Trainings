@@ -1,5 +1,5 @@
 <div fxLayoutAlign="center center">
-    <mat-card fxFlex="28">
+    <mat-card [fxFlex]="deviceXs">
         <mat-toolbar fxLayoutAlign="center center" color="primary">SignIN</mat-toolbar>
         <form #f="ngForm" (ngSubmit)="Authenticate(f)" fxLayoutAlign="strecth" fxLayout="column">
             <mat-form-field>

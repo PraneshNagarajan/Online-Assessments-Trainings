@@ -12,19 +12,9 @@
   background-color: rgba(0, 0, 0, 0.15);
 }
 .mat-form-field {
-    margin-top: 25px;
-    width: 25%;
+    margin-top: 28px;
   }
 
-.example-spacer {
-    position: relative;
-    margin-left: 20%;
-}
-
-.example-spacer1 {
-  position: relative;
-  margin-left: 30%;
-}
  .mat-radio-button ~ .mat-radio-button {
     margin-left: 100px;
   }
@@ -37,14 +27,7 @@
   margin-top: 20px;
 }
 
-.mat-raised-button ~ .mat-raised-button {
-  margin-left: 88.8%;
-}
 
 .space {
-margin-bottom: 25px;
-}
-
-.password {
-  margin-bottom: 24px;
+margin-bottom: 30px;
 }
