@@ -27,6 +27,7 @@
     "firebase": "^7.15.5",
     "flex-layout": "^1.0.1",
     "moment": "^2.27.0",
+    "ngx-countdown": "^10.0.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

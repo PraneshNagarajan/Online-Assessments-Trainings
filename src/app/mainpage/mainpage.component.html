@@ -1,54 +1,34 @@
-<div class="example-loading-shadow" *ngIf="datas.length === 0">
+<div class="example-loading-shadow" *ngIf="quesDatas.length === 0">
     <mat-spinner ></mat-spinner>
 </div>
 
-<mat-toolbar color=primary>
-    <span *ngIf="Arole"> AdminPage</span>
-    <span *ngIf="!Arole"> UserPage</span>
-    <span class="example-spacer"></span>
-    <button mat-flat-button color="primary" (click)="signOut()">Logout
-        <mat-icon>exit_to_app</mat-icon>
-    </button>
-</mat-toolbar>
-<div *ngFor="let data of datas" fxLayoutAlign="space-evenly center">
-    <mat-card [fxFlex]="deviceXs">
-        <mat-toolbar color="primary"><p><b>Name : </b>{{ data.value.firstname}}</p> </mat-toolbar>
-        <div class="menu" fxLayout="column" >
-            <p *ngIf="Arole"><b>Table ID : </b>{{ data.id}}</p>
-            <p><b>User ID : </b>{{ data.value.account.userid}}</p>
-            <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
-            <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
-            <p><b>Father Name : </b>{{ data.value.fathername}}</p>
-            <p><b>DOB : </b>{{ data.value.dob}}</p>
-            <p><b>Gender : </b>{{ data.value.gender}}</p>
-            <p><b>DOB : </b>{{ data.value.phone}}</p>
-            <p><b>Gender : </b>{{ data.value.email}}</p>
-            <div *ngIf="Arole" fxLayout="column">
-                <mat-form-field fxFlex="100">
-                    <mat-label>Assign Role : </mat-label>
-                    <mat-select 
-                    ngModel
-                    name="role"
-                    #role="ngModel">
-                        <mat-option *ngFor="let role of roles" [value]="role.name">
-                            {{role.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="Arole">
-                    <div class="example-button-container">
-                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)" (click)="ngOnDestroy()">
-                            <mat-icon>update</mat-icon>
-                        </button>
-                    </div>
-                    <div class="example-button-container">
-                        <button mat-mini-fab color="warn" (click)="onDelete(data.id)" (click)="ngOnDestroy()">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
+<div>
+    <mat-toolbar color="primary">
+        <span *ngIf="Arole"> AdminPage</span>
+        <span *ngIf="!Arole"> Welcome {{userName}} !</span>
+        <span class="example-spacer"></span>
+        <button mat-flat-button color="primary" (click)="signOut()">Logout
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar>
+    <form fxLayout="column" *ngIf="quesDatas.length !== 0">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+            <span></span>
+            <p><b>Time Left : </b> <countdown  [config]="{leftTime: 1800}" (event)="handleEvent($event)"></countdown></p>
         </div>
-    </mat-card>
+            <div *ngFor="let data of quesDatas">
+                <mat-label>{{data.index}}){{data.assesment1.qa}}</mat-label>
+                <mat-radio-group fxLayout="column">
+                    <mat-radio-button [value]="data.assesment1.opt1" (click)="save(data.assesment1.qa,data.assesment1.opt1)">{{data.assesment1.opt1}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment1.opt2" (click)="save(data.assesment1.qa,data.assesment1.opt2)">{{data.assesment1.opt2}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment1.opt3" (click)="save(data.assesment1.qa,data.assesment1.opt3)">{{data.assesment1.opt3}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment1.opt4" (click)="save(data.assesment1.qa,data.assesment1.opt4)">{{data.assesment1.opt4}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
+                <button mat-raised-button color="primary" >submit</button>
+            </div>
+    </form>
 </div>
+    
+

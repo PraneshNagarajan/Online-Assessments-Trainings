@@ -7,22 +7,33 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class DataService {
-  datas: any = [];
+  userdatas: any = [];
+  assesment1: any = [];
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { 
     this.db.list('/UserTable').snapshotChanges()
     .subscribe(user => {
       user.map(data => {
-        this.datas.push({ id: data.key, value: data.payload.val() });
+        this.userdatas.push({ id: data.key, value: data.payload.val() });
       });
     });
+
+    this.db.list('/Assesment1').snapshotChanges().subscribe(ques => {
+      let i = 0;
+      ques.map(data => {
+        this.assesment1.push({ index: ++i, assesment1: data.payload.val() });
+      })
+    })
    }
    
   getData(id?) {
-    return this.datas;
+    return this.userdatas;
   }
 
+  getAssesment1() {
+    return this.assesment1;
+  }
   loginAuth(id) {
-    this.datas.find( user => { 
+    this.userdatas.find( user => { 
       if(user.value['account']['userid'] === id) {
         if(user.value['account']['role'] === "admin") {
           localStorage.setItem('DomainAdmin', id);
