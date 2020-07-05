@@ -34,7 +34,6 @@ export class MainpageComponent implements OnInit {
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     this.userDatas = service.getData();
     this.quesDatas = service.getAssesment1();
-    
     let admin = localStorage.getItem('DomainAdmin');
     let user =  localStorage.getItem('DomainUser');
     if (admin) {
@@ -63,6 +62,7 @@ onSubmit() {
         }
       });
     });
+this.dbsize = this.quesDatas.length;
 this.crt = i;
 this.wrng = this.dbsize - i;
 if(this.countdown) {
@@ -72,11 +72,14 @@ if(this.countdown) {
 }
 localStorage.removeItem('DomainUser');
 this.router.navigate(['']);
-this.db.list('/OnlineExam').push({
-  id : this.userName,
+this.db.list('/OnlineExam').push( {
+  id: this.userName,
+  result: {
   date: moment().format("DD-MM-YYYY"),
   mark: this.crt+'/'+ this.dbsize
-});
+  }
+}
+);
   }
 
 handleEvent(value: Event) {
@@ -94,10 +97,10 @@ save(Uqa, Uans) {
   } else {
     this.userAnswered.push({qa: Uqa, ans: Uans});
   }
-  this.dbsize = this.quesDatas.length;
 }
 
 confirm() {
+  this.dbsize = this.quesDatas.length; 
   let unAns= this.dbsize - this.userAnswered.length;
   if(confirm('Are you sure to submit?\nAnswered Questions: '+this.userAnswered.length+'\n'+'Unanswered Questions: '+ unAns)){
     this.onSubmit();

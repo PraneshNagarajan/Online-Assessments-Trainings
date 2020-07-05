@@ -14,7 +14,7 @@
     <form fxLayout="column" *ngIf="quesDatas.length !== 0">
         <div fxLayout="row" fxLayoutAlign="space-between">
             <span></span>
-            <p><b>Time Left : </b> <countdown  [config]="{leftTime: 1800}" (event)="handleEvent($event)"></countdown></p>
+            <p><b>Time Left : </b> <countdown  [config]="{leftTime: 10}" (event)="handleEvent($event)"></countdown></p>
         </div>
             <div *ngFor="let data of quesDatas">
                 <mat-label>{{data.index}}){{data.assesment1.qa}}</mat-label>
