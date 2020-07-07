@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CountdownModule } from 'ngx-countdown';
+import { YouTubePlayerModule } from '@angular/youtube-player'
 import { SignINUPComponent } from './sign-in-up/sign-in-up.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
@@ -67,6 +68,7 @@ import { SignupComponent } from './signup/signup.component';
     MatProgressSpinnerModule,
     MatExpansionModule,
     CountdownModule,
+    YouTubePlayerModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
