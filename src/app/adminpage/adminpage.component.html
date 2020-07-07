@@ -1,0 +1,51 @@
+<div class="example-loading-shadow" *ngIf="userDatas.length === 0">
+    <mat-spinner ></mat-spinner>
+</div>
+
+<mat-toolbar color=primary>
+<span> AdminPage: {{userName}}</span>
+<span class="example-spacer1"></span>
+<span routerLink="/scheduleExam">ScheduleExam</span>
+<span class="example-spacer"></span>
+<button mat-flat-button color="primary" (click)="signOut()">Logout
+    <mat-icon>exit_to_app</mat-icon>
+</button>
+</mat-toolbar>
+<div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
+<mat-card [fxFlex]="device">
+    <mat-toolbar color="primary"><p><b>Name : </b>{{ data.value.firstname}}</p> </mat-toolbar>
+    <div class="menu" fxLayout="column" >
+        <p><b>Table ID : </b>{{ data.id}}</p>
+        <p><b>User ID : </b>{{ data.value.account.userid}}</p>
+        <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
+        <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
+        <p><b>Father Name : </b>{{ data.value.fathername}}</p>
+        <p><b>DOB : </b>{{ data.value.dob}}</p>
+        <p><b>Gender : </b>{{ data.value.gender}}</p>
+        <p><b>DOB : </b>{{ data.value.phone}}</p>
+        <p><b>Gender : </b>{{ data.value.email}}</p>
+        <div fxLayout="column">
+            <mat-form-field fxFlex="100">
+                <mat-label>Assign Role : </mat-label>
+                <mat-select 
+                ngModel
+                name="role"
+                #role="ngModel">
+                    <mat-option *ngFor="let role of roles" [value]="role.name">
+                        {{role.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+                <div class="example-button-container">
+                    <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)" (click)="ngOnDestroy()">
+                        <mat-icon>update</mat-icon>
+                    </button>
+                </div>
+                <div class="example-button-container">
+                    <button mat-mini-fab color="warn" (click)="onDelete(data.id)" (click)="ngOnDestroy()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>

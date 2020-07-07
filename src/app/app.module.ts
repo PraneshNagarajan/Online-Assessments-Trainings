@@ -31,18 +31,25 @@ import { CountdownModule } from 'ngx-countdown';
 import { YouTubePlayerModule } from '@angular/youtube-player'
 import { SignINUPComponent } from './sign-in-up/sign-in-up.component';
 import { HomepageComponent } from './homepage/homepage.component';
-import { MainpageComponent } from './mainpage/mainpage.component';
 import { RouterGuardService } from './router-guard.service';
+import { AdminRouterGuardService } from './admin-router-guard.service';
 import { DataService } from './data.service';
 import { SignupComponent } from './signup/signup.component';
+import { AssessmentComponent } from './assessment/assessment.component';
+import { TrainingComponent } from './training/training.component';
+import { AdminpageComponent } from './adminpage/adminpage.component';
+import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignINUPComponent,
     HomepageComponent,
-    MainpageComponent,
-    SignupComponent
+    SignupComponent,
+    AssessmentComponent,
+    TrainingComponent,
+    AdminpageComponent,
+    ScheduleExamComponent
   ],
   imports: [
     BrowserModule,
@@ -73,13 +80,17 @@ import { SignupComponent } from './signup/signup.component';
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
-      { path: '', component: SignINUPComponent},
-      { path: 'signUp', component: SignupComponent},
-      { path: 'main', component: MainpageComponent, canActivate:[RouterGuardService]}
+      { path: '', component: SignINUPComponent },
+      { path: 'signUp', component: SignupComponent },
+      { path: 'adminPage', component: AdminpageComponent, canActivate:[AdminRouterGuardService] }, 
+      { path: 'scheduleExam', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'assesment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
+      { path: 'training', component: TrainingComponent, canActivate:[RouterGuardService] }
     ])
   ],
   providers: [
     RouterGuardService,
+    AdminRouterGuardService,
     DataService,
     MediaChange
   ],

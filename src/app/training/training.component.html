@@ -1,0 +1,30 @@
+<mat-toolbar color="primary"> 
+    <span>Welcome to video tutorial.
+    </span>
+    <span class="example-spacer"></span>
+    <button mat-flat-button color="primary" (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<div  fxLayoutAlign="center" class="outer-form">
+    <mat-card fxFlex="80" fxLayout="column">
+        <mat-card >
+            <form fxLayout="column">
+                <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">Video1: What is SE?</mat-toolbar>
+                <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="!deviceXs">Video1: What is Software Engineering?</mat-toolbar>
+                <div fxLayoutAlign="center">
+                    <youtube-player videoId="cDQ34z0oqnQ" suggestedQuality="highres" [height]="deviceHeight" [width]="deviceWidth"> </youtube-player>
+                </div>
+            </form>
+        </mat-card>
+        <mat-card >
+            <form fxLayout="column">
+                <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">Video2: Testing Life Cycle.</mat-toolbar>
+                <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="!deviceXs">Video2: Software Testing Life Cycle</mat-toolbar>
+                <div fxLayoutAlign="center">
+                    <youtube-player videoId="HylDB3bN6hQ" suggestedQuality="highres" [height]="deviceHeight" [width]="deviceWidth"> </youtube-player>
+                </div>
+            </form>
+        </mat-card>
+    </mat-card>
+</div>

@@ -4,8 +4,7 @@
 
 <div>
     <mat-toolbar color="primary">
-        <span *ngIf="Arole"> AdminPage</span>
-        <span *ngIf="!Arole"> Welcome {{userName}} !</span>
+        <span> Welcome {{userName}} !</span>
         <span class="example-spacer"></span>
         <button mat-flat-button color="primary" (click)="signOut()">Logout
             <mat-icon>exit_to_app</mat-icon>

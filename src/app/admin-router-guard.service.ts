@@ -5,10 +5,10 @@ import { AngularFireAuth } from 'angularfire2/auth';
 @Injectable({
   providedIn: 'root'
 })
-export class RouterGuardService implements CanActivate{
+export class AdminRouterGuardService implements CanActivate{
   constructor(private router:Router, private afAuth:AngularFireAuth){}
   canActivate() {
-    if( localStorage.getItem('DomainUser') || localStorage.getItem('DomainAdmin')) {
+    if( localStorage.getItem('DomainAdmin')) {
        return true;
     } else {
        this.router.navigate(['']);

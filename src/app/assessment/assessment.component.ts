@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { DataService } from '../data.service';
-import { MediaObserver, MediaChange } from '@angular/flex-layout';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'app-mainpage',
-  templateUrl: './mainpage.component.html',
-  styleUrls: ['./mainpage.component.css']
+  selector: 'app-assessment',
+  templateUrl: './assessment.component.html',
+  styleUrls: ['./assessment.component.css']
 })
-export class MainpageComponent implements OnInit {
+export class AssessmentComponent implements OnInit {
   Arole;
   crt;
   wrng;
@@ -54,14 +54,14 @@ export class MainpageComponent implements OnInit {
   
 
 onSubmit() {
-    let i = 0;
-    this.quesDatas.map( value => {
-      this.userAnswered.map( userAns =>  {
-        if(value.assesment1.ans === userAns.ans)  {
+let i = 0;
+  this.quesDatas.map( value => {
+    this.userAnswered.map( userAns =>  {
+      if(value.assesment1.ans === userAns.ans)  {
           i = ++i;
-        }
-      });
-    });
+      }
+  });
+});
 this.dbsize = this.quesDatas.length;
 this.crt = i;
 this.wrng = this.dbsize - i;
@@ -107,12 +107,7 @@ confirm() {
   } 
 }
   signOut() {
-    this.afAuth.auth.signOut();
-    if (localStorage.getItem('DomainUser')) {
-      localStorage.removeItem('DomainUser');
-    } else {
-      localStorage.removeItem('DomainAdmin');
+    this.service.logOut();
     }
-    this.router.navigate(['']);
-  }
+
 }

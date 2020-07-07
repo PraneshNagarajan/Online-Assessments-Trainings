@@ -12,13 +12,13 @@ export class DataService {
   userdatas: any = [];
   assesments: any = [];
   assesment1: any = [];
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { 
+  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
     this.db.list('/UserTable').snapshotChanges()
-    .subscribe(user => {
-      user.map(data => {
-        this.userdatas.push({ id: data.key, value: data.payload.val() });
+      .subscribe(user => {
+        user.map(data => {
+          this.userdatas.push({ id: data.key, value: data.payload.val() });
+        });
       });
-    });
 
     this.db.list('/Assesment1').snapshotChanges().subscribe(ques => {
       let oFlag = 0;
@@ -26,51 +26,51 @@ export class DataService {
       let shuffle = moment().format("mm:ss");
       console.log("shuffle: ", shuffle);
       ques.map(data => {
-          this.assesments.push({ data: data.payload.val() });       
+        this.assesments.push({ data: data.payload.val() });
       });
-      (Number(shuffle.split(':')[0]) % 2 === 0)? ++eFlag : ++oFlag;
-      (Number(shuffle.split(':')[1]) % 2 === 0)? ++eFlag : ++oFlag;
-      if( eFlag > oFlag) {
+      (Number(shuffle.split(':')[0]) % 2 === 0) ? ++eFlag : ++oFlag;
+      (Number(shuffle.split(':')[1]) % 2 === 0) ? ++eFlag : ++oFlag;
+      if (eFlag > oFlag) {
         this.eloop(ques);
         this.oloop(ques);
-        } 
-        else if ( oFlag > eFlag) {
-          this.oloop(ques);
-          this.eloop(ques);
-        } else {
-          this.oeloop(ques);
-        }
+      }
+      else if (oFlag > eFlag) {
+        this.oloop(ques);
+        this.eloop(ques);
+      } else {
+        this.oeloop(ques);
+      }
     })
-   }
-   
-   eloop(ques) {
-    for( let j = 0; j < ques.length; j++) { 
-      if( j % 2 === 0) {
-        this.assesment1.push({  index: ++this.i,assesment1: this.assesments[j]['data']});
-      }
-    }
-   }
-   
-   oloop(ques) {
-    for( let j = 0; j < ques.length; j++) { 
-      if( j % 2 !== 0) {
-        this.assesment1.push({  index: ++this.i,assesment1: this.assesments[j]['data']});
-      }
-    }
-   }
+  }
 
-   oeloop(ques) {
-    for( let j = 0; j < ques.length; j++) { 
-      if((j % 3 === 0)) {
-        this.assesment1.push({  index: ++this.i,assesment1: this.assesments[j]['data']});
+  eloop(ques) {
+    for (let j = 0; j < ques.length; j++) {
+      if (j % 2 === 0) {
+        this.assesment1.push({ index: ++this.i, assesment1: this.assesments[j]['data'] });
       }
     }
-    for( let j = 0; j < ques.length; j++) { 
-      if((j % 3 !== 0)) {
-        this.assesment1.push({  index: ++this.i,assesment1: this.assesments[j]['data']});
+  }
+
+  oloop(ques) {
+    for (let j = 0; j < ques.length; j++) {
+      if (j % 2 !== 0) {
+        this.assesment1.push({ index: ++this.i, assesment1: this.assesments[j]['data'] });
       }
     }
-   }
+  }
+
+  oeloop(ques) {
+    for (let j = 0; j < ques.length; j++) {
+      if ((j % 3 === 0)) {
+        this.assesment1.push({ index: ++this.i, assesment1: this.assesments[j]['data'] });
+      }
+    }
+    for (let j = 0; j < ques.length; j++) {
+      if ((j % 3 !== 0)) {
+        this.assesment1.push({ index: ++this.i, assesment1: this.assesments[j]['data'] });
+      }
+    }
+  }
 
 
   getData(id?) {
@@ -81,9 +81,9 @@ export class DataService {
     return this.assesment1;
   }
   loginAuth(id) {
-    this.userdatas.find( user => { 
-      if(user.value['account']['userid'] === id) {
-        if(user.value['account']['role'] === "admin") {
+    this.userdatas.find(user => {
+      if (user.value['account']['userid'] === id) {
+        if (user.value['account']['role'] === "admin") {
           localStorage.setItem('DomainAdmin', id);
         } else {
           localStorage.setItem('DomainUser', id);
@@ -91,5 +91,15 @@ export class DataService {
         this.router.navigate(['/main']);
       }
     });
+  }
+
+  logOut() {
+    this.afAuth.auth.signOut();
+    if (localStorage.getItem('DomainUser')) {
+      localStorage.removeItem('DomainUser');
+    } else {
+      localStorage.removeItem('DomainAdmin');
+    }
+    this.router.navigate(['']);
   }
 }
