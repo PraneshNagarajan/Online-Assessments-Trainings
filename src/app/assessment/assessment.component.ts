@@ -50,7 +50,7 @@ export class AssessmentComponent implements OnInit {
             let Stime1: string = list['value']['time'];
             let Sdate = (list['value']['date'] as string);
             if (Cdate === Sdate) {
-              setInterval(() => {
+              let interval = setInterval(() => {
                 this.time = new Date();
                 Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
                 let Stime = Sdate + " " + Stime1;
@@ -68,6 +68,7 @@ export class AssessmentComponent implements OnInit {
                       this.timer = this.duration;
                       this.isLate = true;
                       this.assessmentDatas = this.service.getAssessment(list['value']['name']);
+                      clearInterval(interval);
                     }
                   } 
                   else {
@@ -81,6 +82,7 @@ export class AssessmentComponent implements OnInit {
                     this.assessmentDatas = this.service.getAssessment(list['value']['name']);
                     this.timer1 = list['value']['duration'];
                     this.isAvailable = false;
+                    clearInterval(interval);
                   } 
                   else {
                     this.msg = "Assessment will start on " + SchTime;
