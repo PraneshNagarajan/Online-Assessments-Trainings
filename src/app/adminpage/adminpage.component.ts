@@ -16,8 +16,9 @@ export class AdminpageComponent implements OnInit {
   userName;
   isSpinner: boolean;
   userDatas = [];
+  deviceXs: boolean;
   device;
-  deviceStyle;
+  deviceStyle ="row";
   media: Subscription;
   roles = [
     { name: 'admin' },
@@ -30,7 +31,7 @@ export class AdminpageComponent implements OnInit {
   constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     this.subscription = db.list('/UserTable').snapshotChanges()
     .subscribe(user => {
-      this.userName = localStorage.getItem('DomainAdmin');
+      this.userName = localStorage.getItem('username');
       user.map(data => {
         this.userDatas.push({ id: data.key, value: data.payload.val() });
       });
@@ -41,10 +42,13 @@ export class AdminpageComponent implements OnInit {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
       console.log(change.mqAlias);
       if(change.mqAlias === 'xs') {
+        this.deviceXs = true;
+        this.deviceStyle = "column";
         this.device = 90;
       } 
       else if(change.mqAlias === 'sm') {
         this.device = 60;
+        this.deviceXs = false;
       }
       else if (change.mqAlias === 'md') {
         this.device = 35;

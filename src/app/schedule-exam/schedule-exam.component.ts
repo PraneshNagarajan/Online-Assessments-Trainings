@@ -23,19 +23,19 @@ export class ScheduleExamComponent implements OnInit {
       console.log(change.mqAlias);
       if(change.mqAlias === 'xs') {
         this.device = 90;
-        this.top = '450px';
+        this.top = '50px';
       } 
       else if(change.mqAlias === 'sm') {
         this.device = 60;
-        this.top = '450px';
+        this.top = '100px';
       }
       else if (change.mqAlias === 'md') {
         this.device = 35;
-        this.top = '120px';
+        this.top = '50px';
       }
       else {
         this.device = 35;
-        this.top = '120px';
+        this.top = '80px';
       }
   });
 }
@@ -43,18 +43,22 @@ export class ScheduleExamComponent implements OnInit {
 schedule = new FormGroup({
   assessment: new FormControl("", Validators.required),
   date: new FormControl("", Validators.required),
-  time: new FormControl("", Validators.required)
+  time: new FormControl("", Validators.required),
+  duration: new FormControl("", Validators.required)
 });
 
 onSchedule() {
-  let Ctime = moment().format("DD-MM-YYYY HH:mm:ss");
+  let Ctime = moment().format("MM-DD-YYYY HH:mm:ss");
   let Sdate = moment(this.schedule.get('date').value).format('DD-MM-YYYY');
   let Stype = this.schedule.get('assessment').value;
   let Stime = this.schedule.get('time').value;
-  this.db.object('/AssessmentScheduler').set({
+  let Sduration = this.schedule.get('duration').value;
+  this.db.list('/AssessmentScheduler').push({
+    status: 'Scheduled',
     name: Stype,
     date: Sdate,
-    time: Stime
+    time: Stime,
+    duration: Sduration
   });
   this.db.list("/AssessmentSchedulerTracker").push({
     id: localStorage.getItem('DomainAdmin'),

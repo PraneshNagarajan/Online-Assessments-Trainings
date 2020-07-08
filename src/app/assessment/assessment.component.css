@@ -11,6 +11,12 @@ div ~ div {
 form {
     margin-left: 10px;
 }
+
+.msg {
+    display: flex;
+    position: absolute;
+    top: 50%;
+}
   .example-loading-shadow {
       width: 100%;
       height: 100%;

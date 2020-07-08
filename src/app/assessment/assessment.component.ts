@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -17,38 +17,106 @@ export class AssessmentComponent implements OnInit {
   crt;
   wrng;
   userName;
+  duration;
+  assessmentlist = [];
   userAnswered = [];
   dbsize;
+  msg;
+  timer;
   countdown: boolean;
   isSpinner: boolean;
-  userDatas = [];
+  isLate:boolean;
+  isAvailable: boolean;
+  assessmentDatas = [];
   quesDatas = [];
-  deviceXs;
-  deviceStyle;
-  mediaSubscribe: Subscription;
+  device;
+  top;
+  time = new Date();
+  media: Subscription;
   roles = [
     { name: 'admin' },
     { name: 'user' }
   ];
+  timer1: any;
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    this.userDatas = service.getData();
-    this.quesDatas = service.getAssesment1();
-    let admin = localStorage.getItem('DomainAdmin');
-    let user =  localStorage.getItem('DomainUser');
-    if (admin) {
-      this.Arole = 'DomainAdmin';
-      this.userName = admin;
-    } else {
-      this.userName = user;
-    }
+    this.db.list('/AssessmentScheduler').snapshotChanges().subscribe((data) => {
+      data.map( assessment => {
+      this.assessmentlist.push( {value: assessment.payload.val()});
+      this.assessmentlist.map(list => {
+      if(list['value']['status'] === "Scheduled") {
+        let Cdate = moment(this.time).format("MM/DD/YYYY");
+        let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
+        let Stime1:string = list['value']['time'];
+        let Sdate = (list['value']['date'] as string);
+        if( Cdate === Sdate) {
+          setInterval(() => {
+            this.time = new Date();
+            Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
+            let Stime = Sdate+" "+Stime1;
+            let Shour = Number(Stime1.split(':')[0]);
+            let Smin =  Number(Stime1.split(':')[1]);
+            let Chour = Number(moment(this.time).format('HH'));
+            let Cmin = Number(moment(this.time).format('mm'));
+            if((Chour > Shour) || ( (Chour === Shour) && (Cmin > Smin ))) {
+              let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+              if(Number(SchTime.split(':')[1]) <= 10) {
+                let i = 0;
+                let seconds = Number(SchTime.split(':')[1])*60+Number(SchTime.split(':')[2]);
+                if(i == 0){
+                  this.duration = list['value']['duration'] - seconds;
+                  this.timer = this.duration;
+                }
+                this.isLate = true;
+                this.assessmentDatas = this.service.getAssessment(list['value']['name']);
+              } else {
+                this.msg = "Assessment already started. You arn't allowed..."
+                this.isAvailable = true;
+              }
+            } else  {
+              let SchTime = moment.utc(moment(Stime, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+            if(Number(SchTime === "00:00:00")) {
+              this.assessmentDatas = this.service.getAssessment(list['value']['name']);
+              this.timer1 = list['value']['duration'];
+            } else {
+              this.msg = "Assessment will start on " + SchTime;
+              this.isAvailable = true;
+            }
+          }
+        }, 1000);
+        }
+      }
+      else {
+        this.msg = "No Assessment scheduled today.";
+        this.isAvailable = true;
+      }
+    });
+  });
+});
+  this.userName = localStorage.getItem('username');
   }
+    
 
   ngOnInit() {
-    this.mediaSubscribe = this.mediaObserver.media$.subscribe((device: MediaChange) => {
-      this.deviceXs = device.mqAlias === 'xs' ? '90%' : '35%';
-      this.deviceStyle = (device.mqAlias === 'xs') ? 'column' : 'row';
-    });
+    this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
+      console.log(change.mqAlias);
+      if(change.mqAlias === 'xs') {
+        this.device = 90;
+        this.top = '50px';
+      } 
+      else if(change.mqAlias === 'sm') {
+        this.device = 60;
+        this.top = '50px';
+      }
+      else if (change.mqAlias === 'md') {
+        this.device = 35;
+        this.top = '50px';
+      }
+      else {
+        this.device = 35;
+        this.top = '50px';
+      }
+  });
   }
 
   
@@ -91,7 +159,6 @@ handleEvent(value: Event) {
 
 save(Uqa, Uans) {
   let index = this.userAnswered.findIndex( x => x.qa === Uqa);
-  console.log(index);
   if(index > -1) {
     this.userAnswered[index]['ans'] = Uans;
   } else {
@@ -109,5 +176,4 @@ confirm() {
   signOut() {
     this.service.logOut();
     }
-
 }

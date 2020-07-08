@@ -1,4 +1,4 @@
-<div class="example-loading-shadow" *ngIf="quesDatas.length === 0">
+<div class="example-loading-shadow" *ngIf="assessmentDatas.length === 0 && !isAvailable">
     <mat-spinner ></mat-spinner>
 </div>
 
@@ -10,24 +10,30 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <form fxLayout="column" *ngIf="quesDatas.length !== 0">
+    <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable">
         <div fxLayout="row" fxLayoutAlign="space-between">
+            <p><b>Time : </b>{{time | date: 'hh:mm:ss a'}}</p>
             <span></span>
-            <p><b>Time Left : </b> <countdown  [config]="{leftTime: 10}" (event)="handleEvent($event)"></countdown></p>
+            <p><b>Time Left : </b> <countdown  [config]="{leftTime: (isLate)? timer: timer1}" (event)="handleEvent($event)"></countdown></p>
         </div>
-            <div *ngFor="let data of quesDatas">
-                <mat-label>{{data.index}}){{data.assesment1.qa}}</mat-label>
+            <div *ngFor="let data of assessmentDatas">
+                <mat-label>{{data.index}}){{data.assesment.qa}}</mat-label>
                 <mat-radio-group fxLayout="column">
-                    <mat-radio-button [value]="data.assesment1.opt1" (click)="save(data.assesment1.qa,data.assesment1.opt1)">{{data.assesment1.opt1}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment1.opt2" (click)="save(data.assesment1.qa,data.assesment1.opt2)">{{data.assesment1.opt2}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment1.opt3" (click)="save(data.assesment1.qa,data.assesment1.opt3)">{{data.assesment1.opt3}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment1.opt4" (click)="save(data.assesment1.qa,data.assesment1.opt4)">{{data.assesment1.opt4}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt1" (click)="save(data.assesment.qa,data.assesment.opt1)">{{data.assesment.opt1}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt2" (click)="save(data.assesment.qa,data.assesment.opt2)">{{data.assesment.opt2}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt3" (click)="save(data.assesment.qa,data.assesment.opt3)">{{data.assesment.opt3}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt4" (click)="save(data.assesment.qa,data.assesment.opt4)">{{data.assesment.opt4}}</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
                 <button mat-raised-button color="primary" >submit</button>
             </div>
     </form>
+</div>
+<div *ngIf="isAvailable" fxLayout="column" fxLayoutAlign="space-evenly center">
+    <mat-card fxFlex="30" class="msg">
+        <mat-card-content>{{msg}}</mat-card-content>
+    </mat-card>
 </div>
     
 

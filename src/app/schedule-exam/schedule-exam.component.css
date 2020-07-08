@@ -4,6 +4,7 @@
 
 div mat-card{
     padding: 0px;
+    margin-bottom: 100px;
 }
 
 form {
@@ -12,4 +13,7 @@ form {
  .mat-raised-button {
      margin-top: 20px;
      margin-bottom: 10px;
+ }
+ div{
+     
  }

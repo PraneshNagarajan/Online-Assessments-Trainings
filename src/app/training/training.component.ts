@@ -4,6 +4,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { AngularFireDatabase } from 'angularfire2/database';
 @Component({
   selector: 'app-training',
   templateUrl: './training.component.html',
@@ -17,8 +18,21 @@ export class TrainingComponent implements OnInit {
   deviceLg;
   deviceWidth;
   deviceHeight;
+  next:boolean;
+  back: boolean;
+  dbsize;
+  plist = 1;
+  videoList = [];
 
-  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService) { }
+  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private db: AngularFireDatabase) {
+    this.db.list('/VideoTraining').snapshotChanges().subscribe(video => {
+      let i = 0;
+      this.dbsize = video.length;
+      video.map( list => {
+        this.videoList.push({id : ++i, playlist: list.payload.val()});
+      });
+    });
+   }
 
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
@@ -36,7 +50,7 @@ export class TrainingComponent implements OnInit {
       else if (change.mqAlias === 'md') {
         this.deviceMd = true;
         this.deviceHeight = 340;
-        this.deviceWidth = 740;
+        this.deviceWidth = 600;
       }
       else {
         this.deviceLg = true;
@@ -53,6 +67,19 @@ export class TrainingComponent implements OnInit {
     document.body.appendChild(tag);
   }
 
+onNext() {
+  ++this.plist;
+  if(this.plist === this.dbsize) {
+  this.next = !this.next;
+  }
+}
+
+onBack() {
+  --this.plist;
+  if(this.plist === this.dbsize) {
+  this.back =  !this.back;
+  }
+}
   signOut() {
     this.service.logOut();
   }

@@ -6,7 +6,7 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <div fxLayoutAlign="center" [ngStyle]="{'margin-top': top}">
+    <div fxLayoutAlign="center">
         <mat-card [fxFlex]="device">
             <mat-toolbar color="warn">
                 <span>Schedule exam : </span>
@@ -15,7 +15,7 @@
                 <mat-form-field >
                     <mat-label>Select the assesment:</mat-label>
                     <mat-select formControlName="assessment" required>
-                        <mat-option value="assesment1"> assesment1</mat-option>
+                        <mat-option value="Assesment1"> assesment1</mat-option>
                     </mat-select>
                     <mat-error>
                         Assessment is required.
@@ -35,6 +35,13 @@
                     <mat-hint>format 13:24:00</mat-hint>
                     <mat-error>
                         Time is Required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="duration" matInput placeholder="Duration:" required>
+                    <span matSuffix>minutes</span>
+                    <mat-error>
+                        Duration is Required.
                     </mat-error>
                 </mat-form-field>
                 <button mat-raised-button color="primary" (click)="onSchedule()" [disabled]="schedule.invalid">Schedule</button>

@@ -2,14 +2,24 @@
     <mat-spinner ></mat-spinner>
 </div>
 
-<mat-toolbar color=primary>
+<mat-toolbar color=primary *ngIf="!deviceXs">
 <span> AdminPage: {{userName}}</span>
 <span class="example-spacer1"></span>
-<span routerLink="/scheduleExam">ScheduleExam</span>
+<span routerLink="/scheduleExam">Assessment</span>
+<span class="example-spacer1"></span>
+<span routerLink="/training">Video</span>
 <span class="example-spacer"></span>
 <button mat-flat-button color="primary" (click)="signOut()">Logout
     <mat-icon>exit_to_app</mat-icon>
 </button>
+</mat-toolbar>
+<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '150px'}">
+    <span> AdminPage: {{userName}}</span>
+    <span routerLink="/scheduleExam">Assessment</span>
+    <span routerLink="/training">Video</span>
+    <button mat-flat-button color="primary" (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
 </mat-toolbar>
 <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
 <mat-card [fxFlex]="device">

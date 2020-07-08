@@ -5,18 +5,18 @@
     background-color: rgba(0, 0, 0, 0.15);
 }
 div mat-card  {
-    margin-top: 30px;
+    margin-top: 10%;
+    margin-bottom: 90%;
+
 }
 
 div mat-card mat-card {
     margin-top: 10px;
     padding: 0px;
 }
-.mat-card ~ .mat-card {
-    margin-top: 30px;
-}
+
  youtube-player {
-     display: flex;
+    display: flex;
     position: relative;
     margin-top: 20px;
     margin-bottom: 20px;
