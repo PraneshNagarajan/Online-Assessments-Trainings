@@ -7,7 +7,7 @@
         </button>
     </mat-toolbar>
     <div fxLayoutAlign="center">
-        <mat-card [fxFlex]="device">
+        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <mat-toolbar color="warn">
                 <span>Schedule exam : </span>
             </mat-toolbar>

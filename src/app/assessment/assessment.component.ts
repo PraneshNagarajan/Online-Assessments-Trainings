@@ -98,25 +98,7 @@ export class AssessmentComponent implements OnInit {
     
 
   ngOnInit() {
-    this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
-      console.log(change.mqAlias);
-      if(change.mqAlias === 'xs') {
-        this.device = 90;
-        this.top = '50px';
-      } 
-      else if(change.mqAlias === 'sm') {
-        this.device = 60;
-        this.top = '50px';
-      }
-      else if (change.mqAlias === 'md') {
-        this.device = 35;
-        this.top = '50px';
-      }
-      else {
-        this.device = 35;
-        this.top = '50px';
-      }
-  });
+    
   }
 
   
@@ -146,8 +128,11 @@ this.db.list('/OnlineExam').push( {
   date: moment().format("DD-MM-YYYY"),
   mark: this.crt+'/'+ this.dbsize
   }
-}
-);
+});
+
+this.db.object('/AssessmentScheduler').set({
+  status: 'Unscheduled'
+});
   }
 
 handleEvent(value: Event) {

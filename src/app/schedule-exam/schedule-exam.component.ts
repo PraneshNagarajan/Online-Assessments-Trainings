@@ -12,30 +12,34 @@ import { AngularFireDatabase } from 'angularfire2/database';
   styleUrls: ['./schedule-exam.component.css']
 })
 export class ScheduleExamComponent implements OnInit {
-  device: number;
   media: Subscription;
   top;
+  size: number;
+  bottom: string;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { }
 
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
-      console.log(change.mqAlias);
       if(change.mqAlias === 'xs') {
-        this.device = 90;
-        this.top = '50px';
+        this.size = 90;
+        this.top="50%"
+        this.bottom="100%"
       } 
       else if(change.mqAlias === 'sm') {
-        this.device = 60;
-        this.top = '100px';
+        this.size = 90;
+        this.top="50%"
+        this.bottom="100%"
       }
       else if (change.mqAlias === 'md') {
-        this.device = 35;
-        this.top = '50px';
+        this.size = 80;
+        this.top="10%"
+        this.bottom="100%"
       }
       else {
-        this.device = 35;
-        this.top = '80px';
+        this.size = 80;
+        this.top="10%"
+        this.bottom="100%"
       }
   });
 }
@@ -52,7 +56,7 @@ onSchedule() {
   let Sdate = moment(this.schedule.get('date').value).format('DD-MM-YYYY');
   let Stype = this.schedule.get('assessment').value;
   let Stime = this.schedule.get('time').value;
-  let Sduration = this.schedule.get('duration').value;
+  let Sduration = this.schedule.get('duration').value * 60;
   this.db.list('/AssessmentScheduler').push({
     status: 'Scheduled',
     name: Stype,

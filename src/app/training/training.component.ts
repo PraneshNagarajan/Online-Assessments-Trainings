@@ -12,6 +12,8 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class TrainingComponent implements OnInit {
   media: Subscription;
+  top;
+  bottom;
   deviceXs;
   deviceSm;
   deviceMd;
@@ -21,13 +23,13 @@ export class TrainingComponent implements OnInit {
   next:boolean;
   back: boolean;
   dbsize;
+  size;
   plist = 1;
   videoList = [];
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private db: AngularFireDatabase) {
     this.db.list('/VideoTraining').snapshotChanges().subscribe(video => {
       let i = 0;
-      this.dbsize = video.length;
       video.map( list => {
         this.videoList.push({id : ++i, playlist: list.payload.val()});
       });
@@ -38,24 +40,37 @@ export class TrainingComponent implements OnInit {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
       if(change.mqAlias === 'xs') {
         this.deviceXs = true;
-        this.deviceHeight = 100;
-        this.deviceWidth = 300;
+        this.deviceHeight = 200;
+        this.deviceWidth = 340;
+        this.size = 90;
+        this.top="50%"
+        this.bottom="100%"
       } 
       else if(change.mqAlias === 'sm') {
         this.deviceXs = false;
         this.deviceSm = true;
-        this.deviceHeight = 200;
-        this.deviceWidth = 480;
+        this.size = 90;
+        this.deviceHeight = 300;
+        this.deviceWidth = 440;
+        this.size = 90;
+        this.top="50%"
+        this.bottom="100%"
       }
       else if (change.mqAlias === 'md') {
         this.deviceMd = true;
-        this.deviceHeight = 340;
-        this.deviceWidth = 600;
+        this.deviceHeight = 440;
+        this.deviceWidth = 650;
+        this.size = 80;
+        this.top="10%"
+        this.bottom="100%"
       }
       else {
         this.deviceLg = true;
-        this.deviceHeight = 400;
-        this.deviceWidth = 880;
+        this.deviceHeight = 450;
+        this.deviceWidth = 1050;
+        this.size = 80;
+        this.top="10%"
+        this.bottom="100%"
       }
       //this.deviceXs = (change.mqAlias === 'xs') ? true: false;
       //this.deviceWidth = (this.deviceXs)? 300: 880;
@@ -68,17 +83,24 @@ export class TrainingComponent implements OnInit {
   }
 
 onNext() {
+  this.dbsize = this.videoList.length;
   ++this.plist;
   if(this.plist === this.dbsize) {
-  this.next = !this.next;
+     this.next = true;
+  } else {
+    this.next = false;
   }
+  this.back = true;
 }
 
 onBack() {
   --this.plist;
-  if(this.plist === this.dbsize) {
-  this.back =  !this.back;
+  if(this.plist  > 1) {
+  this.back =  true;
+  } else {
+    this.back = false;
   }
+  this.next = false;
 }
   signOut() {
     this.service.logOut();
