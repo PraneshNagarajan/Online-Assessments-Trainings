@@ -66,9 +66,9 @@ export class AssessmentComponent implements OnInit {
                 if(i == 0){
                   this.duration = list['value']['duration'] - seconds;
                   this.timer = this.duration;
+                  this.isLate = true;
+                  this.assessmentDatas = this.service.getAssessment(list['value']['name']);
                 }
-                this.isLate = true;
-                this.assessmentDatas = this.service.getAssessment(list['value']['name']);
               } else {
                 this.msg = "Assessment already started. You arn't allowed..."
                 this.isAvailable = true;
@@ -78,6 +78,7 @@ export class AssessmentComponent implements OnInit {
             if(Number(SchTime === "00:00:00")) {
               this.assessmentDatas = this.service.getAssessment(list['value']['name']);
               this.timer1 = list['value']['duration'];
+              this.isAvailable =
             } else {
               this.msg = "Assessment will start on " + SchTime;
               this.isAvailable = true;
