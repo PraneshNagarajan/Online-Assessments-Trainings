@@ -320,7 +320,10 @@ export class SignupComponent implements OnInit {
     let Dob = moment(this.dob.value).format("DD/MM/YYYY");
     this.afAuth.auth.createUserWithEmailAndPassword(Uid, Upass).then(() => {
       this.isSpinner = true;
-      this.db.list('/UserTable').push({
+      this.db.list('/UserList').push({
+        id: Uid
+      });
+      this.db.list('/UserInfo').push({
         firstname: this.firstname.value,
         lastname: this.lastname.value,
         fathername: this.fathername.value,

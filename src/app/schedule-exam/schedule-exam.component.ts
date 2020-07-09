@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { DataService } from '../data.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AngularFireDatabase } from 'angularfire2/database';
 
@@ -11,13 +11,24 @@ import { AngularFireDatabase } from 'angularfire2/database';
   templateUrl: './schedule-exam.component.html',
   styleUrls: ['./schedule-exam.component.css']
 })
-export class ScheduleExamComponent implements OnInit {
+export class ScheduleExamComponent implements OnInit, OnDestroy {
   media: Subscription;
   top;
   size: number;
   bottom: string;
+  userList = [];
+  subscribe: Subscription;
 
-  constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { }
+  constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
+    this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe( users => {
+      users.map( user => {
+        this.userList.push(user.payload.val());
+      })
+      this.ngOnDestroy();
+    });
+  
+
+  }
 
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
@@ -48,7 +59,8 @@ schedule = new FormGroup({
   assessment: new FormControl("", Validators.required),
   date: new FormControl("", Validators.required),
   time: new FormControl("", Validators.required),
-  duration: new FormControl("", Validators.required)
+  duration: new FormControl("", Validators.required),
+  users: new FormArray([])
 });
 
 onSchedule() {
@@ -57,12 +69,15 @@ onSchedule() {
   let Stype = this.schedule.get('assessment').value;
   let Stime = this.schedule.get('time').value;
   let Sduration = this.schedule.get('duration').value * 60;
+  let Susers: any[] = this.schedule.get('users').value;
+  console.log("SUSER : "+Susers);
   this.db.list('/AssessmentScheduler').push({
     status: 'Scheduled',
     name: Stype,
     date: Sdate,
     time: Stime,
-    duration: Sduration
+    duration: Sduration,
+    users : Susers
   });
   this.db.list("/AssessmentSchedulerTracker").push({
     id: localStorage.getItem('DomainAdmin'),
@@ -71,8 +86,21 @@ onSchedule() {
   alert(Stype+" has been scheduled on "+Sdate+" "+Stime+" sucessfully.");
 }
 
-
+onAppend(user) {
+  let users = this.schedule.get('users');
+  let array: any[] = [this.schedule.get('users')];
+  if(!(users.value as string).includes(user)) {
+  (users as FormArray).push(new FormControl(user));
+  console.log((users.value));
+  } else {
+    (users as FormArray).removeAt(array.findIndex( data => data === user));
+    console.log((users.value));
+  }
+}
 signOut() {
   this.service.logOut();
+}
+ngOnDestroy() {
+  this.subscribe.unsubscribe();
 }
 }

@@ -4,11 +4,7 @@
 .outer-form {
     background-color: rgba(0, 0, 0, 0.15);
 }
-div mat-card  {
-    margin-top: 10%;
-    margin-bottom: 90%;
 
-}
 
 div mat-card mat-card {
     margin-top: 10px;

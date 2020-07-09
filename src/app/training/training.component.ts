@@ -41,7 +41,7 @@ export class TrainingComponent implements OnInit {
       if(change.mqAlias === 'xs') {
         this.deviceXs = true;
         this.deviceHeight = 200;
-        this.deviceWidth = 340;
+        this.deviceWidth = 240;
         this.size = 90;
         this.top="50%"
         this.bottom="100%"
