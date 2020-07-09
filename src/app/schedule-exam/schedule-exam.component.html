@@ -46,8 +46,8 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Select the users:</mat-label>
-                    <mat-select formControlName="users" multiple required>
-                        <mat-option *ngFor="let user of userList" [value]="user.id" (click)="onAppend(user.id)">{{user.id}}</mat-option>
+                    <mat-select  multiple required>
+                        <mat-option *ngFor="let user of userList" [value]="user.id"  (click)="onAppend(user.id)">{{user.id}}</mat-option>
                     </mat-select>
                     <mat-error>
                         Users is Required.

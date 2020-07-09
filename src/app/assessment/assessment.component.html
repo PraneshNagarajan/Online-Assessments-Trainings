@@ -10,7 +10,7 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable">
+    <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
         <div fxLayout="row" fxLayoutAlign="space-between">
             <p><b>Time : </b>{{time | date: 'hh:mm:ss a'}}</p>
             <span></span>

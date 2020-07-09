@@ -17,6 +17,7 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
   size: number;
   bottom: string;
   userList = [];
+  users = []
   subscribe: Subscription;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
@@ -69,34 +70,38 @@ onSchedule() {
   let Stype = this.schedule.get('assessment').value;
   let Stime = this.schedule.get('time').value;
   let Sduration = this.schedule.get('duration').value * 60;
-  let Susers: any[] = this.schedule.get('users').value;
-  console.log("SUSER : "+Susers);
   this.db.list('/AssessmentScheduler').push({
     status: 'Scheduled',
     name: Stype,
     date: Sdate,
     time: Stime,
     duration: Sduration,
-    users : Susers
+    users: [this.users]
   });
   this.db.list("/AssessmentSchedulerTracker").push({
     id: localStorage.getItem('DomainAdmin'),
     time: Ctime
   });
+  this.db.list("/AssessmentUserStatus").push({
+    date_time_assessment: Sdate+Stime+Stype,
+    status_check: {
+      status: 'Unstarted'
+    }
+  });
   alert(Stype+" has been scheduled on "+Sdate+" "+Stime+" sucessfully.");
 }
 
-onAppend(user) {
-  let users = this.schedule.get('users');
-  let array: any[] = [this.schedule.get('users')];
-  if(!(users.value as string).includes(user)) {
-  (users as FormArray).push(new FormControl(user));
-  console.log((users.value));
-  } else {
-    (users as FormArray).removeAt(array.findIndex( data => data === user));
-    console.log((users.value));
-  }
+
+onAppend(input) {
+let index = this.users.findIndex(fUser => fUser['id'] as string === input);
+if(index < 0) {
+  this.users.push({ id: input, status: 'Unstarted'});
+  console.log(this.users);
+} else {
+  this.users.splice(index, 1);
 }
+}
+
 signOut() {
   this.service.logOut();
 }

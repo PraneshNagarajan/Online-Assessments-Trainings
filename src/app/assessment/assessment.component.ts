@@ -23,6 +23,7 @@ export class AssessmentComponent implements OnInit {
   dbsize;
   msg;
   timer;
+  isConfirmed: boolean;
   countdown: boolean;
   isSpinner: boolean;
   isLate: boolean;
@@ -69,6 +70,9 @@ export class AssessmentComponent implements OnInit {
                       this.isLate = true;
                       this.assessmentDatas = this.service.getAssessment(list['value']['name']);
                       clearInterval(interval);
+                      if(confirm("Please Click 'OK' button to start Assessment.")) {
+                        this.isConfirmed = true;
+                      }
                     }
                   } 
                   else {
@@ -83,6 +87,9 @@ export class AssessmentComponent implements OnInit {
                     this.timer1 = list['value']['duration'];
                     this.isAvailable = false;
                     clearInterval(interval);
+                    if(confirm("Please Click 'OK' button to start Assessment.")) {
+                      this.isConfirmed = true;
+                    }
                   } 
                   else {
                     this.msg = "Assessment will start on " + SchTime;
@@ -104,7 +111,7 @@ export class AssessmentComponent implements OnInit {
 
 
   ngOnInit() {
-
+    
   }
 
 
@@ -128,7 +135,7 @@ export class AssessmentComponent implements OnInit {
     }
     localStorage.removeItem('DomainUser');
     this.router.navigate(['']);
-    this.db.list('/OnlineExam').push({
+    this.db.list('/AssessmentResults').push({
       id: this.userName,
       result: {
         date: moment().format("DD-MM-YYYY"),
