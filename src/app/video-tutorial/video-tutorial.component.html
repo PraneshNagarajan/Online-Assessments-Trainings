@@ -1,0 +1,45 @@
+<mat-toolbar color="primary"> 
+    <span>Welcome to video tutorial.
+    </span>
+    <span class="example-spacer"></span>
+    <button mat-flat-button color="primary" (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<div  fxLayoutAlign="center" class="outer-form">
+    <mat-card [fxFlex]="size" fxLayout="column" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+        <mat-card >
+            <form fxLayout="column" *ngFor="let video of videoList">
+                <div *ngIf="video.id === plist">
+                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">{{video.playlist.title1}}</mat-toolbar>
+                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="!deviceXs">{{video.playlist.title2}}</mat-toolbar>
+                <div fxLayout="row" fxLayoutAlign="space-evenly" >
+                    <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
+                          <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                      </div>
+                      <div fxLayoutAlign="space-around center" *ngIf="deviceXs">
+                        <button mat-mini-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
+                          <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                      </div>
+                      <div>
+                        <youtube-player [videoId]="video.playlist.name" suggestedQuality="highres" [height]="deviceHeight" [width]="deviceWidth">{{video.name}} </youtube-player>
+                    </div>
+                      <div  fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">
+                          <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                      </div>
+                      <div  fxLayoutAlign="space-around center" *ngIf="deviceXs">
+                        <button mat-mini-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">
+                          <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                      </div>
+                </div>
+                </div>
+            </form>
+    </mat-card>
+    </mat-card>
+</div>
