@@ -14,7 +14,7 @@ export class DataService {
   assesments: any = [];
   assesment: any = [];
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
-    this.db.list('/UserTable').snapshotChanges()
+    this.db.list('/UserInfo').snapshotChanges()
       .subscribe(user => {
         user.map(data => {
           this.userdatas.push({ id: data.key, value: data.payload.val() });
