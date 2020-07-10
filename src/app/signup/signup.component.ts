@@ -357,7 +357,8 @@ export class SignupComponent implements OnInit {
           securityQA1: this.qa1.value,
           securityQA2: this.qa2.value,
           answer1: this.answer1.value,
-          answer2: this.answer2.value
+          answer2: this.answer2.value,
+          role: "user"
         }
       });
       this.isSpinner = false;

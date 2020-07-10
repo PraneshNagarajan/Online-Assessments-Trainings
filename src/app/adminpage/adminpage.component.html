@@ -3,20 +3,33 @@
 </div>
 
 <mat-toolbar color=primary *ngIf="!deviceXs">
-<span> AdminPage: {{userName}}</span>
+<span> AdminPage</span>
 <span class="example-spacer1"></span>
-<span routerLink="/scheduleExam">Assessment</span>
+<span routerLink="/scheduleAssessment">Assessment</span>
 <span class="example-spacer1"></span>
-<span routerLink="/training">Video</span>
+<span routerLink="/video">Video</span>
 <span class="example-spacer"></span>
+<button mat-flat-button color="primary" >
+    <mat-icon>account_circle</mat-icon>
+    {{userName}}
+</button>
+<span class="example-spacer2"></span>
 <button mat-flat-button color="primary" (click)="signOut()">Logout
     <mat-icon>exit_to_app</mat-icon>
 </button>
 </mat-toolbar>
-<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '150px'}">
-    <span> AdminPage: {{userName}}</span>
-    <span routerLink="/scheduleExam">Assessment</span>
-    <span routerLink="/training">Video</span>
+<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '170px'}">
+    <span> Admin Page </span>
+    <span class="example-spacer1"></span>
+    <span routerLink="/scheduleAssessment">Assessment</span>
+    <span class="example-spacer1"></span>
+    <span routerLink="/video">Video</span>
+    <span class="example-spacer1"></span>
+    <button mat-flat-button color="primary" >
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
     <button mat-flat-button color="primary" (click)="signOut()">Logout
         <mat-icon>exit_to_app</mat-icon>
     </button>

@@ -95,7 +95,7 @@ getAssessment(name){
           localStorage.setItem('DomainUser', id);
         }
         localStorage.setItem('username', user.value['firstname']);
-        this.router.navigate(['/adminPage']);
+        this.router.navigate(['/homePage']);
       }
     });
   }

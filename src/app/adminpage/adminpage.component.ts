@@ -29,7 +29,7 @@ export class AdminpageComponent implements OnInit {
   deviceWidth: number;
 
   constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    this.subscription = db.list('/UserTable').snapshotChanges()
+    this.subscription = db.list('/UserInfo').snapshotChanges()
     .subscribe(user => {
       this.userName = localStorage.getItem('username');
       user.map(data => {

@@ -92,7 +92,7 @@ onSchedule() {
   });
   this.db.list("/AssessmentUserStatusTracker").push({
     asssessment_Id : Sdate+"_"+Stime+"_"+Stype,
-    scheduled_info: {
+    scheduleded_info: {
     name: Stype,
     date: Sdate,
     time: Stime,

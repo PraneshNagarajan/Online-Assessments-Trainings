@@ -5,7 +5,9 @@
 .example-spacer1 {
     flex: 0.2 1 auto;
 }
-
+.example-spacer2 {
+    flex: 0.1 1 auto;
+}
 mat-card {
     margin-top: 35px;
 }

@@ -1,28 +1,40 @@
-
+.form {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.example-spacer {
+    flex: 1 1 auto;
+}
+.example-spacer2 {
+    flex: 0.1 1 auto;
+}
 .example-spacer1 {
     flex: 0.5 1 auto;
 }
+.form1 {
+    margin-bottom: 30%;
+}
 mat-card {
-    margin-top: 20%;
+    margin-top: 5%;
     flex: 0.5 1 auto;
     height: 120px;
-    text-align: center;
+    background-color:orangered;
+    color: whitesmoke;
+    border-radius: 2%;
+    padding: 0px;
+    width: 90%;
+    border: 2px solid black;
 }
 
 .text {
     display: inline-flex;
     font-size: 30px;
     margin-top: 30px;
+    margin-bottom: 30px;
     cursor: pointer;
 }
-div mat-card {
-    padding: 0px;
-    width: 20%;
-    border: 2px solid orangered;
-    
-}
-mat-icon {
+
+.icon {
     display:flex;
-    font-size: 750%;
-    color: orangered;
+    font-size: 700%;
+    color: whitesmoke;
 }

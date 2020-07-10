@@ -85,10 +85,11 @@ import { VideoTutorialComponent } from './video-tutorial/video-tutorial.componen
       { path: '', component: SignINUPComponent },
       { path: 'signUp', component: SignupComponent },
       { path: 'adminPage', component: AdminpageComponent, canActivate:[AdminRouterGuardService] }, 
+      { path: 'homePage', component: HomepageComponent, canActivate:[RouterGuardService] },
       { path: 'scheduleAssessment', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
       { path: 'assesment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
       { path: 'training', component: TrainingComponent, canActivate:[RouterGuardService] },
-      { path: 'videoTutorial', component: TrainingComponent, canActivate:[RouterGuardService] }
+      { path: 'video', component: VideoTutorialComponent, canActivate:[RouterGuardService] }
     ])
   ],
   providers: [

@@ -123,7 +123,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                 }
                 else {
                   alert("You don't have permission\n                     (or)                 \nAlready you hvaestarted Assessement.");
-                  this.router.navigate(['']);
+                  this.router.navigate(['/homePage']);
                 }
               }
             });
@@ -165,7 +165,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       alert("Correct answers: " + i + '\n' + 'Incorrect answers :' + this.wrng);
     }
     localStorage.removeItem('DomainUser');
-    this.router.navigate(['']);
+    this.router.navigate(['/homePage']);
     this.db.list('/AssessmentResultsTracker').push({
       id: this.loggedUser,
       assessent_id : this.Sdate+"_"+this.Stime+"_"+this.Sname,

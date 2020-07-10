@@ -29,10 +29,11 @@ export class VideoTutorialComponent implements OnInit {
   videoList = [];
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private db: AngularFireDatabase) {
-    this.db.list('/VideoTraining').snapshotChanges().subscribe(video => {
+    this.db.list('/videoTutorial').snapshotChanges().subscribe(video => {
       let i = 0;
       video.map( list => {
         this.videoList.push({id : ++i, playlist: list.payload.val()});
+        console.log(this.videoList);
       });
     });
    }
