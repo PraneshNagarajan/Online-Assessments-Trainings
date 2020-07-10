@@ -1,7 +1,9 @@
 .example-spacer {
     flex: 1 1 auto;
 }
-
+.example-spacer2 {
+    flex: 0.1 1 auto;
+}
 
 div ~ div {
     margin-top: 10px;

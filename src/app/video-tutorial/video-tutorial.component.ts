@@ -27,8 +27,10 @@ export class VideoTutorialComponent implements OnInit {
   size;
   plist = 1;
   videoList = [];
+  userName: string;
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private db: AngularFireDatabase) {
+    this.userName = localStorage.getItem('username');
     this.db.list('/videoTutorial').snapshotChanges().subscribe(video => {
       let i = 0;
       video.map( list => {
