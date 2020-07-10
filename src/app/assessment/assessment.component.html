@@ -19,14 +19,14 @@
             <div *ngFor="let data of assessmentDatas">
                 <mat-label>{{data.index}}){{data.assesment.qa}}</mat-label>
                 <mat-radio-group fxLayout="column">
-                    <mat-radio-button [value]="data.assesment.opt1" (click)="save(data.assesment.qa,data.assesment.opt1)">{{data.assesment.opt1}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt2" (click)="save(data.assesment.qa,data.assesment.opt2)">{{data.assesment.opt2}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt3" (click)="save(data.assesment.qa,data.assesment.opt3)">{{data.assesment.opt3}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt4" (click)="save(data.assesment.qa,data.assesment.opt4)">{{data.assesment.opt4}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt1" (click)="onSave(data.assesment.qa,data.assesment.opt1)">{{data.assesment.opt1}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt2" (click)="onSave(data.assesment.qa,data.assesment.opt2)">{{data.assesment.opt2}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt3" (click)="onSave(data.assesment.qa,data.assesment.opt3)">{{data.assesment.opt3}}</mat-radio-button>
+                    <mat-radio-button [value]="data.assesment.opt4" (click)="onSave(data.assesment.qa,data.assesment.opt4)">{{data.assesment.opt4}}</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
-                <button mat-raised-button color="primary" (click)="onSubmit()">submit</button>
+                <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
             </div>
     </form>
 </div>

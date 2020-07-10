@@ -18,9 +18,16 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
   bottom: string;
   userList = [];
   users = []
+  loggedUser;
   subscribe: Subscription;
+  users1= [];
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
+    if(localStorage.getItem('DomainAdmin')) {
+      this.loggedUser = localStorage.getItem('DomainAdmin');
+    } else {
+      this.loggedUser = localStorage.getItem('DomainUser')
+    }
     this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe( users => {
       users.map( user => {
         this.userList.push(user.payload.val());
@@ -65,27 +72,32 @@ schedule = new FormGroup({
 });
 
 onSchedule() {
-  let Ctime = moment().format("MM-DD-YYYY HH:mm:ss");
-  let Sdate = moment(this.schedule.get('date').value).format('DD-MM-YYYY');
+  let Ctime = moment().format("MM/DD/YYYY HH:mm:ss");
+  let Sdate = moment(this.schedule.get('date').value).format('MM/DD/YYYY');
   let Stype = this.schedule.get('assessment').value;
   let Stime = this.schedule.get('time').value;
   let Sduration = this.schedule.get('duration').value * 60;
-  this.db.list('/AssessmentScheduler').push({
-    status: 'Scheduled',
+  this.db.list('/AssessmentSchedulerTracker').push({
+    scheduler_info : {
+      id: localStorage.getItem('DomainAdmin'),
+      time: Ctime
+    },
+    scheduled_info: {
     name: Stype,
     date: Sdate,
     time: Stime,
     duration: Sduration,
-    users: [this.users]
+    users: this.users1
+    }
   });
-  this.db.list("/AssessmentSchedulerTracker").push({
-    id: localStorage.getItem('DomainAdmin'),
-    time: Ctime
-  });
-  this.db.list("/AssessmentUserStatus").push({
-    date_time_assessment: Sdate+Stime+Stype,
-    status_check: {
-      status: 'Unstarted'
+  this.db.list("/AssessmentUserStatusTracker").push({
+    asssessment_Id : Sdate+"_"+Stime+"_"+Stype,
+    scheduled_info: {
+    name: Stype,
+    date: Sdate,
+    time: Stime,
+    duration: Sduration,
+    users: this.users
     }
   });
   alert(Stype+" has been scheduled on "+Sdate+" "+Stime+" sucessfully.");
@@ -96,7 +108,7 @@ onAppend(input) {
 let index = this.users.findIndex(fUser => fUser['id'] as string === input);
 if(index < 0) {
   this.users.push({ id: input, status: 'Unstarted'});
-  console.log(this.users);
+  this.users1.push({ id: input});
 } else {
   this.users.splice(index, 1);
 }

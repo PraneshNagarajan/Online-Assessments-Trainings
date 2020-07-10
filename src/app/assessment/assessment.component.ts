@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -12,7 +12,7 @@ import * as moment from 'moment';
   templateUrl: './assessment.component.html',
   styleUrls: ['./assessment.component.css']
 })
-export class AssessmentComponent implements OnInit {
+export class AssessmentComponent implements OnInit, OnDestroy {
   Arole;
   crt;
   wrng;
@@ -24,6 +24,7 @@ export class AssessmentComponent implements OnInit {
   msg;
   timer;
   isConfirmed: boolean;
+  isScheduled: boolean;
   countdown: boolean;
   isSpinner: boolean;
   isLate: boolean;
@@ -32,8 +33,15 @@ export class AssessmentComponent implements OnInit {
   quesDatas = [];
   device;
   top;
+  loggedUser;
+  childID = -1;
+  tableID;
+  Sname: string;
+  Sdate: string;
+  Stime: string;
   time = new Date();
   media: Subscription;
+  DB: Subscription;
   roles = [
     { name: 'admin' },
     { name: 'user' }
@@ -41,67 +49,84 @@ export class AssessmentComponent implements OnInit {
   timer1: any;
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    this.db.list('/AssessmentScheduler').snapshotChanges().subscribe((data) => {
+    let j = -1;
+    if (localStorage.getItem('DomainAdmin')) {
+      this.loggedUser = localStorage.getItem('DomainAdmin');
+    } else {
+      this.loggedUser = localStorage.getItem('DomainUser')
+    }
+    this.DB = this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe((data) => {
       data.map(assessment => {
-        this.assessmentlist.push({ value: assessment.payload.val() });
+        this.assessmentlist.push(assessment.payload.val());
+        this.ngOnDestroy();
         this.assessmentlist.map(list => {
-          if (list['value']['status'] === "Scheduled") {
-            let Cdate = moment(this.time).format("MM/DD/YYYY");
-            let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-            let Stime1: string = list['value']['time'];
-            let Sdate = (list['value']['date'] as string);
-            if (Cdate === Sdate) {
-              let interval = setInterval(() => {
-                this.time = new Date();
-                Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                let Stime = Sdate + " " + Stime1;
-                let Shour = Number(Stime1.split(':')[0]);
-                let Smin = Number(Stime1.split(':')[1]);
-                let Chour = Number(moment(this.time).format('HH'));
-                let Cmin = Number(moment(this.time).format('mm'));
-                if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
-                  let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                  if (Number(SchTime.split(':')[1]) <= 10) {
-                    let i = 0;
-                    let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
-                    if (i == 0) {
-                      this.duration = list['value']['duration'] - seconds;
-                      this.timer = this.duration;
-                      this.isLate = true;
-                      this.assessmentDatas = this.service.getAssessment(list['value']['name']);
-                      clearInterval(interval);
-                      if(confirm("Please Click 'OK' button to start Assessment.")) {
-                        this.isConfirmed = true;
+          if (!this.isScheduled) {
+            let users = list['schedulded_info']['users']
+            users.map(user => {
+              ++j;
+              if (user['id'] === this.loggedUser) {
+                if (user['status'] === "Unstarted") {
+                  this.tableID = assessment.key;
+                  this.childID = j;
+                  this.Sname = list['schedulded_info']['name'];
+                  this.Sdate = (list['schedulded_info']['date'] as string);
+                  this.isScheduled = true
+                  let Cdate = moment(this.time).format("MM/DD/YYYY");
+                  let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
+                  this.Stime = list['schedulded_info']['time'];
+                  if (Cdate === this.Sdate) {
+                    let interval = setInterval(() => {
+                      this.time = new Date();
+                      Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
+                      let Stime1 = this.Sdate + " " + this.Stime;
+                      let Shour = Number(this.Stime.split(':')[0]);
+                      let Smin = Number(this.Stime.split(':')[1]);
+                      let Chour = Number(moment(this.time).format('HH'));
+                      let Cmin = Number(moment(this.time).format('mm'));
+                      if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
+                        let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+                        if (Number(SchTime.split(':')[1]) <= 10) {
+                          let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
+                          this.duration = list['schedulded_info']['duration'] - seconds;
+                          this.timer = this.duration;
+                          this.isLate = true;
+                          this.assessmentDatas = this.service.getAssessment(list['schedulded_info']['name']);
+                          clearInterval(interval);
+                          if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.onUpdateStatus();
+                          }
+                        }
+                        else {
+                          this.msg = "Assessment already started...."
+                          this.isAvailable = true;
+                          clearInterval(interval);
+                        }
                       }
-                    }
-                  } 
-                  else {
-                    this.msg = "Assessment already started. You arn't allowed..."
-                    this.isAvailable = true;
-                  }
-                } 
-                else {
-                  let SchTime = moment.utc(moment(Stime, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                  if (Number(SchTime === "00:00:00")) {
-                    this.assessmentDatas = this.service.getAssessment(list['value']['name']);
-                    this.timer1 = list['value']['duration'];
-                    this.isAvailable = false;
-                    clearInterval(interval);
-                    if(confirm("Please Click 'OK' button to start Assessment.")) {
-                      this.isConfirmed = true;
-                    }
-                  } 
-                  else {
-                    this.msg = "Assessment will start on " + SchTime;
-                    this.isAvailable = true;
+                      else {
+                        let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+                        if (Number(SchTime === "00:00:00")) {
+                          this.assessmentDatas = this.service.getAssessment(list['schedulded_info']['name']);
+                          this.timer1 = list['schedulded_info']['duration'];
+                          this.isAvailable = false;
+                          clearInterval(interval);
+                          if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.onUpdateStatus();
+                          }
+                        }
+                        else {
+                          this.msg = "Assessment will start on " + SchTime;
+                          this.isAvailable = true;
+                        }
+                      }
+                    }, 1000);
                   }
                 }
-              }, 1000);
-            }
-          }
-          else {
-            this.msg = "No Assessment scheduled today.";
-            this.isAvailable = true;
+                else {
+                  alert("You don't have permission\n                     (or)                 \nAlready you hvaestarted Assessement.");
+                  this.router.navigate(['']);
+                }
+              }
+            });
           }
         });
       });
@@ -111,11 +136,17 @@ export class AssessmentComponent implements OnInit {
 
 
   ngOnInit() {
-    
+
   }
 
 
-
+  onUpdateStatus() {
+    let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
+    refDB.child('schedulded_info').child('users').child(String(this.childID)).update({
+      status: (!this.isConfirmed) ? "Started" : "Finished"
+    });
+    this.isConfirmed = !this.isConfirmed;
+  }
   onSubmit() {
     let i = 0;
     this.quesDatas.map(value => {
@@ -135,17 +166,15 @@ export class AssessmentComponent implements OnInit {
     }
     localStorage.removeItem('DomainUser');
     this.router.navigate(['']);
-    this.db.list('/AssessmentResults').push({
-      id: this.userName,
+    this.db.list('/AssessmentResultsTracker').push({
+      id: this.loggedUser,
+      assessent_id : this.Sdate+"_"+this.Stime+"_"+this.Sname,
       result: {
-        date: moment().format("DD-MM-YYYY"),
+        date: moment().format("MM/DDYYYY"),
         mark: this.crt + '/' + this.dbsize
       }
     });
-
-    this.db.object('/AssessmentScheduler').set({
-      status: 'Unscheduled'
-    });
+    this.onUpdateStatus();
   }
 
   handleEvent(value: Event) {
@@ -164,7 +193,7 @@ export class AssessmentComponent implements OnInit {
     }
   }
 
-  confirm() {
+  onconfirm() {
     this.dbsize = this.quesDatas.length;
     let unAns = this.dbsize - this.userAnswered.length;
     if (confirm('Are you sure to submit?\nAnswered Questions: ' + this.userAnswered.length + '\n' + 'Unanswered Questions: ' + unAns)) {
@@ -173,5 +202,9 @@ export class AssessmentComponent implements OnInit {
   }
   signOut() {
     this.service.logOut();
+  }
+
+  ngOnDestroy() {
+    this.DB.unsubscribe();
   }
 }
