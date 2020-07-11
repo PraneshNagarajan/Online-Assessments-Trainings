@@ -57,7 +57,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     }
     this.DB = this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe((data) => {
       data.map(assessment => {
-        console.log("test");
         this.assessmentlist.push(assessment.payload.val());
         this.ngOnDestroy();
         this.assessmentlist.map(list => {
@@ -116,7 +115,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           }
                         }
                         else {
-                          console.log("test10");
                           this.msg = "Assessment will start on " + SchTime;
                           this.isAvailable = true;
                         }
