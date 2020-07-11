@@ -62,15 +62,11 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.ngOnDestroy();
         this.assessmentlist.map(list => {
           if (!this.isScheduled) {
-            console.log("test1");
             let users = list['scheduleded_info']['users']
             users.map(user => {
               ++j;
-              console.log("test2");
               if (user['id'] === this.loggedUser) {
-                console.log("test3");
                 if (user['status'] === "Unstarted") {
-                  console.log("test4");
                   this.tableID = assessment.key;
                   this.childID = j;
                   this.Sname = list['scheduleded_info']['name'];
@@ -80,7 +76,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                   let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
                   this.Stime = list['scheduleded_info']['time'];
                   if (Cdate === this.Sdate) {
-                    console.log("test5");
                     let interval = setInterval(() => {
                       this.time = new Date();
                       Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
@@ -90,30 +85,25 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                       let Chour = Number(moment(this.time).format('HH'));
                       let Cmin = Number(moment(this.time).format('mm'));
                       if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
-                        console.log("test6");
                         let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime.split(':')[1]) <= 10) {
-                          console.log("test7");
                           let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
                           this.duration = list['scheduleded_info']['duration'] - seconds;
                           this.timer = this.duration;
                           this.isLate = true;
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
-                          console.log(this.assessmentDatas);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();
                           }
                         }
                         else {
-                          console.log("test8");
                           this.msg = "Assessment already started...."
                           this.isAvailable = true;
                           clearInterval(interval);
                         }
                       }
                       else {
-                        console.log("test9");
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
