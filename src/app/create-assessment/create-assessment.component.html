@@ -1,0 +1,54 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+    <mat-toolbar color="primary">
+        <span>Exam Scheduler Page : </span>
+        <span class="example-spacer"></span>
+        <button mat-flat-button color="primary" (click)="signOut()">Logout
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div fxLayoutAlign="center">
+        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}" class="card">
+            <mat-toolbar color="warn">
+                <span>Schedule exam : </span>
+            </mat-toolbar>
+            <form fxLayout="column" fxLayoutAlign="center" [formGroup]="Submit">
+                <mat-form-field>
+                    <mat-label>Enter the assesment title:</mat-label>
+                    <input matInput formControlName="assessment" required>
+                    <mat-error>
+                        Assessment title is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="question" matInput placeholder="Enter the questions" required>
+                    <mat-error>
+                        Question is Required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)">
+                    <mat-hint>Type & press enter to type next one.</mat-hint>
+                </mat-form-field>
+            </form>    
+            <form  *ngIf="options1.length !== 0" [formGroup]="Submit">
+                <span fxLayout="column" *ngFor="let option of options1" class="form1">
+                    <mat-card  fxLayout="row" fxLayoutAlign="space-between center">
+                        <span>{{option.opt}}</span>
+                        <button mat-raised-button color="warn" (click)="onDelete(option.opt)">delete</button>
+                    </mat-card>
+                </span>
+                <mat-form-field>
+                    <mat-label>Enter the answer</mat-label>
+                    <input matInput formControlName="ans"  required>
+                    <mat-error>
+                        Answer is Required.
+                    </mat-error>
+                </mat-form-field>
+                <div fxLayoutAlign="center">
+                    <button mat-raised-button color="primary"  (click)="onSave()">Save</button>
+                </div>
+            </form>
+            <button mat-raised-button color="primary" class="submit" (click)="onSubmit()">Submit</button>
+        </mat-card>
+    </div>
+</div>

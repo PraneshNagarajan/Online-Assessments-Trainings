@@ -31,7 +31,8 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
     this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe( users => {
       users.map( user => {
         this.userList.push(user.payload.val());
-      })
+        console.log(this.userList);
+      });
       this.ngOnDestroy();
     });
   

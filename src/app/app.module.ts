@@ -40,6 +40,7 @@ import { TrainingComponent } from './training/training.component';
 import { AdminpageComponent } from './adminpage/adminpage.component';
 import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
+import { CreateAssessmentComponent } from './create-assessment/create-assessment.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { VideoTutorialComponent } from './video-tutorial/video-tutorial.componen
     TrainingComponent,
     AdminpageComponent,
     ScheduleExamComponent,
-    VideoTutorialComponent
+    VideoTutorialComponent,
+    CreateAssessmentComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import { VideoTutorialComponent } from './video-tutorial/video-tutorial.componen
       { path: 'scheduleAssessment', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
       { path: 'training', component: TrainingComponent, canActivate:[RouterGuardService] },
-      { path: 'video', component: VideoTutorialComponent, canActivate:[RouterGuardService] }
+      { path: 'video', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
+      { path: 'addAssessment', component: CreateAssessmentComponent}
     ])
   ],
   providers: [

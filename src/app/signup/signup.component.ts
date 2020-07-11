@@ -352,7 +352,7 @@ export class SignupComponent implements OnInit {
           pincode: (this.isChecked) ? this.Ppincode.value : this.Cpincode.value
         },
         account: {
-          userid: this.userid.value+'@domain.com',
+          userid: Uid,
           password: this.password.value,
           securityQA1: this.qa1.value,
           securityQA2: this.qa2.value,

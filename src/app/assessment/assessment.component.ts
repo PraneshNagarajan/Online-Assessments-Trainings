@@ -57,24 +57,30 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     }
     this.DB = this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe((data) => {
       data.map(assessment => {
+        console.log("test");
         this.assessmentlist.push(assessment.payload.val());
         this.ngOnDestroy();
         this.assessmentlist.map(list => {
           if (!this.isScheduled) {
-            let users = list['schedulded_info']['users']
+            console.log("test1");
+            let users = list['scheduleded_info']['users']
             users.map(user => {
               ++j;
+              console.log("test2");
               if (user['id'] === this.loggedUser) {
+                console.log("test3");
                 if (user['status'] === "Unstarted") {
+                  console.log("test4");
                   this.tableID = assessment.key;
                   this.childID = j;
-                  this.Sname = list['schedulded_info']['name'];
-                  this.Sdate = (list['schedulded_info']['date'] as string);
+                  this.Sname = list['scheduleded_info']['name'];
+                  this.Sdate = (list['scheduleded_info']['date'] as string);
                   this.isScheduled = true
                   let Cdate = moment(this.time).format("MM/DD/YYYY");
                   let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                  this.Stime = list['schedulded_info']['time'];
+                  this.Stime = list['scheduleded_info']['time'];
                   if (Cdate === this.Sdate) {
+                    console.log("test5");
                     let interval = setInterval(() => {
                       this.time = new Date();
                       Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
@@ -84,29 +90,35 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                       let Chour = Number(moment(this.time).format('HH'));
                       let Cmin = Number(moment(this.time).format('mm'));
                       if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
+                        console.log("test6");
                         let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime.split(':')[1]) <= 10) {
+                          console.log("test7");
                           let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
-                          this.duration = list['schedulded_info']['duration'] - seconds;
+                          this.duration = list['scheduleded_info']['duration'] - seconds;
                           this.timer = this.duration;
                           this.isLate = true;
-                          this.assessmentDatas = this.service.getAssessment(list['schedulded_info']['name']);
+                          this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
+                          console.log(this.assessmentDatas);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();
                           }
                         }
                         else {
+                          console.log("test8");
                           this.msg = "Assessment already started...."
                           this.isAvailable = true;
                           clearInterval(interval);
                         }
                       }
                       else {
+                        console.log("test9");
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
-                          this.assessmentDatas = this.service.getAssessment(list['schedulded_info']['name']);
-                          this.timer1 = list['schedulded_info']['duration'];
+                          this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
+                          console.log(this.assessmentDatas);
+                          this.timer1 = list['scheduleded_info']['duration'];
                           this.isAvailable = false;
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
@@ -114,6 +126,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           }
                         }
                         else {
+                          console.log("test10");
                           this.msg = "Assessment will start on " + SchTime;
                           this.isAvailable = true;
                         }
@@ -142,21 +155,20 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   onUpdateStatus() {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
-    refDB.child('schedulded_info').child('users').child(String(this.childID)).update({
+    refDB.child('scheduleded_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Finished"
     });
     this.isConfirmed = !this.isConfirmed;
   }
   onSubmit() {
     let i = 0;
-    this.quesDatas.map(value => {
+    this.assessmentDatas.map(value => {
       this.userAnswered.map(userAns => {
-        if (value.assesment1.ans === userAns.ans) {
+        if (value.assesment.ans === userAns.ans) {
           i = ++i;
         }
       });
     });
-    this.dbsize = this.quesDatas.length;
     this.crt = i;
     this.wrng = this.dbsize - i;
     if (this.countdown) {
@@ -184,7 +196,8 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     }
   }
 
-  save(Uqa, Uans) {
+  onSave(Uqa, Uans) {
+    this.dbsize = this.assessmentDatas.length;
     let index = this.userAnswered.findIndex(x => x.qa === Uqa);
     if (index > -1) {
       this.userAnswered[index]['ans'] = Uans;
@@ -193,8 +206,8 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     }
   }
 
-  onconfirm() {
-    this.dbsize = this.quesDatas.length;
+  onConfirm() {
+    this.dbsize = this.assessmentDatas.length;
     let unAns = this.dbsize - this.userAnswered.length;
     if (confirm('Are you sure to submit?\nAnswered Questions: ' + this.userAnswered.length + '\n' + 'Unanswered Questions: ' + unAns)) {
       this.onSubmit();

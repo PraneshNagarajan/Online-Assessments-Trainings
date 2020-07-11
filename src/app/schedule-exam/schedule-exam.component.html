@@ -15,7 +15,7 @@
                 <mat-form-field >
                     <mat-label>Select the assesment:</mat-label>
                     <mat-select formControlName="assessment" required>
-                        <mat-option value="Assesment1"> assesment1</mat-option>
+                        <mat-option value="Assesment2"> Assesment2</mat-option>
                     </mat-select>
                     <mat-error>
                         Assessment is required.
@@ -47,7 +47,7 @@
                 <mat-form-field>
                     <mat-label>Select the users:</mat-label>
                     <mat-select  multiple required>
-                        <mat-option *ngFor="let user of userList" [value]="user.id"  (click)="onAppend(user.id)">{{user.id}}</mat-option>
+                        <mat-option *ngFor="let user of userList"  (click)="onAppend(user.id)">{{user.id}}</mat-option>
                     </mat-select>
                     <mat-error>
                         Users is Required.
