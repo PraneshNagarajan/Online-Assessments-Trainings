@@ -63,7 +63,7 @@ export class AdminpageComponent implements OnInit {
   }
 
   onUpdate(id, sel_role) {
-    this.db.object('/UserInfo/' + id+'/account').update({ roles: sel_role }).then(() => {
+    this.db.object('/UserInfo/' + id+'/account').update({ role: sel_role }).then(() => {
       let index = this.userDatas.findIndex(user => user['id'] === id);
       this.userDatas[index]['value']['account']['role'] = sel_role;
       alert("Updated Sucessfully");

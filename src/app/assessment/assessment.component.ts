@@ -170,7 +170,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       id: this.loggedUser,
       assessent_id : this.Sdate+"_"+this.Stime+"_"+this.Sname,
       result: {
-        date: moment().format("MM/DDYYYY"),
+        date: moment().format("MM/DD/YYYY"),
         mark: this.crt + '/' + this.dbsize
       }
     });
