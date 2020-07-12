@@ -17,6 +17,7 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
   size: number;
   bottom: string;
   userList = [];
+  assessmentList = [];
   users = []
   loggedUser;
   subscribe: Subscription;
@@ -31,12 +32,14 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
     this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe( users => {
       users.map( user => {
         this.userList.push(user.payload.val());
-        console.log(this.userList);
+      });
+    });
+    this.subscribe = this.db.list('/AssessmentList').snapshotChanges().subscribe( assessments => {
+      assessments.map( assessment=> {
+        this.assessmentList.push(assessment.payload.val());
       });
       this.ngOnDestroy();
     });
-  
-
   }
 
   ngOnInit() {

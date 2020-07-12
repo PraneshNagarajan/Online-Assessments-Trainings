@@ -30,11 +30,11 @@
                     <mat-hint>Type & press enter to type next one.</mat-hint>
                 </mat-form-field>
             </form>    
-            <form  *ngIf="options1.length !== 0" [formGroup]="Submit">
-                <span fxLayout="column" *ngFor="let option of options1" class="form1">
+            <form  *ngIf="options.length !== 0" [formGroup]="Submit">
+                <span fxLayout="column" *ngFor="let option of options" class="form1">
                     <mat-card  fxLayout="row" fxLayoutAlign="space-between center">
-                        <span>{{option.opt}}</span>
-                        <button mat-raised-button color="warn" (click)="onDelete(option.opt)">delete</button>
+                        <span>{{option}}</span>
+                        <button mat-raised-button color="warn" (click)="onDelete(option)">delete</button>
                     </mat-card>
                 </span>
                 <mat-form-field>

@@ -80,17 +80,17 @@ onSubmit() {
       name: Stype
     }
   });
-  this.options.push({name: Stype});
-  this.db.list("/AssessmentsData").push({qa_info: this.options});
+  //this.options.push({name: Stype});
+  this.db.list("/AssessmentsData/"+Stype).push(this.options);
   alert(Stype+" has been uploaded sucessfully.");
 }
 
 
 onAppend(input) {
-let index = this.options1.findIndex(option => option['opt']  === input);
+let index = this.options.findIndex(option => option  === input);
 if(index < 0) {
-  this.options1.push({ opt: input});
-  console.log(this.options1);
+  this.options.push(input);
+  console.log(this.options);
 }  else {
   alert("Duplicate Entry");
 }
@@ -98,23 +98,23 @@ this.Submit.get('option').reset();
 }
 
 onSave() {
-let ques =  this.Submit.get('question');
-let opt = this.Submit.get('option').value;
-let Ans = this.Submit.get('ans');
-console.log("ANS1", this.Submit.get('ans'));
-console.log("ANS :", Ans.value);
-this.options1.push({qa: ques.value});
-this.options1.push({ans: Ans.value});
-this.options.push(this.options1);
-this.options1 = [];
-ques.reset();
-Ans.reset();
-console.log("save : ", this.options);
+  let Stype = this.Submit.get('assessment').value;
+  let ques =  this.Submit.get('question');
+  let Ans = this.Submit.get('ans');
+  this.db.list("/AssessmentsData/"+Stype).push({
+    qa: ques.value,
+    ans: Ans.value,
+    options: this.options
+  }).then(() => alert("data saved")), error => alert(error);
+  this.db.list("/AssessmentList").push(Stype);
+  Ans.reset();
+  ques.reset();
+  this.options = [];
 }
 onDelete(input) {
-  let index = this.options1.findIndex(option => option['opt'] as string === input);
+  let index = this.options.findIndex(option => option as string === input);
   if(index > -1) {
-    this.options1.splice(index, 1);
+    this.options.splice(index, 1);
   } 
   }
 

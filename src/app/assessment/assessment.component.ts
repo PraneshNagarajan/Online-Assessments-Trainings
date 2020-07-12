@@ -61,16 +61,17 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.ngOnDestroy();
         this.assessmentlist.map(list => {
           if (!this.isScheduled) {
-            let users = list['scheduleded_info']['users']
-            users.map(user => {
+            let users:any[] = [list['scheduleded_info']['users']];
+            users.map( user => {
               ++j;
-              if (user['id'] === this.loggedUser) {
-                if (user['status'] === "Unstarted") {
+             console.log(user[j]['id']);
+              if (user[j]['id'] === this.loggedUser) {
+                if (user[j]['status'] === "Unstarted") {
                   this.tableID = assessment.key;
                   this.childID = j;
                   this.Sname = list['scheduleded_info']['name'];
                   this.Sdate = (list['scheduleded_info']['date'] as string);
-                  this.isScheduled = true
+                  this.isScheduled = true;
                   let Cdate = moment(this.time).format("MM/DD/YYYY");
                   let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
                   this.Stime = list['scheduleded_info']['time'];
@@ -91,6 +92,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           this.timer = this.duration;
                           this.isLate = true;
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
+                          console.log(this.assessmentDatas);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();

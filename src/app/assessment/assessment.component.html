@@ -21,13 +21,10 @@
             <span></span>
             <p><b>Time Left : </b> <countdown  [config]="{leftTime: (isLate)? timer: timer1}" (event)="handleEvent($event)"></countdown></p>
         </div>
-            <div *ngFor="let data of assessmentDatas">
-                <mat-label>{{data.index}}){{data.assesment.qa}}</mat-label>
+            <div *ngFor="let data1 of assessmentDatas">
+                <mat-label>{{data1.index}}){{data1.assesment.qa}}</mat-label>
                 <mat-radio-group fxLayout="column">
-                    <mat-radio-button [value]="data.assesment.opt1" (click)="onSave(data.assesment.qa,data.assesment.opt1)">{{data.assesment.opt1}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt2" (click)="onSave(data.assesment.qa,data.assesment.opt2)">{{data.assesment.opt2}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt3" (click)="onSave(data.assesment.qa,data.assesment.opt3)">{{data.assesment.opt3}}</mat-radio-button>
-                    <mat-radio-button [value]="data.assesment.opt4" (click)="onSave(data.assesment.qa,data.assesment.opt4)">{{data.assesment.opt4}}</mat-radio-button>
+                    <mat-radio-button *ngFor="let data2 of data1.assesment.options" [value]="data2" (click)="onSave(data1.assesment.qa,data2)">{{data2}}</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">

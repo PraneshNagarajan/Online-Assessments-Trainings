@@ -15,7 +15,7 @@
                 <mat-form-field >
                     <mat-label>Select the assesment:</mat-label>
                     <mat-select formControlName="assessment" required>
-                        <mat-option value="Assessment2"> Assessment2</mat-option>
+                        <mat-option *ngFor="let assessment of assessmentList" value="assessment">{{assessment}}</mat-option>
                     </mat-select>
                     <mat-error>
                         Assessment is required.
