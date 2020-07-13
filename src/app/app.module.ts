@@ -41,6 +41,7 @@ import { AdminpageComponent } from './adminpage/adminpage.component';
 import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
 import { CreateAssessmentComponent } from './create-assessment/create-assessment.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { CreateAssessmentComponent } from './create-assessment/create-assessment
     CreateAssessmentComponent
   ],
   imports: [
+    MatGridListModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

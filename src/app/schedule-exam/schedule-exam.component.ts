@@ -22,7 +22,7 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
   loggedUser;
   subscribe: Subscription;
   users1= [];
-
+ 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
     if(localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');

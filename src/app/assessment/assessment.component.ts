@@ -13,6 +13,7 @@ import * as moment from 'moment';
   styleUrls: ['./assessment.component.css']
 })
 export class AssessmentComponent implements OnInit, OnDestroy {
+  color;
   Arole;
   crt;
   wrng;
@@ -47,6 +48,8 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     { name: 'user' }
   ];
   timer1: any;
+  bottom: string;
+  col: number;
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     let j = -1;
@@ -66,7 +69,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
               ++j;
              console.log(user[j]['id']);
               if (user[j]['id'] === this.loggedUser) {
-                if (user[j]['status'] === "Unstarted") {
+                if (user[j]['status'] !== "Unstarted") {
                   this.tableID = assessment.key;
                   this.childID = j;
                   this.Sname = list['scheduleded_info']['name'];
@@ -86,7 +89,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                       let Cmin = Number(moment(this.time).format('mm'));
                       if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
                         let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                        if (Number(SchTime.split(':')[1]) <= 10) {
+                        if (Number(SchTime.split(':')[1]) <= 20) {
                           let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
                           this.duration = list['scheduleded_info']['duration'] - seconds;
                           this.timer = this.duration;
@@ -139,9 +142,33 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-
+    this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
+      if(change.mqAlias === 'xs') {
+        this.col = 1
+        this.top="50%"
+        this.bottom="100%"
+      } 
+      else if(change.mqAlias === 'sm') {
+        this.col = 1;
+        this.top="50%"
+        this.bottom="100%"
+      }
+      else if (change.mqAlias === 'md') {
+        this.col = 2;
+        this.top="5%"
+        this.bottom="100%"
+      }
+      else {
+        this.col = 2;
+        this.top="5%"
+        this.bottom="100%"
+      }
+  });
   }
-
+  onDisplay(value) {
+    console.log(value);
+    this.color = value;
+  }
 
   onUpdateStatus() {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);

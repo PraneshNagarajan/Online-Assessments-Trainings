@@ -32,3 +32,11 @@ form {
       justify-content: center;
       background: rgba(0, 0, 0, 0.15);
   }
+
+  .card {
+      display: flex;
+      text-align: center;
+      align-content: center;
+      height: 20%;
+      width: 100%;
+  }

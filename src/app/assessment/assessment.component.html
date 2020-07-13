@@ -1,12 +1,12 @@
 <div class="example-loading-shadow" *ngIf="assessmentDatas.length === 0 && !isAvailable">
-    <mat-spinner ></mat-spinner>
+    <mat-spinner></mat-spinner>
 </div>
 
 <div>
     <mat-toolbar color="primary">
         <span> {{Sname}}</span>
         <span class="example-spacer"></span>
-        <button mat-flat-button color="primary" >
+        <button mat-flat-button color="primary">
             <mat-icon>account_circle</mat-icon>
             {{userName}}
         </button>
@@ -15,27 +15,47 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
-        <div fxLayout="row" fxLayoutAlign="space-between">
-            <p><b>Time : </b>{{time | date: 'hh:mm:ss a'}}</p>
-            <span></span>
-            <p><b>Time Left : </b> <countdown  [config]="{leftTime: (isLate)? timer: timer1}" (event)="handleEvent($event)"></countdown></p>
-        </div>
-            <div *ngFor="let data1 of assessmentDatas">
-                <mat-label>{{data1.index}}){{data1.assesment.qa}}</mat-label>
-                <mat-radio-group fxLayout="column">
-                    <mat-radio-button *ngFor="let data2 of data1.assesment.options" [value]="data2" (click)="onSave(data1.assesment.qa,data2)">{{data2}}</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
-                <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
-            </div>
-    </form>
+    <div fxLayoutAlign="center">
+        <mat-card fxFlex="80" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+            <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                    <p><b>Time : </b>{{time | date: 'hh:mm:ss a'}}</p>
+                    <span></span>
+                    <p><b>Time Left : </b>
+                        <countdown [config]="{leftTime: (isLate)? timer: timer1}" (event)="handleEvent($event)">
+                        </countdown>
+                    </p>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                    <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
+                            <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                    </div>
+                    <div *ngFor="let data of assessmentDatas" fxFlex="100">
+                        <mat-label fxLayoutAlign="space-evenly">{{data.index}}){{data.assesment.qa}}</mat-label>
+                        <mat-grid-list [cols]="col" rowHeight="100px">
+                            <mat-grid-tile *ngFor="let option of data.assesment.options; let i = index;">
+                               <button mat-raised-button fxFlex="30" [color]="(color === i)? 'accent':''" (click)="onDisplay(i)" >{{option}}</button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                    </div>
+                    <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">
+                            <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
+                    <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+
 </div>
 <div *ngIf="isAvailable" fxLayout="column" fxLayoutAlign="space-evenly center">
     <mat-card fxFlex="30" class="msg">
         <mat-card-content>{{msg}}</mat-card-content>
     </mat-card>
 </div>
-    
-
