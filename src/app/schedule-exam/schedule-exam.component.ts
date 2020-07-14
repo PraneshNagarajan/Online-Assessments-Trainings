@@ -12,7 +12,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
   templateUrl: './schedule-exam.component.html',
   styleUrls: ['./schedule-exam.component.css']
 })
-export class ScheduleExamComponent implements OnInit, OnDestroy {
+export class ScheduleExamComponent implements OnInit {
   media: Subscription;
   top;
   size: number;
@@ -21,33 +21,26 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
   assessmentList = [];
   users = []
   loggedUser;
-  subscribe: Subscription;
   assessmentSchduledData = [];
   users1 = [];
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
 
     console.log("convert", moment.duration("1500", "seconds").format());
-    let cvrt = "00:" + moment.duration(1500, "seconds").format("HH:mm:ss");
-    let addtime = moment("12:40:00", "HH:mm:ss").add("00:" + moment.duration(1500, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
-    console.log("addd hours", addtime);
-    // console.log(moment().format("HH:mm:ss"));
-    console.log("time between ", moment(addtime, "HH:mm:ss").isBetween(moment("13:00:00", "HH:mm:ss"), moment("14:50   :00", "HH:mm:ss")));
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
-    this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe(users => {
+     this.db.list('/UserList').snapshotChanges().subscribe(users => {
       users.map(user => {
         this.userList.push(user.payload.val());
       });
     });
-    this.subscribe = this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
+     this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
       assessments.map(assessment => {
         this.assessmentList.push(assessment.payload.val());
       });
-      this.ngOnDestroy();
     });
     this.db.list("/AssessmentUserStatusTracker").snapshotChanges().subscribe(data => {
       data.map(assessmentData => {
@@ -113,9 +106,6 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
         } else {
           subTime = moment(time, "HH:mm:ss").subtract(moment.duration(Sduration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
         }
-        console.log("ATime :", addTime);
-        console.log("STime", subTime);
-        console.log("between time :", moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss")));
         let name = (data.assessment_id as string).split('_')[3];
         Users.map(user => {
           console.log("USERSD :", user['id']);
@@ -127,7 +117,7 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
                   this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
                   alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
                 } else {
-                  alert("Already " + user + " has been aadedd " + Stype + " between" + time + " - " + addTime);
+                  alert("Already " + user['id'] + " has been engagged " + Stype + " between" + subTime + " - " + addTime);
                 }
               } else {
                 this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
@@ -182,8 +172,5 @@ export class ScheduleExamComponent implements OnInit, OnDestroy {
 
   signOut() {
     this.service.logOut();
-  }
-  ngOnDestroy() {
-    this.subscribe.unsubscribe();
   }
 }
