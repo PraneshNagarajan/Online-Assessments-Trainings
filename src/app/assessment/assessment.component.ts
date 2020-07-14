@@ -190,6 +190,9 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     refDB.child('scheduleded_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Finished"
     });
+    refDB.update({
+      status: (!this.isConfirmed) ? "Started" : "Finished"
+    });
     this.isConfirmed = !this.isConfirmed;
   }
   onSubmit() {
