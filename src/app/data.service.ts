@@ -11,8 +11,8 @@ export class DataService {
   i = 0;
   userdatas: any = [];
   assessmentlist = [];
-  assesments: any = [];
-  assesment: any = [];
+  assessments: any = [];
+  assessment: any = [];
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
     this.db.list('/UserInfo').snapshotChanges()
       .subscribe(user => {
@@ -29,7 +29,7 @@ getAssessment(name){
         let shuffle = moment().format("mm:ss");
         console.log("shuffle: ", shuffle);
         ques.map(data => {
-          this.assesments.push({ data: data.payload.val() });
+          this.assessments.push({ data: data.payload.val() });
         });
         (Number(shuffle.split(':')[0]) % 2 === 0) ? ++eFlag : ++oFlag;
         (Number(shuffle.split(':')[1]) % 2 === 0) ? ++eFlag : ++oFlag;
@@ -44,7 +44,7 @@ getAssessment(name){
           this.oeloop(ques);
         }
       });
-      return this.assesment;
+      return this.assessment;
     } 
 
 
@@ -53,7 +53,7 @@ getAssessment(name){
   eloop(ques) {
     for (let j = 0; j < ques.length; j++) {
       if (j % 2 === 0) {
-        this.assesment.push({ index: ++this.i, assesment: this.assesments[j]['data'] });
+        this.assessment.push({ index: ++this.i, assessment: this.assessments[j]['data'] });
       }
     }
   }
@@ -61,7 +61,7 @@ getAssessment(name){
   oloop(ques) {
     for (let j = 0; j < ques.length; j++) {
       if (j % 2 !== 0) {
-        this.assesment.push({ index: ++this.i, assesment: this.assesments[j]['data'] });
+        this.assessment.push({ index: ++this.i, assessment: this.assessments[j]['data'] });
       }
     }
   }
@@ -69,12 +69,12 @@ getAssessment(name){
   oeloop(ques) {
     for (let j = 0; j < ques.length; j++) {
       if ((j % 3 === 0)) {
-        this.assesment.push({ index: ++this.i, assesment: this.assesments[j]['data'] });
+        this.assessment.push({ index: ++this.i, assessment: this.assessments[j]['data'] });
       }
     }
     for (let j = 0; j < ques.length; j++) {
       if ((j % 3 !== 0)) {
-        this.assesment.push({ index: ++this.i, assesment: this.assesments[j]['data'] });
+        this.assessment.push({ index: ++this.i, assessment: this.assessments[j]['data'] });
       }
     }
   }
