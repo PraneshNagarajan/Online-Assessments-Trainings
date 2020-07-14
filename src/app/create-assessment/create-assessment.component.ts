@@ -16,26 +16,26 @@ media: Subscription;
   top;
   size: number;
   bottom: string;
-  userList = [];
+  listSize;
   options = [];
   loggedUser;
   subscribe: Subscription;
   options1= [];
+  assessmentName: any;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
+    let i = 1;
     if(localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
-    this.subscribe = this.db.list('/UserList').snapshotChanges().subscribe( options => {
-      options.map( user => {
-        this.userList.push(user.payload.val());
-      })
-      this.ngOnDestroy();
-    });
-  
-
+    this.db.list('/AssessmentList').snapshotChanges().subscribe( options => {
+      options.map( user => { 
+       ++i;
+      });
+      this.Submit.get('assessment').setValue("Assessment"+i);
+     });
   }
 
   ngOnInit() {
@@ -64,10 +64,10 @@ media: Subscription;
 }
 
 Submit = new FormGroup({
-  assessment: new FormControl("", Validators.required),
+  assessment: new FormControl({ value: "", disabled:true}),
   question : new FormControl("", Validators.required),
   ans: new FormControl("", Validators.required),
-  option : new FormControl()
+  option : new FormControl("", Validators.required)
 });
 
 onSubmit() {
@@ -86,6 +86,7 @@ onSubmit() {
 
 
 onAppend(input) {
+
 let index = this.options.findIndex(option => option  === input);
 if(index < 0) {
   this.options.push(input);
@@ -93,7 +94,7 @@ if(index < 0) {
 }  else {
   alert("Duplicate Entry");
 }
-this.Submit.get('option').reset();
+this.Submit.get('option').reset(" ");
 }
 
 onSave() {

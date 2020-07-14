@@ -65,11 +65,11 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.assessmentlist.push(assessment.payload.val());
         this.ngOnDestroy();
         this.assessmentlist.map(list => {
+          if(list['status'] === "Unstarted") {
           if (!this.isScheduled) {
             let users:any[] = [list['scheduleded_info']['users']];
             users.map( user => {
               ++j;
-             console.log(user[j]['id']);
               if (user[j]['id'] === this.loggedUser) {
                 if (user[j]['status'] !== "Unstarted") {
                   this.tableID = assessment.key;
@@ -96,27 +96,19 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           this.duration = list['scheduleded_info']['duration'] - seconds;
                           this.timer = this.duration;
                           this.isLate = true;
-                          this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
-                          
+                          this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']); 
                           this.dbsize = this.assessmentDatas.length;
                           this.dbLength = Array(this.dbsize); 
-                          //console.log("Array : ", this.dbLength);
-                          //console.log("dbSize :", this.dbsize);
-                          console.log(this.assessmentDatas);
-                          this.assessmentDatas.map( Data => console.log("DATA:", Data));
-                         console.log("options:  ", this.options);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();
                           }
-                        }
-                        else {
+                        } else {
                           this.msg = "Assessment already started...."
                           this.isAvailable = true;
                           clearInterval(interval);
                         }
-                      }
-                      else {
+                      } else {
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
@@ -125,9 +117,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           });
                           this.dbsize = this.assessmentDatas.length;
                           this.dbLength = Array(this.dbsize); 
-                          console.log("Array : ", this.dbLength);
-                          console.log("dbSize :", this.dbsize);
-                          console.log(this.assessmentDatas);
                           this.timer1 = list['scheduleded_info']['duration'];
                           this.isAvailable = false;
                           clearInterval(interval);
@@ -144,12 +133,15 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                   }
                 }
                 else {
-                  alert("You don't have permission\n                     (or)                 \nAlready you hvaestarted Assessement.");
+                  alert("Already you have started Assessement.");
                   this.router.navigate(['/homePage']);
                 }
+              } else {
+                this.msg = "No Assessment scheduled for you at this moment."
               }
             });
           }
+        }
         });
       });
     });
@@ -190,9 +182,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     refDB.child('scheduleded_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Finished"
     });
-    refDB.update({
-      status: (!this.isConfirmed) ? "Started" : "Finished"
-    });
     this.isConfirmed = !this.isConfirmed;
   }
   onSubmit() {
@@ -226,6 +215,10 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   handleEvent(value: Event) {
     if (value['action'] === 'done') {
+      let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
+      refDB.update({
+        status: "Completed"
+      });
       this.countdown = true;
       this.onSubmit();
     }

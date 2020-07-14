@@ -7,7 +7,7 @@
         </button>
     </mat-toolbar>
     <div fxLayoutAlign="center">
-        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}" class="card">
+        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <mat-toolbar color="warn">
                 <span>Schedule exam : </span>
             </mat-toolbar>
@@ -26,8 +26,18 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)">
+                    <input matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)" required>
                     <mat-hint>Type & press enter to type next one.</mat-hint>
+                    <mat-error>
+                        Option is Required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field >
+                    <mat-label>Enter the answer</mat-label>
+                    <input matInput formControlName="ans"  required>
+                    <mat-error>
+                        Answer is Required.
+                    </mat-error>
                 </mat-form-field>
             </form>    
             <form  *ngIf="options.length !== 0" [formGroup]="Submit">
@@ -37,18 +47,16 @@
                         <button mat-raised-button color="warn" (click)="onDelete(option)">delete</button>
                     </mat-card>
                 </span>
-                <mat-form-field>
-                    <mat-label>Enter the answer</mat-label>
-                    <input matInput formControlName="ans"  required>
-                    <mat-error>
-                        Answer is Required.
-                    </mat-error>
-                </mat-form-field>
+                <span  fxLayoutAlign="stretch">
+                    
+                </span>
                 <div fxLayoutAlign="center">
                     <button mat-raised-button color="primary"  (click)="onSave()">Save</button>
                 </div>
             </form>
-            <button mat-raised-button color="primary" class="submit" (click)="onSubmit()">Submit</button>
+            <span fxLayoutAlign="center">
+                <button mat-raised-button  color="primary" class="submit" [disabled]="Submit.invalid" (click)="onSubmit()">Submit</button>
+            </span>     
         </mat-card>
     </div>
 </div>
