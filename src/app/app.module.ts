@@ -42,6 +42,7 @@ import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
 import { CreateAssessmentComponent } from './create-assessment/create-assessment.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { FilterPipe } from './filter.pipe';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AdminpageComponent,
     ScheduleExamComponent,
     VideoTutorialComponent,
-    CreateAssessmentComponent
+    CreateAssessmentComponent,
+    FilterPipe
   ],
   imports: [
     MatGridListModule,

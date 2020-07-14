@@ -50,7 +50,9 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   timer1: any;
   bottom: string;
   col: number;
-
+  dbLength: any[];
+  Loop = 0;
+  options = [];
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     let j = -1;
     if (localStorage.getItem('DomainAdmin')) {
@@ -95,7 +97,14 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           this.timer = this.duration;
                           this.isLate = true;
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
+                          
+                          this.dbsize = this.assessmentDatas.length;
+                          this.dbLength = Array(this.dbsize); 
+                          //console.log("Array : ", this.dbLength);
+                          //console.log("dbSize :", this.dbsize);
                           console.log(this.assessmentDatas);
+                          this.assessmentDatas.map( Data => console.log("DATA:", Data));
+                         console.log("options:  ", this.options);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();
@@ -111,6 +120,13 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
                           this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
+                          this.assessmentDatas.map(data => {
+                            this.options.push(data['options']);
+                          });
+                          this.dbsize = this.assessmentDatas.length;
+                          this.dbLength = Array(this.dbsize); 
+                          console.log("Array : ", this.dbLength);
+                          console.log("dbSize :", this.dbsize);
                           console.log(this.assessmentDatas);
                           this.timer1 = list['scheduleded_info']['duration'];
                           this.isAvailable = false;
@@ -165,10 +181,9 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       }
   });
   }
-  onDisplay(value) {
-    console.log(value);
-    this.color = value;
-  }
+   onNext() {
+     this.Loop = ++this.Loop;
+   }
 
   onUpdateStatus() {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
@@ -214,13 +229,13 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   }
 
   onSave(Uqa, Uans) {
-    this.dbsize = this.assessmentDatas.length;
     let index = this.userAnswered.findIndex(x => x.qa === Uqa);
     if (index > -1) {
       this.userAnswered[index]['ans'] = Uans;
     } else {
       this.userAnswered.push({ qa: Uqa, ans: Uans });
     }
+    this.Loop = ++this.Loop;
   }
 
   onConfirm() {

@@ -80,7 +80,6 @@ onSubmit() {
       name: Stype
     }
   });
-  //this.options.push({name: Stype});
   this.db.list("/AssessmentsData/"+Stype).push(this.options);
   alert(Stype+" has been uploaded sucessfully.");
 }
