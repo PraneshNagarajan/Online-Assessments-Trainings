@@ -148,7 +148,7 @@ export class ScheduleExamComponent implements OnInit {
       }
     });
     this.db.list("/AssessmentUserStatusTracker").push({
-      assessment_Id: Sdate + "_" + Stime + "_" + Sduration + "_" + Stype,
+      assessment_id: Sdate + "_" + Stime + "_" + Sduration + "_" + Stype,
       status: 'Unstarted',
       scheduleded_info: {
         name: Stype,
