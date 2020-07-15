@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DataService } from '../data.service';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as moment from 'moment';
@@ -19,25 +19,25 @@ export class ScheduleExamComponent implements OnInit {
   bottom: string;
   userList = [];
   assessmentList = [];
+  enagagedUsers = "";
   users = []
   loggedUser;
   assessmentSchduledData = [];
   users1 = [];
+  confirmed: boolean = true;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
-
-    console.log("convert", moment.duration("1500", "seconds").format());
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
-     this.db.list('/UserList').snapshotChanges().subscribe(users => {
+    this.db.list('/UserList').snapshotChanges().subscribe(users => {
       users.map(user => {
         this.userList.push(user.payload.val());
       });
     });
-     this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
+    this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
       assessments.map(assessment => {
         this.assessmentList.push(assessment.payload.val());
       });
@@ -46,7 +46,7 @@ export class ScheduleExamComponent implements OnInit {
       data.map(assessmentData => {
         this.assessmentSchduledData.push(assessmentData.payload.val());
       });
-    })
+    }, error => console.log(error));
   }
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class ScheduleExamComponent implements OnInit {
     date: new FormControl("", Validators.required),
     time: new FormControl("", Validators.required),
     duration: new FormControl("", Validators.required),
-    users: new FormArray([])
+    users: new FormControl("", Validators.required)
   });
 
   onSchedule() {
@@ -88,49 +88,50 @@ export class ScheduleExamComponent implements OnInit {
     let Stype = this.schedule.get('assessment').value;
     let Stime = this.schedule.get('time').value;
     let Sduration = this.schedule.get('duration').value * 60;
-    this.assessmentSchduledData.map(data => {
-      let Users: any[] = data['scheduleded_info']['users'];
-      let date = (data.assessment_id as string).split('_')[0];
-      let time = (data.assessment_id as string).split('_')[1];
-      let duration = Number((data.assessment_id as string).split('_')[2]);
-      if (data.status === "Unstarted") {
-        let addTime;
-        let subTime;
-        if (Number(duration) < 3600) {
-          addTime = moment(time, "HH:mm:ss").add("00:" + moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
-        } else {
-          addTime = moment(time, "HH:mm:ss").add(moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
-        }
-        if (Sduration < 3600) {
-          subTime = moment(time, "HH:mm:ss").subtract("00:" + moment.duration(Sduration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
-        } else {
-          subTime = moment(time, "HH:mm:ss").subtract(moment.duration(Sduration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
-        }
-        let name = (data.assessment_id as string).split('_')[3];
-        Users.map(user => {
-          console.log("USERSD :", user['id']);
-          this.users.map(user1 => {
-            console.log(user1['id']);
-            if (user['id'] === user1['id']) {
-              if ((date === Sdate)) {
-                if (!moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss"))) {
-                  this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-                  alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
-                } else {
-                  alert("Already " + user['id'] + " has been engagged " + Stype + " between" + subTime + " - " + addTime);
+    if (this.assessmentSchduledData.length > 0) {
+      this.assessmentSchduledData.map(data => {
+        let Users: any[] = data['scheduled_info']['users'];
+        let date = data['scheduled_info']['date'];
+        let time = data['scheduled_info']['time'];
+        let duration = data['scheduled_info']['duration'];
+        if (data.status === "Unstarted") {
+          let addTime;
+          let subTime;
+          if (Number(duration) < 3600) {
+            addTime = moment(time, "HH:mm:ss").add("00:" + moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
+          } else {
+            addTime = moment(time, "HH:mm:ss").add(moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
+          }
+          if (Sduration < 3600) {
+            subTime = moment(time, "HH:mm:ss").subtract("00:" + moment.duration(Sduration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
+          } else {
+            subTime = moment(time, "HH:mm:ss").subtract(moment.duration(Sduration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
+          }
+          let name = (data.assessment_id as string).split('_')[3];
+          Users.map(user => {
+            this.users.map(user1 => {
+              if (user['id'] === user1['id']) {
+                if ((date === Sdate)) {
+                  if (moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss"))) {
+                    this.confirmed = false;
+                    this.enagagedUsers = this.enagagedUsers + user["id"] + " ";
+                  }
                 }
-              } else {
-                this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-                alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
               }
-            } else {
-              this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-              alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
-            }
+            });
           });
-        });
-      }
-    });
+          if (this.confirmed) {
+            this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+            alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+          } else {
+            alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between" + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users");
+          }
+        }
+      });
+    } else {
+      this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+    }
   }
 
   onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
@@ -150,7 +151,7 @@ export class ScheduleExamComponent implements OnInit {
     this.db.list("/AssessmentUserStatusTracker").push({
       assessment_id: Sdate + "_" + Stime + "_" + Sduration + "_" + Stype,
       status: 'Unstarted',
-      scheduleded_info: {
+      scheduled_info: {
         name: Stype,
         date: Sdate,
         time: Stime,

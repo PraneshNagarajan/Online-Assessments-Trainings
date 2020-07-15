@@ -31,7 +31,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   isLate: boolean;
   isAvailable: boolean;
   assessmentDatas = [];
-  device;
   top;
   loggedUser;
   childID = -1;
@@ -46,7 +45,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   bottom: string;
   col: number;
   Loop = 0;
-  Loop1 = -1;
   next: boolean;
   back: boolean;
 
@@ -64,19 +62,19 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.assessmentlist.map(list => {
           if (list['status'] === "Unstarted") {
             if (!this.isScheduled) {
-              let users: any[] = [list['scheduleded_info']['users']];
+              let users: any[] = [list['scheduled_info']['users']];
               users.map(user => {
                 ++j;
                 if (user[j]['id'] === this.loggedUser) {
                   if (user[j]['status'] === "Unstarted") {
                     this.tableID = assessment.key;
                     this.childID = j;
-                    this.Sname = list['scheduleded_info']['name'];
-                    this.Sdate = (list['scheduleded_info']['date'] as string);
+                    this.Sname = list['scheduled_info']['name'];
+                    this.Sdate = (list['scheduled_info']['date'] as string);
                     this.isScheduled = true;
                     let Cdate = moment(this.time).format("MM/DD/YYYY");
                     let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                    this.Stime = list['scheduleded_info']['time'];
+                    this.Stime = list['scheduled_info']['time'];
                     if (Cdate === this.Sdate) {
                       let interval = setInterval(() => {
                         this.time = new Date();
@@ -90,11 +88,10 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                           if (Number(SchTime.split(':')[1]) <= 10) {
                             let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
-                            this.duration = list['scheduleded_info']['duration'] - seconds;
+                            this.duration = list['scheduled_info']['duration'] - seconds;
                             this.timer = this.duration;
                             this.isLate = true;
-                            this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
-                            this.dbsize = this.assessmentDatas.length;
+                            this.assessmentDatas = this.service.getAssessment(list['scheduled_info']['name']);
                             clearInterval(interval);
                             if (confirm("Please Click 'OK' button to start Assessment.")) {
                               this.onUpdateStatus();
@@ -107,9 +104,8 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                         } else {
                           let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                           if (Number(SchTime === "00:00:00")) {
-                            this.assessmentDatas = this.service.getAssessment(list['scheduleded_info']['name']);
-                            this.dbsize = this.assessmentDatas.length;
-                            this.timer1 = list['scheduleded_info']['duration'];
+                            this.assessmentDatas = this.service.getAssessment(list['scheduled_info']['name']);
+                            this.timer1 = list['scheduled_info']['duration'];
                             this.isAvailable = false;
                             clearInterval(interval);
                             if (confirm("Please Click 'OK' button to start Assessment.")) {
@@ -173,7 +169,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.color = data.ans;
       }
     });
-    if (this.Loop === this.assessmentDatas.length - 1) {
+    if (this.Loop === this.dbsize - 1) {
       this.next = false;
     } else {
       this.next = true;
@@ -188,7 +184,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.color = data.ans;
       }
     });
-    if (this.Loop1 > 1) {
+    if (this.Loop > 0) {
       this.back = true;
     } else {
       this.back = false;
@@ -198,7 +194,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   onUpdateStatus() {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
-    refDB.child('scheduleded_info').child('users').child(String(this.childID)).update({
+    refDB.child('scheduled_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Finished"
     });
     this.isConfirmed = !this.isConfirmed;
@@ -231,12 +227,29 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       }
     });
     this.onUpdateStatus();
+    let statusUser = [];
+    let statusFlag = true;
+    this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe(datas => {
+      datas.map(data => {
+        statusUser = data['scheduled_info']['users'];
+        statusUser.map(user => {
+          if (status === "started" || status === "Unstarted") {
+            statusFlag = false;
+          }
+        });
+        if (statusFlag) {
+          this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID).update({
+            status: "Completed"
+          });
+        }
+      });
+    });
   }
 
   handleEvent(value: Event) {
     if (value['action'] === 'done') {
-      let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
-      refDB.update({
+      console.log("done");
+      this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID).update({
         status: "Completed"
       });
       this.countdown = true;
@@ -245,15 +258,17 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   }
 
   onSave(Uqa: any[], Uans) {
+    this.dbsize = this.assessmentDatas.length;
+    console.log("dbSize :", this.dbsize);
     this.color = Uans;
     let QA = Uqa['assessment']['qa']
     let index = this.userAnswered.findIndex(x => x.qa === QA);
     if (index > -1) {
       this.userAnswered[index]['ans'] = Uans;
     } else {
-      this.userAnswered.push({ index: ++this.Loop1, qa: QA, ans: Uans });
+      this.userAnswered.push({ index: this.Loop, qa: QA, ans: Uans });
     }
-    if (this.Loop < this.assessmentDatas.length - 1) {
+    if (this.Loop < this.dbsize - 1) {
       this.next = true;
     }
   }

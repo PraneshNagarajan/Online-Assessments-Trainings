@@ -46,14 +46,14 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Select the users:</mat-label>
-                    <mat-select  multiple required>
+                    <mat-select  multiple required formControlName="users">
                         <mat-option *ngFor="let user of userList"  (click)="onAppend(user.id)">{{user.id}}</mat-option>
                     </mat-select>
                     <mat-error>
                         Users is Required.
                     </mat-error>
                 </mat-form-field>
-                <button mat-raised-button color="primary" (click)="onSchedule()" [disabled]="schedule.invalid">Schedule</button>
+                <button mat-raised-button color="primary" (click)="onSchedule()"  [disabled]="schedule.invalid">Schedule</button>
             </form>
         </mat-card>
     </div>
