@@ -5,7 +5,15 @@
 <mat-toolbar color=primary *ngIf="!deviceXs">
 <span> AdminPage</span>
 <span class="example-spacer1"></span>
-<span routerLink="/scheduleAssessment">Assessment</span>
+<span >
+    <mat-form-field>
+        <mat-label>Assessment</mat-label>
+        <mat-select>
+            <mat-option routerLink="/scheduleAssessment">Schedule Assessment</mat-option>
+            <mat-option routerLink="/addAssessment">Add Assessment</mat-option>
+        </mat-select>
+    </mat-form-field>
+</span>
 <span class="example-spacer1"></span>
 <span routerLink="/video">Video</span>
 <span class="example-spacer"></span>

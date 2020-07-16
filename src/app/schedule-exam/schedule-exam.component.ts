@@ -18,6 +18,7 @@ export class ScheduleExamComponent implements OnInit {
   size: number;
   bottom: string;
   userList = [];
+  isAvailable: boolean;
   assessmentList = [];
   enagagedUsers = "";
   users = []
@@ -95,6 +96,7 @@ export class ScheduleExamComponent implements OnInit {
         let time = data['scheduled_info']['time'];
         let duration = data['scheduled_info']['duration'];
         if (data.status === "Unstarted") {
+          this.isAvailable = true;
           let addTime;
           let subTime;
           if (Number(duration) < 3600) {
@@ -125,9 +127,14 @@ export class ScheduleExamComponent implements OnInit {
             alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
           } else {
             alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between" + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users");
+            this.enagagedUsers = "";
           }
         }
       });
+      if( !this.isAvailable) {
+      this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+      }
     } else {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
       alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
@@ -145,7 +152,7 @@ export class ScheduleExamComponent implements OnInit {
         date: Sdate,
         time: Stime,
         duration: Sduration,
-        users: this.users1
+        users: this.users
       }
     });
     this.db.list("/AssessmentUserStatusTracker").push({
@@ -165,9 +172,10 @@ export class ScheduleExamComponent implements OnInit {
     let index = this.users.findIndex(fUser => fUser['id'] as string === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
-      this.users1.push({ id: input });
+      console.log(this.users);
     } else {
       this.users.splice(index, 1);
+      console.log(this.users);
     }
   }
 

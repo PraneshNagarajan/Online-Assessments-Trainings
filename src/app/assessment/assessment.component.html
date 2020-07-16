@@ -3,7 +3,7 @@
 </div>
 
 <div>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" *ngIf="assessmentDatas.length !== 0">
         <span> {{Sname}}</span>
         <span class="example-spacer"></span>
         <button mat-flat-button color="primary">
@@ -15,7 +15,7 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <div fxLayoutAlign="center">
+    <div fxLayoutAlign="center"  *ngIf="assessmentDatas.length !== 0">
         <mat-card fxFlex="80" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
                 <div fxLayout="row" fxLayoutAlign="space-between">

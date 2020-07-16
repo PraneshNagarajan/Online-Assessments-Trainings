@@ -13,43 +13,40 @@ import * as moment from 'moment';
   styleUrls: ['./assessment.component.css']
 })
 export class AssessmentComponent implements OnInit, OnDestroy {
-  color;
-  Arole;
-  crt;
-  wrng;
+  Seloption;
   userName;
   duration;
-  assessmentlist = [];
-  userAnswered = [];
   dbsize;
   msg;
   timer;
-  isConfirmed: boolean;
-  isScheduled: boolean;
-  countdown: boolean;
-  isSpinner: boolean;
-  isLate: boolean;
-  isAvailable: boolean;
-  assessmentDatas = [];
+  timer1;
   top;
-  loggedUser;
+  bottom;
+  col;
+  Loop = 0;
   childID = -1;
   tableID;
+  loggedUser;
   Sname: string;
   Sdate: string;
   Stime: string;
   time = new Date();
-  media: Subscription;
   DB: Subscription;
-  timer1: any;
-  bottom: string;
-  col: number;
-  Loop = 0;
+  media: Subscription;
+  isAvailable: boolean;
+  isConfirmed: boolean;
+  isScheduled: boolean;
+  countdown: boolean;
+  isLate: boolean;
   next: boolean;
   back: boolean;
+  assessmentlist = [];
+  assessmentDatas = [];
+  userAnswered = [];
+
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    let j = -1;
+    let j = 0;
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
@@ -62,11 +59,12 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.assessmentlist.map(list => {
           if (list['status'] === "Unstarted") {
             if (!this.isScheduled) {
-              let users: any[] = [list['scheduled_info']['users']];
+              let users: any[] = list['scheduled_info']['users'];
               users.map(user => {
                 ++j;
-                if (user[j]['id'] === this.loggedUser) {
-                  if (user[j]['status'] === "Unstarted") {
+                if (user['id'] === this.loggedUser) {
+                  this.isAvailable = true;
+                  if (user['status'] === "Unstarted") {
                     this.tableID = assessment.key;
                     this.childID = j;
                     this.Sname = list['scheduled_info']['name'];
@@ -125,7 +123,10 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                     this.router.navigate(['/homePage']);
                   }
                 } else {
-                  this.msg = "No Assessment scheduled for you at this moment."
+                  if (users.length === j && !this.isAvailable) {
+                    this.isAvailable = true;
+                    this.msg = "No Assessment scheduled for you at this moment."
+                  }
                 }
               });
             }
@@ -166,7 +167,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     ++this.Loop;
     this.userAnswered.map(data => {
       if (data.index === this.Loop) {
-        this.color = data.ans;
+        this.Seloption = data.ans;
       }
     });
     if (this.Loop === this.dbsize - 1) {
@@ -181,7 +182,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     --this.Loop;
     this.userAnswered.map(data => {
       if (data.index === this.Loop) {
-        this.color = data.ans;
+        this.Seloption = data.ans;
       }
     });
     if (this.Loop > 0) {
@@ -209,12 +210,10 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         }
       });
     });
-    this.crt = i;
-    this.wrng = this.dbsize - i;
     if (this.countdown) {
-      alert("OOPS ! Time is Over\nCorrect answers: " + i + '\n' + 'Incorrect answers :' + this.wrng);
+      alert("OOPS ! Time is Over\nCorrect answers: " + i + '\n' + 'Incorrect answers :' + (this.dbsize - i));
     } else {
-      alert("Correct answers: " + i + '\n' + 'Incorrect answers :' + this.wrng);
+      alert("Correct answers: " + i + '\n' + 'Incorrect answers :' + (this.dbsize - i));
     }
     localStorage.removeItem('DomainUser');
     this.router.navigate(['/homePage']);
@@ -223,7 +222,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       assessent_id: this.Sdate + "_" + this.Stime + "_" + this.Sname,
       result: {
         date: moment().format("MM/DD/YYYY"),
-        mark: this.crt + '/' + this.dbsize
+        mark: i + '/' + this.dbsize
       }
     });
     this.onUpdateStatus();
@@ -248,7 +247,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   handleEvent(value: Event) {
     if (value['action'] === 'done') {
-      console.log("done");
       this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID).update({
         status: "Completed"
       });
@@ -259,8 +257,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   onSave(Uqa: any[], Uans) {
     this.dbsize = this.assessmentDatas.length;
-    console.log("dbSize :", this.dbsize);
-    this.color = Uans;
+    this.Seloption = Uans;
     let QA = Uqa['assessment']['qa']
     let index = this.userAnswered.findIndex(x => x.qa === QA);
     if (index > -1) {
