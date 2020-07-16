@@ -36,7 +36,7 @@
                             <mat-label fxLayoutAlign="space-evenly">{{data.index}}){{data.assessment.qa}}</mat-label>
                             <mat-grid-list [cols]="col" rowHeight="100px">
                                 <mat-grid-tile *ngFor="let option of data.assessment.options; let j = index;">
-                                   <button mat-raised-button  [color]="(color === option)? 'accent':''" (click)="onSave(data,option)" >{{option}}</button>
+                                   <button mat-raised-button  [color]="(SelOption === option)? 'accent':''" (click)="onSave(data,option)" >{{option}}</button>
                                 </mat-grid-tile>
                             </mat-grid-list>                        
                     </div>

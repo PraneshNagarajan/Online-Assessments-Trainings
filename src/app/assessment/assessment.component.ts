@@ -13,7 +13,7 @@ import * as moment from 'moment';
   styleUrls: ['./assessment.component.css']
 })
 export class AssessmentComponent implements OnInit, OnDestroy {
-  Seloption;
+  SelOption;
   userName;
   duration;
   dbsize;
@@ -46,7 +46,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    let j = 0;
+    let i = 0, k=3;
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
@@ -54,43 +54,64 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     }
     this.DB = this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe((data) => {
       data.map(assessment => {
-        this.assessmentlist.push(assessment.payload.val());
-        this.ngOnDestroy();
+        this.assessmentlist.push({key: assessment.key, assessment: assessment.payload.val()});
+        console.log("1!");
+      });  
+      
         this.assessmentlist.map(list => {
-          if (list['status'] === "Unstarted") {
+          this.ngOnDestroy();
+          ++i;
+          console.log("i :", i);
+         // console.log("list :", list);
+          //console.log("KEY :", list.key);
+          let users: any[] = list['assessment']['scheduled_info']['users'];
+          //console.log("users :", users)
+          //console.log("ASS_Status", list['assessment']['status']);
+          if (list['assessment']['status'] === "Unstarted") {
+             let j = 0
+             console.log("j :", j);
+              this.isAvailable = true;
             if (!this.isScheduled) {
-              let users: any[] = list['scheduled_info']['users'];
               users.map(user => {
-                ++j;
+              ++j;
+               // this.isAvailable = false;
                 if (user['id'] === this.loggedUser) {
-                  this.isAvailable = true;
+                  console.log("user_id :", user['id']);
+                    this.isAvailable = true;
+                    console.log(this.isAvailable);
                   if (user['status'] === "Unstarted") {
-                    this.tableID = assessment.key;
-                    this.childID = j;
-                    this.Sname = list['scheduled_info']['name'];
-                    this.Sdate = (list['scheduled_info']['date'] as string);
+                    console.log("user_status :",user['status']);
+                    this.tableID = list.key;
+                    this.childID = j-1;
+                    this.Sname = list['assessment']['scheduled_info']['name'];
+                    this.Sdate = (list['assessment']['scheduled_info']['date'] as string);
                     this.isScheduled = true;
                     let Cdate = moment(this.time).format("MM/DD/YYYY");
                     let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                    this.Stime = list['scheduled_info']['time'];
+                    this.Stime = list['assessment']['scheduled_info']['time'];
+                    console.log("S_time :",list['assessment']['scheduled_info']['time']);
                     if (Cdate === this.Sdate) {
+                      console.log("test3 :", Cdate);
                       let interval = setInterval(() => {
                         this.time = new Date();
                         Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
                         let Stime1 = this.Sdate + " " + this.Stime;
-                        let Shour = Number(this.Stime.split(':')[0]);
-                        let Smin = Number(this.Stime.split(':')[1]);
+                        let Shour = Number(moment(this.Stime, "HH:mm:ss").format("HH"));;
+                        let Smin = Number(moment(this.Stime, "HH:mm:ss").format("mm"));
                         let Chour = Number(moment(this.time).format('HH'));
                         let Cmin = Number(moment(this.time).format('mm'));
                         if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
+                          console.log("test5, date matched, check minutes");
                           let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                           if (Number(SchTime.split(':')[1]) <= 10) {
+                            console.log("test6");
                             let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
-                            this.duration = list['scheduled_info']['duration'] - seconds;
+                            this.duration = list['assessment']['scheduled_info']['duration'] - seconds;
                             this.timer = this.duration;
                             this.isLate = true;
-                            this.assessmentDatas = this.service.getAssessment(list['scheduled_info']['name']);
+                            this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
                             clearInterval(interval);
+                            console.log(this.assessmentDatas);
                             if (confirm("Please Click 'OK' button to start Assessment.")) {
                               this.onUpdateStatus();
                             }
@@ -100,10 +121,12 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                             clearInterval(interval);
                           }
                         } else {
+                          console.log("test5.1");
                           let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                           if (Number(SchTime === "00:00:00")) {
-                            this.assessmentDatas = this.service.getAssessment(list['scheduled_info']['name']);
-                            this.timer1 = list['scheduled_info']['duration'];
+                            console.log("test5.2");
+                            this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
+                            this.timer1 = list['assessment']['scheduled_info']['duration'];
                             this.isAvailable = false;
                             clearInterval(interval);
                             if (confirm("Please Click 'OK' button to start Assessment.")) {
@@ -119,21 +142,33 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                     }
                   }
                   else {
+                    console.log("test2.1");
                     alert("Already you have started Assessement.");
                     this.router.navigate(['/homePage']);
                   }
                 } else {
+                  console.log("test1.1");
+                  console.log("user length :", users.length);
+                  console.log("j :",j);
+                  console.log(!this.isAvailable);
                   if (users.length === j && !this.isAvailable) {
+                    console.log("test1.2");
                     this.isAvailable = true;
                     this.msg = "No Assessment scheduled for you at this moment."
                   }
                 }
               });
             }
+          } else {
+            //console.log("test3.1");
+            if(list.length === i  && !this.isAvailable) {
+              this.isAvailable = true;
+              console.log("test3.2");
+              this.msg = "No Assessment scheduled for you at this moment."
+            }
           }
         });
       });
-    });
     this.userName = localStorage.getItem('username');
   }
 
@@ -161,20 +196,28 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.bottom = "100%"
       }
     });
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
+
+ handleVisibilityChange() {
+   let i = 0;
+   if(document.hidden ) {
+     if( i === 0) {
+     alert("If you leave this page again. Assessment will exit automatically");
+   } else {
+     this.onSubmit();
+   } 
+  }
+ }
 
   onNext() {
     ++this.Loop;
     this.userAnswered.map(data => {
       if (data.index === this.Loop) {
-        this.Seloption = data.ans;
+        this.SelOption = data.ans;
       }
     });
-    if (this.Loop === this.dbsize - 1) {
       this.next = false;
-    } else {
-      this.next = true;
-    }
     this.back = true;
   }
 
@@ -182,7 +225,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     --this.Loop;
     this.userAnswered.map(data => {
       if (data.index === this.Loop) {
-        this.Seloption = data.ans;
+        this.SelOption = data.ans;
       }
     });
     if (this.Loop > 0) {
@@ -257,7 +300,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   onSave(Uqa: any[], Uans) {
     this.dbsize = this.assessmentDatas.length;
-    this.Seloption = Uans;
+    this.SelOption = Uans;
     let QA = Uqa['assessment']['qa']
     let index = this.userAnswered.findIndex(x => x.qa === QA);
     if (index > -1) {
