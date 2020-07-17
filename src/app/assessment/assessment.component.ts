@@ -17,12 +17,13 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   userName;
   duration;
   dbsize;
-  msg;
+  msg = "";
   timer;
   timer1;
   top;
   bottom;
   col;
+  k = 0;
   Loop = 0;
   childID = -1;
   tableID;
@@ -46,129 +47,121 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    let i = 0, k=3;
+    let i = 0;
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (this.k <= 0 && this.assessmentDatas.length > 0) {
+          alert("If you leave this page again. Assessment will exit automatically.");
+          ++this.k;
+        } else if (this.k > 0 && this.assessmentDatas.length > 0) {
+          this.onSubmit();
+        }
+      }
+    }, false);
     this.DB = this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe((data) => {
       data.map(assessment => {
-        this.assessmentlist.push({key: assessment.key, assessment: assessment.payload.val()});
-        console.log("1!");
-      });  
-      
-        this.assessmentlist.map(list => {
-          this.ngOnDestroy();
-          ++i;
-          console.log("i :", i);
-         // console.log("list :", list);
-          //console.log("KEY :", list.key);
-          let users: any[] = list['assessment']['scheduled_info']['users'];
-          //console.log("users :", users)
-          //console.log("ASS_Status", list['assessment']['status']);
-          if (list['assessment']['status'] === "Unstarted") {
-             let j = 0
-             console.log("j :", j);
-              this.isAvailable = true;
+        this.assessmentlist.push({ key: assessment.key, assessment: assessment.payload.val() });
+      });
+      this.assessmentlist.map(list => {
+        this.ngOnDestroy();
+        ++i;
+        let users: any[] = list['assessment']['scheduled_info']['users'];
+        if (list['assessment']['status'] === "Unstarted") {
+          let j = 0
+          this.isAvailable = true;
+          users.map(user => {
             if (!this.isScheduled) {
-              users.map(user => {
               ++j;
-               // this.isAvailable = false;
+              this.Sname = list['assessment']['scheduled_info']['name'];
+              this.Sdate = list['assessment']['scheduled_info']['date'];
+              let Cdate = moment(this.time).format("MM/DD/YYYY");
+              this.Stime = list['assessment']['scheduled_info']['time'];
+              if (Cdate === this.Sdate) {
                 if (user['id'] === this.loggedUser) {
-                  console.log("user_id :", user['id']);
-                    this.isAvailable = true;
-                    console.log(this.isAvailable);
+                  this.isAvailable = true;
                   if (user['status'] === "Unstarted") {
-                    console.log("user_status :",user['status']);
                     this.tableID = list.key;
-                    this.childID = j-1;
-                    this.Sname = list['assessment']['scheduled_info']['name'];
-                    this.Sdate = (list['assessment']['scheduled_info']['date'] as string);
-                    this.isScheduled = true;
-                    let Cdate = moment(this.time).format("MM/DD/YYYY");
-                    let Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                    this.Stime = list['assessment']['scheduled_info']['time'];
-                    console.log("S_time :",list['assessment']['scheduled_info']['time']);
-                    if (Cdate === this.Sdate) {
-                      console.log("test3 :", Cdate);
-                      let interval = setInterval(() => {
-                        this.time = new Date();
-                        Ctime = moment(this.time).format("MM/DD/YYYY HH:mm:ss");
-                        let Stime1 = this.Sdate + " " + this.Stime;
-                        let Shour = Number(moment(this.Stime, "HH:mm:ss").format("HH"));;
-                        let Smin = Number(moment(this.Stime, "HH:mm:ss").format("mm"));
-                        let Chour = Number(moment(this.time).format('HH'));
-                        let Cmin = Number(moment(this.time).format('mm'));
-                        if ((Chour > Shour) || ((Chour === Shour) && (Cmin > Smin))) {
-                          console.log("test5, date matched, check minutes");
-                          let SchTime = moment.utc(moment(Ctime, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                          if (Number(SchTime.split(':')[1]) <= 10) {
-                            console.log("test6");
-                            let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
-                            this.duration = list['assessment']['scheduled_info']['duration'] - seconds;
-                            this.timer = this.duration;
-                            this.isLate = true;
-                            this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
-                            clearInterval(interval);
-                            console.log(this.assessmentDatas);
-                            if (confirm("Please Click 'OK' button to start Assessment.")) {
-                              this.onUpdateStatus();
-                            }
-                          } else {
-                            this.msg = "Assessment already started...."
-                            this.isAvailable = true;
-                            clearInterval(interval);
+                    this.childID = j - 1;;
+                    setInterval(() => this.time = new Date());
+                    let interval = setInterval(() => {
+                      let Stime1 = this.Sdate + " " + this.Stime;
+                      let Shour = Number(moment(this.Stime, "HH:mm:ss").format("HH"));;
+                      let Smin = Number(moment(this.Stime, "HH:mm:ss").format("mm"));
+                      let Chour = Number(moment(this.time).format('HH'));
+                      let Cmin = Number(moment(this.time).format('mm'));
+                      if ((Chour > Shour) || ((Chour === Shour) && (Cmin >= Smin))) {
+                        let SchTime = moment.utc(moment(this.time, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+                        if (Number(SchTime.split(':')[1]) <= 10) {
+                          this.isAvailable = false;
+                          let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
+                          this.duration = list['assessment']['scheduled_info']['duration'] - seconds;
+                          this.timer = this.duration;
+                          this.isLate = true;
+                          this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
+                          clearInterval(interval);
+                          if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.onUpdateStatus();
                           }
                         } else {
-                          console.log("test5.1");
-                          let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(Ctime, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                          if (Number(SchTime === "00:00:00")) {
-                            console.log("test5.2");
-                            this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
-                            this.timer1 = list['assessment']['scheduled_info']['duration'];
-                            this.isAvailable = false;
-                            clearInterval(interval);
-                            if (confirm("Please Click 'OK' button to start Assessment.")) {
-                              this.onUpdateStatus();
-                            }
-                          }
-                          else {
-                            this.msg = "Assessment will start on " + SchTime;
-                            this.isAvailable = true;
+                          this.msg = "Assessment already started...."
+                          this.isAvailable = true;
+                          clearInterval(interval);
+                        }
+                      }
+                      else {
+                        let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(this.time, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
+                        if (Number(SchTime === "00:00:00")) {
+                          this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
+                          this.timer1 = list['assessment']['scheduled_info']['duration'];
+                          this.isAvailable = false;
+                          clearInterval(interval);
+                          if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.onUpdateStatus();
                           }
                         }
-                      }, 1000);
+                        else {
+                          this.msg = "Assessment will start on " + SchTime;
+                          this.isAvailable = true;
+                        }
+                      }
+                    }, 1000);
+                  } else {
+                    if (user['status'] === "Started") {
+                      alert("Already you have started Assessement.");
+                      this.router.navigate(['/homePage']);
+                    } else {
+                      this.isAvailable = true;
+                      this.msg = "No Assessment scheduled for you at this moment."
                     }
                   }
-                  else {
-                    console.log("test2.1");
-                    alert("Already you have started Assessement.");
-                    this.router.navigate(['/homePage']);
-                  }
                 } else {
-                  console.log("test1.1");
-                  console.log("user length :", users.length);
-                  console.log("j :",j);
-                  console.log(!this.isAvailable);
                   if (users.length === j && !this.isAvailable) {
-                    console.log("test1.2");
                     this.isAvailable = true;
                     this.msg = "No Assessment scheduled for you at this moment."
                   }
                 }
-              });
+              } else {
+                if (this.assessmentlist.length === i) {
+                  this.isAvailable = true;
+                  this.msg = "No Assessment scheduled for you at this moment."
+                }
+              }
             }
-          } else {
-            //console.log("test3.1");
-            if(list.length === i  && !this.isAvailable) {
-              this.isAvailable = true;
-              console.log("test3.2");
-              this.msg = "No Assessment scheduled for you at this moment."
-            }
+          });
+
+        } else {
+          if (this.assessmentlist.length === i && !this.isAvailable) {
+            this.isAvailable = true;
+            this.msg = "No Assessment scheduled for you at this moment."
           }
-        });
+        }
       });
+    });
     this.userName = localStorage.getItem('username');
   }
 
@@ -196,20 +189,18 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.bottom = "100%"
       }
     });
-    document.addEventListener("visibilitychange", this.handleVisibilityChange);
   }
 
- handleVisibilityChange() {
-   let i = 0;
-   if(document.hidden ) {
-     if( i === 0) {
-     alert("If you leave this page again. Assessment will exit automatically");
-   } else {
-     this.onSubmit();
-   } 
+  handleVisibilityChange(k) {
+    if (document.hidden) {
+      ++k;
+      alert(k);
+    }
   }
- }
 
+  ondispaly() {
+    alert("If you leave this page again. Assessment will exit automatically");
+  }
   onNext() {
     ++this.Loop;
     this.userAnswered.map(data => {
@@ -217,7 +208,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.SelOption = data.ans;
       }
     });
-      this.next = false;
+    this.next = false;
     this.back = true;
   }
 
@@ -273,9 +264,9 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     let statusFlag = true;
     this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe(datas => {
       datas.map(data => {
-        statusUser = data['scheduled_info']['users'];
+        statusUser = data['assessment']['scheduled_info']['users'];
         statusUser.map(user => {
-          if (status === "started" || status === "Unstarted") {
+          if (user.status === "started") {
             statusFlag = false;
           }
         });
@@ -320,6 +311,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       this.onSubmit();
     }
   }
+
   signOut() {
     this.service.logOut();
   }

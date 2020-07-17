@@ -15,7 +15,7 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <div fxLayoutAlign="center"  *ngIf="assessmentDatas.length !== 0">
+    <div fxLayoutAlign="center" *ngIf="assessmentDatas.length !== 0  && !isAvailable">
         <mat-card fxFlex="80" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
                 <div fxLayout="row" fxLayoutAlign="space-between">
@@ -33,12 +33,13 @@
                         </button>
                     </div>
                     <div *ngFor="let data of assessmentDatas | filter:Loop ; let i = index;" fxFlex="100">
-                            <mat-label fxLayoutAlign="space-evenly">{{data.index}}){{data.assessment.qa}}</mat-label>
-                            <mat-grid-list [cols]="col" rowHeight="100px">
-                                <mat-grid-tile *ngFor="let option of data.assessment.options; let j = index;">
-                                   <button mat-raised-button  [color]="(SelOption === option)? 'accent':''" (click)="onSave(data,option)" >{{option}}</button>
-                                </mat-grid-tile>
-                            </mat-grid-list>                        
+                        <mat-label fxLayoutAlign="space-evenly">{{data.index}}){{data.assessment.qa}}</mat-label>
+                        <mat-grid-list [cols]="col" rowHeight="100px">
+                            <mat-grid-tile *ngFor="let option of data.assessment.options; let j = index;">
+                                <button mat-raised-button [color]="(SelOption === option)? 'accent':''"
+                                    (click)="onSave(data,option)">{{option}}</button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
                     </div>
                     <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
                         <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!next" (click)="onNext()">
@@ -46,15 +47,14 @@
                         </button>
                     </div>
                 </div>
-                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center">
+                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center" *ngIf="assessmentDatas.length === userAnswered.length">
                     <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
                 </div>
             </form>
         </mat-card>
     </div>
-
 </div>
-<div *ngIf="isAvailable" fxLayout="column" fxLayoutAlign="space-evenly center">
+<div *ngIf="isAvailable && msg.length !==0" fxLayout="column" fxLayoutAlign="space-evenly center">
     <mat-card fxFlex="30" class="msg">
         <mat-card-content>{{msg}}</mat-card-content>
     </mat-card>

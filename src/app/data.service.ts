@@ -27,7 +27,6 @@ getAssessment(name){
         let oFlag = 0;
         let eFlag = 0;
         let shuffle = moment().format("mm:ss");
-        console.log("shuffle: ", shuffle);
         ques.map(data => {
           this.assessments.push({ data: data.payload.val() });
         });
