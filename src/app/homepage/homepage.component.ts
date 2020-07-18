@@ -18,13 +18,13 @@ export class HomepageComponent implements OnInit {
   style: string;
   userName: string;
   constructor(private router:Router, private mediaObserver: MediaObserver, private service: DataService) {
-    if (localStorage.getItem('DomainUser')) {
+    if (sessionStorage.getItem('DomainUser')) {
       this.user = 'DomainUser';
     }
-    else if(localStorage.getItem('DomainAdmin')) {
+    else if(sessionStorage.getItem('DomainAdmin')) {
       this.user = 'DomainAdmin';
     }
-    this.userName = localStorage.getItem('username');
+    this.userName = sessionStorage.getItem('username');
   }
 
   ngOnInit() {

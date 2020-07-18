@@ -8,7 +8,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 export class RouterGuardService implements CanActivate{
   constructor(private router:Router, private afAuth:AngularFireAuth){}
   canActivate() {
-    if( localStorage.getItem('DomainUser') || localStorage.getItem('DomainAdmin')) {
+    if( sessionStorage.getItem('DomainUser') || sessionStorage.getItem('DomainAdmin')) {
        return true;
     } else {
        this.router.navigate(['']);

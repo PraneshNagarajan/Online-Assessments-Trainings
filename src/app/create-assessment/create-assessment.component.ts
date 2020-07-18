@@ -25,10 +25,10 @@ media: Subscription;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) { 
     let i = 1;
-    if(localStorage.getItem('DomainAdmin')) {
-      this.loggedUser = localStorage.getItem('DomainAdmin');
+    if(sessionStorage.getItem('DomainAdmin')) {
+      this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
-      this.loggedUser = localStorage.getItem('DomainUser')
+      this.loggedUser = sessionStorage.getItem('DomainUser')
     }
    this.subscribe = this.db.list('/AssessmentList').snapshotChanges().subscribe( options => {
       options.map( user => { 
@@ -75,7 +75,7 @@ onSubmit() {
   let Stype = this.Submit.get('assessment').value;
   this.db.list('/AssessmentSubmissionTracker').push({
     add_info : {
-      id: localStorage.getItem('DomainAdmin'),
+      id: sessionStorage.getItem('DomainAdmin'),
       time: Ctime,
       name: Stype
     }

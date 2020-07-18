@@ -1,4 +1,4 @@
-<div class="example-loading-shadow" *ngIf="assessmentDatas.length === 0 && !isAvailable">
+<div class="example-loading-shadow" *ngIf="assessmentDatas.length === 0 && !isAvailable && assessmentKey">
     <mat-spinner></mat-spinner>
 </div>
 
@@ -15,9 +15,22 @@
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <div fxLayoutAlign="center" *ngIf="assessmentDatas.length !== 0  && !isAvailable">
-        <mat-card fxFlex="80" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
-            <form fxLayout="column" *ngIf="assessmentDatas.length !== 0 && !isAvailable && isConfirmed">
+    <div fxLayoutAlign="center" *ngIf="!assessmentKey">
+        <mat-card fxFlex="40" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+            <form fxLayout="column" fxLayoutAlign="stretch" [formGroup]="form">
+                <mat-form-field>
+                    <input formControlName="key" matInput placeholder="Enter the assessment Key: " required #key>
+                    <mat-error>
+                        assessment Key is Required.
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="primary" (click)="lanuchAssessment()" [disabled]="form.invalid">Submit</button>
+            </form>
+        </mat-card>
+    </div>
+    <div fxLayoutAlign="center" *ngIf="assessmentDatas.length !== 0  && !isAvailable  && isConfirmed">
+        <mat-card fxFlex="85" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+            <form fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="space-between">
                     <p><b>Time : </b>{{time | date: 'hh:mm:ss a'}}</p>
                     <span></span>
@@ -47,7 +60,8 @@
                         </button>
                     </div>
                 </div>
-                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center" *ngIf="assessmentDatas.length === userAnswered.length">
+                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center"
+                    *ngIf="assessmentDatas.length === userAnswered.length">
                     <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
                 </div>
             </form>

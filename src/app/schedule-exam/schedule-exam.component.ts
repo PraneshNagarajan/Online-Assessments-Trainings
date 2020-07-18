@@ -28,10 +28,10 @@ export class ScheduleExamComponent implements OnInit {
   confirmed: boolean = true;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
-    if (localStorage.getItem('DomainAdmin')) {
-      this.loggedUser = localStorage.getItem('DomainAdmin');
+    if (sessionStorage.getItem('DomainAdmin')) {
+      this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
-      this.loggedUser = localStorage.getItem('DomainUser')
+      this.loggedUser = sessionStorage.getItem('DomainUser')
     }
     this.db.list('/UserList').snapshotChanges().subscribe(users => {
       users.map(user => {
@@ -47,7 +47,7 @@ export class ScheduleExamComponent implements OnInit {
       data.map(assessmentData => {
         this.assessmentSchduledData.push(assessmentData.payload.val());
       });
-    }, error => console.log(error));
+    }, error => alert(error));
   }
 
   ngOnInit() {
@@ -84,6 +84,7 @@ export class ScheduleExamComponent implements OnInit {
   });
 
   onSchedule() {
+    let i = 0;
     let Ctime = moment().format("MM/DD/YYYY HH:mm:ss");
     let Sdate = moment(this.schedule.get('date').value).format('MM/DD/YYYY');
     let Stype = this.schedule.get('assessment').value;
@@ -91,6 +92,7 @@ export class ScheduleExamComponent implements OnInit {
     let Sduration = this.schedule.get('duration').value * 60;
     if (this.assessmentSchduledData.length > 0) {
       this.assessmentSchduledData.map(data => {
+        ++i;
         let Users: any[] = data['scheduled_info']['users'];
         let date = data['scheduled_info']['date'];
         let time = data['scheduled_info']['time'];
@@ -122,6 +124,7 @@ export class ScheduleExamComponent implements OnInit {
               }
             });
           });
+          if(this.assessmentSchduledData.length  === i) {
           if (this.confirmed) {
             this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
             alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
@@ -130,6 +133,7 @@ export class ScheduleExamComponent implements OnInit {
             this.enagagedUsers = "";
           }
         }
+      }
       });
       if( !this.isAvailable) {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
@@ -144,7 +148,7 @@ export class ScheduleExamComponent implements OnInit {
   onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
     this.db.list('/AssessmentSchedulerTracker').push({
       scheduler_info: {
-        id: localStorage.getItem('DomainAdmin'),
+        id: sessionStorage.getItem('DomainAdmin'),
         time: Ctime
       },
       scheduled_info: {
@@ -172,10 +176,8 @@ export class ScheduleExamComponent implements OnInit {
     let index = this.users.findIndex(fUser => fUser['id'] as string === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
-      console.log(this.users);
     } else {
       this.users.splice(index, 1);
-      console.log(this.users);
     }
   }
 

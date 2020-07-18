@@ -22,29 +22,29 @@ export class DataService {
       });
   }
 
-getAssessment(name){
-      this.db.list('/AssessmentsData/'+name).snapshotChanges().subscribe(ques => {
-        let oFlag = 0;
-        let eFlag = 0;
-        let shuffle = moment().format("mm:ss");
-        ques.map(data => {
-          this.assessments.push({ data: data.payload.val() });
-        });
-        (Number(shuffle.split(':')[0]) % 2 === 0) ? ++eFlag : ++oFlag;
-        (Number(shuffle.split(':')[1]) % 2 === 0) ? ++eFlag : ++oFlag;
-        if (eFlag > oFlag) {
-          this.eloop(ques);
-          this.oloop(ques);
-        }
-        else if (oFlag > eFlag) {
-          this.oloop(ques);
-          this.eloop(ques);
-        } else {
-          this.oeloop(ques);
-        }
+  getAssessment(name) {
+    this.db.list('/AssessmentsData/' + name).snapshotChanges().subscribe(ques => {
+      let oFlag = 0;
+      let eFlag = 0;
+      let shuffle = moment().format("mm:ss");
+      ques.map(data => {
+        this.assessments.push({ data: data.payload.val() });
       });
-      return this.assessment;
-    } 
+      (Number(shuffle.split(':')[0]) % 2 === 0) ? ++eFlag : ++oFlag;
+      (Number(shuffle.split(':')[1]) % 2 === 0) ? ++eFlag : ++oFlag;
+      if (eFlag > oFlag) {
+        this.eloop(ques);
+        this.oloop(ques);
+      }
+      else if (oFlag > eFlag) {
+        this.oloop(ques);
+        this.eloop(ques);
+      } else {
+        this.oeloop(ques);
+      }
+    });
+    return this.assessment;
+  }
 
 
 
