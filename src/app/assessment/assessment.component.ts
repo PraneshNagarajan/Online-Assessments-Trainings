@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Directive } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -12,6 +12,7 @@ import * as moment from 'moment';
   templateUrl: './assessment.component.html',
   styleUrls: ['./assessment.component.css']
 })
+
 export class AssessmentComponent implements OnInit, OnDestroy {
   SelOption;
   userName;
@@ -46,14 +47,14 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   userAnswered = [];
 
 
-  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
+  constructor( private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
     let i = 0, j = 0;
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
-    document.addEventListener("keydown", key => {
+   document.addEventListener("keydown", key => {
       if (key.altKey || key.key === "Tab") {
         if (this.k === 0) {
           alert("If you leave this page again. Assessment will exit automatically.");
@@ -63,7 +64,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         }
       }
     });
-    document.addEventListener("visibilitychange", () => {
+  document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (this.k <= 0 && this.assessmentDatas.length > 0) {
           alert("If you leave this page again. Assessment will exit automatically.");
@@ -78,7 +79,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.assessmentlist.push({ key: assessment.key, assessment: assessment.payload.val() });
       });
       this.assessmentlist.map(list => {
-        this.ngOnDestroy();
         ++i;
         let users: any[] = list['assessment']['scheduled_info']['users'];
         if (list['assessment']['status'] === "Unstarted") {
@@ -112,9 +112,9 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                           this.timer = this.duration;
                           this.isLate = true;
                           this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
-                          console.log(this.assessmentDatas);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.ngOnDestroy();
                             this.onUpdateStatus();
                           }
                         } else {
@@ -127,11 +127,11 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(this.time, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
                           this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
-                          console.log(this.assessmentDatas);
                           this.timer1 = list['assessment']['scheduled_info']['duration'];
                           this.isAvailable = false;
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
+                            this.ngOnDestroy();
                             this.onUpdateStatus();
                           }
                         }
@@ -244,6 +244,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       status: (!this.isConfirmed) ? "Started" : "Completed"
     });
     this.isConfirmed = !this.isConfirmed;
+    console.log()
   }
 
   onSubmit() {
@@ -261,7 +262,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       alert("Correct answers: " + i + '\n' + 'Incorrect answers :' + (this.dbsize - i));
     }
     localStorage.removeItem('DomainUser');
-    this.router.navigate(['/homePage']);
+    this.router.navigate(['/homePage'],{skipLocationChange: false});
     this.db.list('/AssessmentResultsTracker').push({
       id: this.loggedUser,
       assessent_id: this.Sdate + "_" + this.Stime + "_" + this.Sname,
@@ -270,7 +271,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         mark: i + '/' + this.dbsize
       }
     });
-    this.onUpdateStatus();
     let statusUser = [];
     let statusFlag = true;
     let k = 0;
@@ -291,6 +291,8 @@ export class AssessmentComponent implements OnInit, OnDestroy {
           status: "Completed"
         });
       }
+      this.ngOnDestroy();
+      this.onUpdateStatus();
     });
     }
     });
@@ -335,6 +337,11 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log(!this.isConfirmed);
+    if(!this.isConfirmed) {
     this.DB.unsubscribe();
+    } else {
+      this.assessmentDatas = [];
+    }
   }
 }
