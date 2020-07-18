@@ -93,7 +93,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
               if (Cdate === this.Sdate) {
                 if (user['id'] === this.loggedUser) {
                   this.isAvailable = true;
-                  if (user['status'] !== "Unstarted") {
+                  if (user['status'] === "Unstarted") {
                     this.tableID = list.key;
                     this.childID = j - 1;;
                     setInterval(() => this.time = new Date());
@@ -105,13 +105,14 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                       let Cmin = Number(moment(this.time).format('mm'));
                       if ((Chour > Shour) || ((Chour === Shour) && (Cmin >= Smin))) {
                         let SchTime = moment.utc(moment(this.time, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                        if (Number(SchTime.split(':')[1]) <= 20) {
+                        if (Number(SchTime.split(':')[1]) <= 10) {
                           this.isAvailable = false;
                           let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
                           this.duration = list['assessment']['scheduled_info']['duration'] - seconds;
                           this.timer = this.duration;
                           this.isLate = true;
                           this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
+                          console.log(this.assessmentDatas);
                           clearInterval(interval);
                           if (confirm("Please Click 'OK' button to start Assessment.")) {
                             this.onUpdateStatus();
@@ -126,6 +127,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                         let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(this.time, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                         if (Number(SchTime === "00:00:00")) {
                           this.assessmentDatas = this.service.getAssessment(list['assessment']['scheduled_info']['name']);
+                          console.log(this.assessmentDatas);
                           this.timer1 = list['assessment']['scheduled_info']['duration'];
                           this.isAvailable = false;
                           clearInterval(interval);

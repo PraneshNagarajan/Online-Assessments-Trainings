@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { DataService } from '../data.service';
@@ -11,7 +11,7 @@ import * as moment from 'moment';
   templateUrl: './create-assessment.component.html',
   styleUrls: ['./create-assessment.component.css']
 })
-export class CreateAssessmentComponent implements OnInit {
+export class CreateAssessmentComponent implements OnInit, OnDestroy {
 media: Subscription;
   top;
   size: number;
@@ -30,7 +30,7 @@ media: Subscription;
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
-    this.db.list('/AssessmentList').snapshotChanges().subscribe( options => {
+   this.subscribe = this.db.list('/AssessmentList').snapshotChanges().subscribe( options => {
       options.map( user => { 
        ++i;
       });
@@ -80,16 +80,16 @@ onSubmit() {
       name: Stype
     }
   });
+  this.db.list("/AssessmentList").push(Stype);
   this.db.list("/AssessmentsData/"+Stype).push(this.options);
   alert(Stype+" has been uploaded sucessfully.");
 }
 
 
-onAppend(input) {
-
+onAppend(input:string) {
 let index = this.options.findIndex(option => option  === input);
 if(index < 0) {
-  this.options.push(input);
+  this.options.push(input.trim());
   console.log(this.options);
 }  else {
   alert("Duplicate Entry");
@@ -98,6 +98,7 @@ this.Submit.get('option').reset(" ");
 }
 
 onSave() {
+  this.ngOnDestroy();
   let Stype = this.Submit.get('assessment').value;
   let ques =  this.Submit.get('question');
   let Ans = this.Submit.get('ans');
@@ -106,7 +107,6 @@ onSave() {
     ans: Ans.value,
     options: this.options
   }).then(() => alert("data saved")), error => alert(error);
-  this.db.list("/AssessmentList").push(Stype);
   Ans.reset();
   ques.reset();
   this.options = [];

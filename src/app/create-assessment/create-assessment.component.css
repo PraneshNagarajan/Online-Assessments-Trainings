@@ -20,7 +20,7 @@ form {
     background-color: rgba(0, 0, 0 , 0.15); 
     padding: 4px;
 }
- .submit {
+ button {
      margin-top: 20px;
      margin-bottom: 10px;
  }

@@ -50,13 +50,11 @@
                 <span  fxLayoutAlign="stretch">
                     
                 </span>
-                <div fxLayoutAlign="center">
+                <div fxLayoutAlign="space-around">
                     <button mat-raised-button color="primary"  (click)="onSave()">Save</button>
+                    <button mat-raised-button  color="primary" (click)="onSubmit()">Submit</button>
                 </div>
-            </form>
-            <span fxLayoutAlign="center">
-                <button mat-raised-button  color="primary" class="submit" [disabled]="Submit.invalid" (click)="onSubmit()">Submit</button>
-            </span>     
+            </form>     
         </mat-card>
     </div>
 </div>
