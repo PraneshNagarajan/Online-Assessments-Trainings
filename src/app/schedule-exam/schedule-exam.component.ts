@@ -18,6 +18,7 @@ export class ScheduleExamComponent implements OnInit {
   size: number;
   bottom: string;
   userList = [];
+  key;
   isAvailable: boolean;
   assessmentList = [];
   enagagedUsers = "";
@@ -47,7 +48,8 @@ export class ScheduleExamComponent implements OnInit {
       data.map(assessmentData => {
         this.assessmentSchduledData.push(assessmentData.payload.val());
       });
-    }, error => alert(error));
+      console.log(this.assessmentSchduledData.length);
+    }, error => console.log(error));
   }
 
   ngOnInit() {
@@ -93,6 +95,7 @@ export class ScheduleExamComponent implements OnInit {
     if (this.assessmentSchduledData.length > 0) {
       this.assessmentSchduledData.map(data => {
         ++i;
+        console.log(i);
         let Users: any[] = data['scheduled_info']['users'];
         let date = data['scheduled_info']['date'];
         let time = data['scheduled_info']['time'];
@@ -127,9 +130,9 @@ export class ScheduleExamComponent implements OnInit {
           if(this.assessmentSchduledData.length  === i) {
           if (this.confirmed) {
             this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-            alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+            alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
           } else {
-            alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between" + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users");
+            alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between " + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users.");
             this.enagagedUsers = "";
           }
         }
@@ -137,11 +140,11 @@ export class ScheduleExamComponent implements OnInit {
       });
       if( !this.isAvailable) {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
       }
     } else {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.");
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
     }
   }
 
@@ -169,15 +172,17 @@ export class ScheduleExamComponent implements OnInit {
         duration: Sduration,
         users: this.users
       }
-    });
+    }).then(data => this.key = data.key);
   }
 
   onAppend(input) {
     let index = this.users.findIndex(fUser => fUser['id'] as string === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
+      console.log(this.users);
     } else {
       this.users.splice(index, 1);
+      console.log(this.users);
     }
   }
 
