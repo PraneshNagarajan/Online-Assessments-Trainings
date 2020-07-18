@@ -146,6 +146,7 @@ export class ScheduleExamComponent implements OnInit {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
       alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
     }
+    this.schedule.reset();
   }
 
   onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
