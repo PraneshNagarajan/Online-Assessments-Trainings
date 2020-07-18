@@ -47,12 +47,22 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    let i = 0;
+    let i = 0, j = 0;
     if (localStorage.getItem('DomainAdmin')) {
       this.loggedUser = localStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = localStorage.getItem('DomainUser')
     }
+    document.addEventListener("keydown", key => {
+      if (key.altKey || key.key === "Tab") {
+        if (this.k === 0) {
+          alert("If you leave this page again. Assessment will exit automatically.");
+          ++this.k;
+        } else if (this.k > 0 && this.assessmentDatas.length > 0) {
+          this.onSubmit();
+        }
+      }
+    });
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (this.k <= 0 && this.assessmentDatas.length > 0) {
@@ -72,7 +82,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         ++i;
         let users: any[] = list['assessment']['scheduled_info']['users'];
         if (list['assessment']['status'] === "Unstarted") {
-          let j = 0
           this.isAvailable = true;
           users.map(user => {
             if (!this.isScheduled) {
@@ -84,7 +93,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
               if (Cdate === this.Sdate) {
                 if (user['id'] === this.loggedUser) {
                   this.isAvailable = true;
-                  if (user['status'] === "Unstarted") {
+                  if (user['status'] !== "Unstarted") {
                     this.tableID = list.key;
                     this.childID = j - 1;;
                     setInterval(() => this.time = new Date());
@@ -96,7 +105,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                       let Cmin = Number(moment(this.time).format('mm'));
                       if ((Chour > Shour) || ((Chour === Shour) && (Cmin >= Smin))) {
                         let SchTime = moment.utc(moment(this.time, "MM/DD/YYYY HH:mm:ss").diff(moment(Stime1, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
-                        if (Number(SchTime.split(':')[1]) <= 10) {
+                        if (Number(SchTime.split(':')[1]) <= 20) {
                           this.isAvailable = false;
                           let seconds = Number(SchTime.split(':')[1]) * 60 + Number(SchTime.split(':')[2]);
                           this.duration = list['assessment']['scheduled_info']['duration'] - seconds;
@@ -230,7 +239,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   onUpdateStatus() {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID);
     refDB.child('scheduled_info').child('users').child(String(this.childID)).update({
-      status: (!this.isConfirmed) ? "Started" : "Finished"
+      status: (!this.isConfirmed) ? "Started" : "Completed"
     });
     this.isConfirmed = !this.isConfirmed;
   }
@@ -262,21 +271,28 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     this.onUpdateStatus();
     let statusUser = [];
     let statusFlag = true;
-    this.db.list('/AssessmentUserStatusTracker').snapshotChanges().subscribe(datas => {
+    let k = 0;
+    this.db.list('/AssessmentUserStatusTracker/'+ this.tableID).snapshotChanges().subscribe(datas => {
       datas.map(data => {
-        statusUser = data['assessment']['scheduled_info']['users'];
-        statusUser.map(user => {
-          if (user.status === "started") {
+        ++k;
+        if(k === 2) {
+        statusUser.push(data.payload.val());
+        statusUser.map( data => {
+         let users: any[] = data['users'];
+         users.map(user => { 
+          if(user.status === "Started") {
             statusFlag = false;
           }
-        });
-        if (statusFlag) {
-          this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID).update({
-            status: "Completed"
-          });
-        }
       });
+      if(statusFlag) {
+        this.db.database.ref('/AssessmentUserStatusTracker/' + this.tableID).update({
+          status: "Completed"
+        });
+      }
     });
+    }
+    });
+  });    
   }
 
   handleEvent(value: Event) {
