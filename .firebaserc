@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "login-e1ea9"
+    "default": "login-e1ea9",
+    "hosting": "training-assessment-portal"
   }
 }
