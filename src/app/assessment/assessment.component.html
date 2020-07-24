@@ -19,10 +19,13 @@
         <mat-card fxFlex="40" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <form fxLayout="column" fxLayoutAlign="stretch" [formGroup]="form">
                 <mat-form-field>
-                    <input formControlName="key" matInput placeholder="Enter the assessment Key: " required #key>
-                    <mat-error>
-                        assessment Key is Required.
-                    </mat-error>
+                    <input formControlName="key" matInput placeholder="Enter the assessment Key: ">
+                    <mat-error *ngIf="key.touched && key.invalid">
+                        <li *ngIf="key.errors.required"> assessment Key is Required.</li>
+                        <li *ngIf="key.errors.foundAsessmentKeyCharacter">Assessment starts from '-'.</li>
+                        <li *ngIf="key.errors.notFoundSpecialCharacter">Special Characters are not allowed except '-'.</li>
+                        <li *ngIf="key.errors.minlength"> Assessment key is invalid</li>
+                    </mat-error>    
                 </mat-form-field>
                 <button mat-raised-button color="primary" (click)="lanuchAssessment()" [disabled]="form.invalid">Submit</button>
             </form>

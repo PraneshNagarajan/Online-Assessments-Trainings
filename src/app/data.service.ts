@@ -45,7 +45,7 @@ ngOnInit() {
       } else {
         this.oeloop(ques);
       }
-    }, error => alert("It is not Valid Key. Please Enter Valid Assessment Key. \n key starts with '-'"));
+    });
     return this.assessment;
   }
 

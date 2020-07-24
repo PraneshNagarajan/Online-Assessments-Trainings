@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import * as moment from 'moment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { SpecialCharacterValidators } from '../Validators/specialCharacter.validators';
 
 @Component({
   selector: 'app-assessment',
@@ -29,7 +30,6 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   k = 0;
   Loop = 0;
   childID = -1;
-  key;
   loggedUser;
   Sname: string;
   Sdate: string;
@@ -104,7 +104,12 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   }
 
   form = new FormGroup({
-    key: new FormControl("", Validators.required)
+    key: new FormControl("", [
+      Validators.required,
+      SpecialCharacterValidators.foundAsessmentKeyCharacter,
+      SpecialCharacterValidators.notFoundSpecialCharacter,
+      Validators.minLength(15)
+    ])
   });
 
   handleVisibilityChange(k) {
@@ -113,12 +118,14 @@ export class AssessmentComponent implements OnInit, OnDestroy {
       alert(k);
     }
   }
-
+get key() {
+return this.form.get('key');
+}
   lanuchAssessment() {
     let j = 0;
-    this.key = this.form.get('key').value;
     this.assessmentKey = true;
-   this.DB = this.db.list('/AssessmentUserStatusTracker/' + this.key).valueChanges().subscribe(data => {
+   this.DB = this.db.list('/AssessmentUserStatusTracker/' + this.key.value).valueChanges().subscribe(data => {
+      if(data.length > 0) {
       this.assessmentlist = data;
       let Cdate = moment(this.time).format("MM/DD/YYYY");
       this.Stime = this.assessmentlist[1]['time'];
@@ -189,7 +196,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
                     this.router.navigate(['/homePage']);
                   } else {
                     this.isAvailable = true;
-                    this.msg = "No Assessment scheduled for you at this moment."
+                    this.msg = "Assessment Completed."
                   }
                 }
               } else {
@@ -208,6 +215,10 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         this.isAvailable = true;
         this.msg = "No Assessment scheduled for you at this moment."
       }
+    } else {
+      this.isAvailable = true;
+        this.msg = "Invalid key. Please enter valid key. \n key starts from '-'"
+    }
     });
   }
   onNext() {
@@ -237,7 +248,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
   }
 
   onUpdateStatus() {
-    let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.key);
+    let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value);
     refDB.child('scheduled_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Completed"
     });
@@ -271,7 +282,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     this.ngOnDestroy();
     this.onUpdateStatus();
     let statusFlag = true;
-    this.db.list('/AssessmentUserStatusTracker/' + this.key).valueChanges().subscribe(data => {
+    this.db.list('/AssessmentUserStatusTracker/' + this.key.value).valueChanges().subscribe(data => {
       this.assessmentlist = data;
       let users: any[] = data[1]['users'];
       users.map(user => {
@@ -280,7 +291,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
         }
       });
       if (statusFlag) {
-        this.db.database.ref('/AssessmentUserStatusTracker/' + this.key).update({
+        this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
           status: "Completed"
         });
       }
@@ -289,7 +300,7 @@ export class AssessmentComponent implements OnInit, OnDestroy {
 
   handleEvent(value: Event) {
     if (value['action'] === 'done') {
-      this.db.database.ref('/AssessmentUserStatusTracker/' + this.key).update({
+      this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
         status: "Completed"
       });
       this.countdown = true;

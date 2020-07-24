@@ -19,4 +19,16 @@ export class SpecialCharacterValidators {
         }
     }
 
+    static notFoundSpecialCharacter(control: AbstractControl): ValidationErrors| null {
+        if((control.value as string).match(/[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?*$]/)) {
+            return {notFoundSpecialCharacter: true};
+        }
+    }
+
+    static foundAsessmentKeyCharacter(control: AbstractControl): ValidationErrors| null {
+        if(!(control.value as string).match(/[-]/)) {
+            return {foundAsessmentKeyCharacter: true};
+        }
+    }
+
 }
