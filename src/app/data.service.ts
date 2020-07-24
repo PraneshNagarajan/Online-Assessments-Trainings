@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Router } from '@angular/router';
@@ -7,7 +7,7 @@ import * as moment from 'moment';
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
+export class DataService implements OnInit {
   i = 0;
   userdatas: any = [];
   assessmentlist = [];
@@ -21,8 +21,11 @@ export class DataService {
         });
       });
   }
+ngOnInit() {
 
+}
   getAssessment(name) {
+    this.assessment = [];
     this.db.list('/AssessmentsData/' + name).snapshotChanges().subscribe(ques => {
       let oFlag = 0;
       let eFlag = 0;
@@ -89,24 +92,25 @@ export class DataService {
     this.userdatas.find(user => {
       if (user.value['account']['userid'] === id) {
         if (user.value['account']['role'] === "admin") {
-          localStorage.setItem('DomainAdmin', id);
+          sessionStorage.setItem('DomainAdmin', id);
         } else {
-          localStorage.setItem('DomainUser', id);
+          sessionStorage.setItem('DomainUser', id);
         }
-        localStorage.setItem('username', user.value['firstname']);
+        sessionStorage.setItem('username', user.value['firstname']);
         this.router.navigate(['/homePage']);
       }
+      sessionStorage
     });
   }
 
   logOut() {
     this.afAuth.auth.signOut();
-    if (localStorage.getItem('DomainUser')) {
-      localStorage.removeItem('DomainUser');
+    if (sessionStorage.getItem('DomainUser')) {
+      sessionStorage.removeItem('DomainUser');
     } else {
-      localStorage.removeItem('DomainAdmin');
+      sessionStorage.removeItem('DomainAdmin');
     }
-    localStorage.removeItem('username');
+    sessionStorage.removeItem('username');
     this.router.navigate(['']);
   }
 }
