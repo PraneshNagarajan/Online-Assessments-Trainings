@@ -131,7 +131,7 @@ return this.form.get('key');
       this.Stime = this.assessmentlist[1]['time'];
       this.Sname = this.assessmentlist[1]['name'];
       this.Sdate = this.assessmentlist[1]['date'];
-      if (this.assessmentlist[2] === "Unstarted") {
+      if (this.assessmentlist[2] !== "Completed") {
         this.isAvailable = true;
         let users: any[] = this.assessmentlist[1]['users'];
         users.map(user => {
@@ -202,7 +202,7 @@ return this.form.get('key');
               } else {
                 if (users.length === j && !this.isAvailable) {
                   this.isAvailable = true;
-                  this.msg = "No Assessment scheduled for you at this moment."
+                  this.msg = "You don't have permission to take this assessment."
                 }
               }
             } else {
@@ -213,7 +213,7 @@ return this.form.get('key');
         });
       } else {
         this.isAvailable = true;
-        this.msg = "No Assessment scheduled for you at this moment."
+        this.msg = "This assessment has done."
       }
     } else {
       this.isAvailable = true;
@@ -252,6 +252,11 @@ return this.form.get('key');
     refDB.child('scheduled_info').child('users').child(String(this.childID)).update({
       status: (!this.isConfirmed) ? "Started" : "Completed"
     });
+    if(!this.isConfirmed){
+      this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
+        status: "Started"
+      });
+    }
     this.isConfirmed = !this.isConfirmed;
   }
 

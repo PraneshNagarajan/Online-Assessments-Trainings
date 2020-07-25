@@ -18,7 +18,6 @@ export class ScheduleExamComponent implements OnInit {
   size: number;
   bottom: string;
   userList = [];
-  key;
   isAvailable: boolean;
   assessmentList = [];
   enagagedUsers = "";
@@ -87,6 +86,7 @@ export class ScheduleExamComponent implements OnInit {
 
   onSchedule() {
     let i = 0;
+    let addTime, subTime;
     let Ctime = moment().format("MM/DD/YYYY HH:mm:ss");
     let Sdate = moment(this.schedule.get('date').value).format('MM/DD/YYYY');
     let Stype = this.schedule.get('assessment').value;
@@ -95,15 +95,13 @@ export class ScheduleExamComponent implements OnInit {
     if (this.assessmentSchduledData.length > 0) {
       this.assessmentSchduledData.map(data => {
         ++i;
-        console.log(i);
         let Users: any[] = data['scheduled_info']['users'];
         let date = data['scheduled_info']['date'];
         let time = data['scheduled_info']['time'];
         let duration = data['scheduled_info']['duration'];
         if (data.status === "Unstarted") {
+          console.log("status :", data.status);
           this.isAvailable = true;
-          let addTime;
-          let subTime;
           if (Number(duration) < 3600) {
             addTime = moment(time, "HH:mm:ss").add("00:" + moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
           } else {
@@ -118,35 +116,30 @@ export class ScheduleExamComponent implements OnInit {
           Users.map(user => {
             this.users.map(user1 => {
               if (user['id'] === user1['id']) {
+                console.log("id : ", user['id'])
                 if ((date === Sdate)) {
+                  console.log(date);
                   if (moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss"))) {
                     this.confirmed = false;
-                    this.enagagedUsers = this.enagagedUsers + user["id"] + " ";
+                    this.enagagedUsers = this.enagagedUsers + user['id'] + " ";
                   }
                 }
               }
             });
           });
-          if(this.assessmentSchduledData.length  === i) {
-          if (this.confirmed) {
-            this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-            alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
-          } else {
-            alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between " + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users.");
-            this.enagagedUsers = "";
-          }
         }
-      }
       });
-      if( !this.isAvailable) {
-      this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
+      if (this.confirmed || !this.isAvailable) {
+        this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+      } else {
+        alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between " + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users.");
+        this.enagagedUsers = "";
       }
     } else {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
-      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  "+this.key);
     }
     this.schedule.reset();
+    this.users = [];
   }
 
   onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
@@ -173,17 +166,15 @@ export class ScheduleExamComponent implements OnInit {
         duration: Sduration,
         users: this.users
       }
-    }).then(data => this.key = data.key);
+    }).then(data => alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key));
   }
 
   onAppend(input) {
     let index = this.users.findIndex(fUser => fUser['id'] as string === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
-      console.log(this.users);
     } else {
       this.users.splice(index, 1);
-      console.log(this.users);
     }
   }
 
