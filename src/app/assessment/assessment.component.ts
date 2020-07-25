@@ -58,21 +58,15 @@ export class AssessmentComponent implements OnInit, OnDestroy {
     document.addEventListener("keydown", key => {
       if ((key.altKey || key.key === "Tab") && this.assessmentDatas.length > 0) {
         if (this.k === 0) {
-          alert("If you leave this page again. Assessment will exit automatically.");
           ++this.k;
         } else if (this.k > 0 && this.assessmentDatas.length > 0) {
-          this.onSubmit();
+          this.onSubmit("leave the tab");
         }
       }
     });
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (this.k <= 0 && this.assessmentDatas.length > 0) {
-          alert("If you leave this page again. Assessment will exit automatically.");
-          ++this.k;
-        } else if (this.k > 0 && this.assessmentDatas.length > 0) {
-          this.onSubmit();
-        }
+      if (document.hidden && this.assessmentDatas.length > 0) {
+          this.onSubmit("leave the tab");
       }
     }, false);
     this.userName = sessionStorage.getItem('username');
@@ -122,6 +116,7 @@ get key() {
 return this.form.get('key');
 }
   lanuchAssessment() {
+    window.location.reload;
     let j = 0;
     this.assessmentKey = true;
    this.DB = this.db.list('/AssessmentUserStatusTracker/' + this.key.value).valueChanges().subscribe(data => {
@@ -142,7 +137,6 @@ return this.form.get('key');
                 this.isAvailable = true;
                 if (user['status'] === "Unstarted") {
                   this.childID = j - 1;
-                  console.log(this.childID);
                   setInterval(() => this.time = new Date());
                   let interval = setInterval(() => {
                     let Stime1 = this.Sdate + " " + this.Stime;
@@ -159,7 +153,6 @@ return this.form.get('key');
                         this.timer = this.duration;
                         this.isLate = true;
                         this.assessmentDatas = this.service.getAssessment(this.Sname);
-                        console.log(this.assessmentDatas);
                         clearInterval(interval);
                         if (confirm("Please Click 'OK' button to start Assessment.")) {
                           this.ngOnDestroy();
@@ -175,7 +168,6 @@ return this.form.get('key');
                       let SchTime = moment.utc(moment(Stime1, "MM/DD/YYYY HH:mm:ss").diff(moment(this.time, "MM/DD/YYYY HH:mm:ss"))).format("HH:mm:ss");
                       if (Number(SchTime === "00:00:00")) {
                         this.assessmentDatas = this.service.getAssessment(this.Sname);
-                        console.log(this.assessmentDatas);
                         this.timer1 = this.assessmentlist[1]['duration'];
                         this.isAvailable = false;
                         clearInterval(interval);
@@ -247,20 +239,21 @@ return this.form.get('key');
     this.next = true;
   }
 
-  onUpdateStatus() {
+  onUpdateStatus(remark?) {
     let refDB = this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value);
     refDB.child('scheduled_info').child('users').child(String(this.childID)).update({
-      status: (!this.isConfirmed) ? "Started" : "Completed"
+      status: (!this.isConfirmed && !remark) ? "Started" : "Completed",
+      remarks: (remark) ? remark: ""
     });
     if(!this.isConfirmed){
-      this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
+      this.db.object('/AssessmentUserStatusTracker/' + this.key.value).update({
         status: "Started"
       });
     }
     this.isConfirmed = !this.isConfirmed;
   }
 
-  onSubmit() {
+  onSubmit(remark) {
     let i = 0;
     this.assessmentDatas.map(value => {
       this.userAnswered.map(userAns => {
@@ -285,7 +278,7 @@ return this.form.get('key');
       }
     });
     this.ngOnDestroy();
-    this.onUpdateStatus();
+    this.onUpdateStatus(remark);
     let statusFlag = true;
     this.db.list('/AssessmentUserStatusTracker/' + this.key.value).valueChanges().subscribe(data => {
       this.assessmentlist = data;
@@ -296,7 +289,7 @@ return this.form.get('key');
         }
       });
       if (statusFlag) {
-        this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
+        this.db.object('/AssessmentUserStatusTracker/' + this.key.value).update({
           status: "Completed"
         });
       }
@@ -305,11 +298,11 @@ return this.form.get('key');
 
   handleEvent(value: Event) {
     if (value['action'] === 'done') {
-      this.db.database.ref('/AssessmentUserStatusTracker/' + this.key.value).update({
+      this.db.object('/AssessmentUserStatusTracker/' + this.key.value).update({
         status: "Completed"
       });
       this.countdown = true;
-      this.onSubmit();
+      this.onSubmit("Time up");
     }
   }
 
@@ -332,7 +325,7 @@ return this.form.get('key');
     this.dbsize = this.assessmentDatas.length;
     let unAns = this.dbsize - this.userAnswered.length;
     if (confirm('Are you sure to submit?\nAnswered Questions: ' + this.userAnswered.length + '\n' + 'Unanswered Questions: ' + unAns)) {
-      this.onSubmit();
+      this.onSubmit("user done the assessment");
     }
   }
 

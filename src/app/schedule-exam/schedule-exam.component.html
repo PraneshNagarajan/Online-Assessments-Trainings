@@ -54,6 +54,7 @@
                     </mat-error>
                 </mat-form-field>
                 <button mat-raised-button color="primary" (click)="onSchedule()"  [disabled]="schedule.invalid">Schedule</button>
+                <mat-label *ngIf="key.length > 0" fxLayoutAlign="center"> Assessment Key : {{key}}</mat-label>
             </form>
         </mat-card>
     </div>

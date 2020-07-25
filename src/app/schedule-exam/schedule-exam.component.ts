@@ -26,6 +26,7 @@ export class ScheduleExamComponent implements OnInit {
   assessmentSchduledData = [];
   users1 = [];
   confirmed: boolean = true;
+  key: any = "";
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
     if (sessionStorage.getItem('DomainAdmin')) {
@@ -166,7 +167,10 @@ export class ScheduleExamComponent implements OnInit {
         duration: Sduration,
         users: this.users
       }
-    }).then(data => alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key));
+    }).then(data => {
+      this.key = data.key;
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key)
+    });
   }
 
   onAppend(input) {
