@@ -44,7 +44,7 @@ import { CreateAssessmentComponent } from './create-assessment/create-assessment
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { FilterPipe } from './filter.pipe';
-import { TextAlignPipe } from './text-align.pipe';
+
 
 @NgModule({
   declarations: [
@@ -58,8 +58,7 @@ import { TextAlignPipe } from './text-align.pipe';
     ScheduleExamComponent,
     VideoTutorialComponent,
     CreateAssessmentComponent,
-    FilterPipe,
-    TextAlignPipe
+    FilterPipe
   ],
   imports: [
     MatGridListModule,
@@ -85,7 +84,7 @@ import { TextAlignPipe } from './text-align.pipe';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
-    MatDividerModule ,
+    MatDividerModule,
     CountdownModule,
     YouTubePlayerModule,
     AngularFireAuthModule,
