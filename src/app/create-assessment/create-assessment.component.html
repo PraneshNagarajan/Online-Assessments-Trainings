@@ -20,13 +20,13 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="question" matInput placeholder="Enter the questions" required>
+                    <textarea formControlName="question" matInput placeholder="Enter the questions" required></textarea>
                     <mat-error>
                         Question is Required.
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)" required>
+                    <textarea matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)" required></textarea>
                     <mat-hint>Type & press enter to type next one.</mat-hint>
                     <mat-error>
                         Option is Required.

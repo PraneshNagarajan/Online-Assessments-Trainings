@@ -9,6 +9,11 @@ div ~ div {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.mat-raised-button ~ .mat-raised-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
 
 form {
     margin-left: 10px;
@@ -32,5 +37,6 @@ form {
       justify-content: center;
       background: rgba(0, 0, 0, 0.15);
   }
-
-  
+  .align {
+      white-space: pre-wrap;
+  }

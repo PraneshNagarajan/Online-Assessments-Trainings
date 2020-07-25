@@ -42,7 +42,9 @@ import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
 import { CreateAssessmentComponent } from './create-assessment/create-assessment.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDividerModule } from '@angular/material/divider';
 import { FilterPipe } from './filter.pipe';
+import { TextAlignPipe } from './text-align.pipe';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { FilterPipe } from './filter.pipe';
     ScheduleExamComponent,
     VideoTutorialComponent,
     CreateAssessmentComponent,
-    FilterPipe
+    FilterPipe,
+    TextAlignPipe
   ],
   imports: [
     MatGridListModule,
@@ -82,6 +85,7 @@ import { FilterPipe } from './filter.pipe';
     MatSelectModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    MatDividerModule ,
     CountdownModule,
     YouTubePlayerModule,
     AngularFireAuthModule,

@@ -209,7 +209,7 @@ return this.form.get('key');
       }
     } else {
       this.isAvailable = true;
-        this.msg = "Invalid key. Please enter valid key. \n key starts from '-'"
+        this.msg = "Invalid key. Please enter valid key."
     }
     });
   }

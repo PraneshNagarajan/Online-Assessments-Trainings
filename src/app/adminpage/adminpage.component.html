@@ -1,82 +1,82 @@
 <div class="example-loading-shadow" *ngIf="userDatas.length === 0">
-    <mat-spinner ></mat-spinner>
+    <mat-spinner></mat-spinner>
 </div>
 
 <mat-toolbar color=primary *ngIf="!deviceXs">
-<span> AdminPage</span>
-<span class="example-spacer1"></span>
-<span >
-    <mat-form-field>
-        <mat-label>Assessment</mat-label>
-        <mat-select>
-            <mat-option routerLink="/scheduleAssessment">Schedule Assessment</mat-option>
-            <mat-option routerLink="/addAssessment">Add Assessment</mat-option>
-        </mat-select>
-    </mat-form-field>
-</span>
-<span class="example-spacer1"></span>
-<span routerLink="/video">Video</span>
-<span class="example-spacer"></span>
-<button mat-flat-button color="primary" >
-    <mat-icon>account_circle</mat-icon>
-    {{userName}}
-</button>
-<span class="example-spacer2"></span>
-<button mat-flat-button color="primary" (click)="signOut()">Logout
-    <mat-icon>exit_to_app</mat-icon>
-</button>
-</mat-toolbar>
-<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '170px'}">
-    <span> Admin Page </span>
+    <span> AdminPage</span>
     <span class="example-spacer1"></span>
-    <span routerLink="/scheduleAssessment">Assessment</span>
+    <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/scheduleAssessment">Schedule Assessment</button>
+        <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
+    </mat-menu>
     <span class="example-spacer1"></span>
-    <span routerLink="/video">Video</span>
-    <span class="example-spacer1"></span>
-    <button mat-flat-button color="primary" >
+    <button mat-button  routerLink="/video">Video</button>
+    <span class="example-spacer"></span>
+    <button mat-button>
         <mat-icon>account_circle</mat-icon>
         {{userName}}
     </button>
     <span class="example-spacer1"></span>
-    <button mat-flat-button color="primary" (click)="signOut()">Logout
+    <button mat-button  (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '170px'}">
+    <span> Admin Page </span>
+    <span class="example-spacer1"></span>
+    <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item color="primary" routerLink="/scheduleAssessment">Schedule Assessment</button>
+        <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
+    </mat-menu>
+    <span class="example-spacer1"></span>
+    <button mat-button routerLink="/video">Video</button>
+    <span class="example-spacer1"></span>
+    <button mat-button color="primary">
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
+    <button mat-button (click)="signOut()">Logout
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
 <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
-<mat-card [fxFlex]="device">
-    <mat-toolbar color="primary"><p><b>Name : </b>{{ data.value.firstname}}</p> </mat-toolbar>
-    <div class="menu" fxLayout="column" >
-        <p><b>Table ID : </b>{{ data.id}}</p>
-        <p><b>User ID : </b>{{ data.value.account.userid}}</p>
-        <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
-        <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
-        <p><b>Father Name : </b>{{ data.value.fathername}}</p>
-        <p><b>DOB : </b>{{ data.value.dob}}</p>
-        <p><b>Gender : </b>{{ data.value.gender}}</p>
-        <p><b>phone : </b>{{ data.value.phone}}</p>
-        <p><b>mail : </b>{{ data.value.email}}</p>
-        <div fxLayout="column">
-            <mat-form-field fxFlex="100">
-                <mat-label>Assign Role : </mat-label>
-                <mat-select 
-                ngModel
-                name="role"
-                #role="ngModel">
-                    <mat-option *ngFor="let role of roles" [value]="role.name">
-                        {{role.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <div fxLayout="row" fxLayoutAlign="space-around center">
-                <div class="example-button-container">
-                    <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)" (click)="ngOnDestroy()">
-                        <mat-icon>update</mat-icon>
-                    </button>
-                </div>
-                <div class="example-button-container">
-                    <button mat-mini-fab color="warn" (click)="onDelete(data.id)" (click)="ngOnDestroy()">
-                        <mat-icon>delete</mat-icon>
-                    </button>
+    <mat-card [fxFlex]="device">
+        <mat-toolbar color="primary">
+            <p><b>Name : </b>{{ data.value.firstname}}</p>
+        </mat-toolbar>
+        <div class="menu" fxLayout="column">
+            <p><b>Table ID : </b>{{ data.id}}</p>
+            <p><b>User ID : </b>{{ data.value.account.userid}}</p>
+            <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
+            <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
+            <p><b>Father Name : </b>{{ data.value.fathername}}</p>
+            <p><b>DOB : </b>{{ data.value.dob}}</p>
+            <p><b>Gender : </b>{{ data.value.gender}}</p>
+            <p><b>phone : </b>{{ data.value.phone}}</p>
+            <p><b>mail : </b>{{ data.value.email}}</p>
+            <div fxLayout="column">
+                <mat-form-field fxFlex="100">
+                    <mat-label>Assign Role : </mat-label>
+                    <mat-select ngModel name="role" #role="ngModel">
+                        <mat-option *ngFor="let role of roles" [value]="role.name">
+                            {{role.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                    <div class="example-button-container">
+                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)"
+                            (click)="ngOnDestroy()">
+                            <mat-icon>update</mat-icon>
+                        </button>
+                    </div>
+                    <div class="example-button-container">
+                        <button mat-mini-fab color="warn" (click)="onDelete(data.id)" (click)="ngOnDestroy()">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
