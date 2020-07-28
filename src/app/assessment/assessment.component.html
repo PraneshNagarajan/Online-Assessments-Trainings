@@ -23,7 +23,7 @@
                     <mat-error *ngIf="key.touched && key.invalid">
                         <li *ngIf="key.errors.required"> assessment Key is Required.</li>
                         <li *ngIf="key.errors.foundAsessmentKeyCharacter">Assessment starts from '-'.</li>
-                        <li *ngIf="key.errors.notFoundSpecialCharacter">Special Characters are not allowed except '-'.</li>
+                        <li *ngIf="key.errors.notFoundSpecialCharacter">Special Characters are not allowed except '-' '_'.</li>
                         <li *ngIf="key.errors.minlength"> Assessment key is invalid</li>
                     </mat-error>    
                 </mat-form-field>
@@ -49,11 +49,11 @@
                         </button>
                     </div>
                     <div *ngFor="let data of assessmentDatas | filter:Loop ; let i = index;" fxFlex="100">
-                        <mat-label  fxLayoutAlign="space-evenly"><pre>{{data.index}}){{data.assessment.qa}}</pre> </mat-label>
+                        <mat-label  fxLayoutAlign="space-evenly"><pre>{{i+1}}){{data.qa}}</pre> </mat-label>
                         <mat-grid-list [cols]="col" rowHeight="100px">
-                            <mat-grid-tile *ngFor="let option of data.assessment.options; let j = index;">
+                            <mat-grid-tile *ngFor="let option of data.options; let j = index;">
                                 <button class="align" fxFlex="65" mat-raised-button [color]="(SelOption === option)? 'accent':''"
-                                    (click)="onSave(data,option)"><pre>{{option}}</pre></button>
+                                    (click)="onSave(data,option)"><pre>{{option}} </pre></button>
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>
@@ -64,15 +64,16 @@
                     </div>
                 </div>
                 <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="center"
-                    *ngIf="assessmentDatas.length === userAnswered.length">
+                    *ngIf="dbsize  === userAnswered.length">
                     <button mat-raised-button color="primary" (click)="onConfirm()">submit</button>
                 </div>
             </form>
         </mat-card>
     </div>
 </div>
-<div *ngIf="isAvailable && msg.length !==0" fxLayout="column" fxLayoutAlign="space-evenly center">
-    <mat-card fxFlex="30" class="msg">
+<div *ngIf="isAvailable && msg.length !==0 && assessmentKey" fxLayout="column" fxLayoutAlign="space-evenly center">
+    <mat-card fxFlex="30" class="msg" fxLayout="column">
         <mat-card-content>{{msg}}</mat-card-content>
+        <button mat-raised-button color="primary"  routerLink="/homePage">Exit</button>
     </mat-card>
 </div>

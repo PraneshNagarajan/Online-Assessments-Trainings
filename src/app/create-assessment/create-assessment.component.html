@@ -1,12 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="space-between">
     <mat-toolbar color="primary">
-        <span>Exam Scheduler Page : </span>
+        <span *ngIf="!isPreview">Exam Scheduler Page : </span>
+        <span *ngIf="isPreview">Preview Assessment</span>
         <span class="example-spacer"></span>
         <button mat-flat-button color="primary" (click)="signOut()">Logout
             <mat-icon>exit_to_app</mat-icon>
         </button>
     </mat-toolbar>
-    <div fxLayoutAlign="center">
+    <div class="bkgclr" fxLayoutAlign="center" *ngIf="!isPreview">
         <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <mat-toolbar color="warn">
                 <span>Schedule exam : </span>
@@ -26,35 +27,89 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <textarea matInput formControlName="option" placeholder="Enter the options"  #OPT  (keyup.enter)="onAppend(OPT.value)" required></textarea>
+                    <textarea matInput formControlName="option" placeholder="Enter the options" #OPT
+                        (keyup.enter)="onAppend(OPT.value)" required></textarea>
                     <mat-hint>Type & press enter to type next one.</mat-hint>
                     <mat-error>
                         Option is Required.
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field >
+                <mat-form-field>
                     <mat-label>Enter the answer</mat-label>
-                    <input matInput formControlName="ans"  required>
+                    <textarea matInput formControlName="ans" required></textarea>
                     <mat-error>
                         Answer is Required.
                     </mat-error>
                 </mat-form-field>
-            </form>    
-            <form  *ngIf="options.length !== 0" [formGroup]="Submit">
+            </form>
+            <form *ngIf="options.length !== 0" [formGroup]="Submit">
                 <span fxLayout="column" *ngFor="let option of options" class="form1">
-                    <mat-card  fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-card fxLayout="row" fxLayoutAlign="space-between center">
                         <span>{{option}}</span>
                         <button mat-raised-button color="warn" (click)="onDelete(option)">delete</button>
                     </mat-card>
                 </span>
-                <span  fxLayoutAlign="stretch">
-                    
+                <span fxLayoutAlign="stretch">
                 </span>
                 <div fxLayoutAlign="space-around">
-                    <button mat-raised-button color="primary"  (click)="onSave()">Save</button>
-                    <button mat-raised-button  color="primary" (click)="onSubmit()">Submit</button>
+                    <button mat-raised-button color="primary" (click)="onSave()">Save</button>
                 </div>
-            </form>     
+            </form>
+            <div [ngStyle]="{'width': deviceXS}" *ngIf="!isPreview" fxLayoutAlign="center">
+                <button mat-raised-button color="primary" (click)="preview()">preview</button>
+            </div>
+        </mat-card>
+    </div>
+
+    <div class="bkgclr" fxLayoutAlign="center" *ngIf="isPreview">
+        <mat-card fxFlex="85" [ngStyle]="{'margin-top': top1, 'margin-bottom': bottom1}">
+            <form fxLayout="column" [formGroup]="Update">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
+                            <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                    </div>
+                    <div *ngFor="let data of combinedData | filter:Loop:'ifloop'; let i = index;" fxFlex="100">
+                        <div fxLayoutAlign="center">
+                            <button fxFlex="65" mat-raised-button [disable]="(update.value)? fa: true"
+                                [color]="(SelOption === data.qa)? 'accent':''" (click)="onUpdate(data.qa,'','','')">
+                                <pre>Question : {{Loop+1}}){{data.qa}}</pre> </button>
+                        </div>
+
+                        <mat-grid-list [cols]="col" rowHeight="100px">
+                            <mat-grid-tile *ngFor="let option of data.options; let j = index;">
+                                <button class="align" fxFlex="65" mat-raised-button
+                                    [disable]="(update.value)? false: true"
+                                    [color]="(SelOption === option)? 'accent':''"
+                                    (click)="onUpdate(data.qa,'',option,j)">
+                                    <pre>Option {{j}} : {{option}} </pre></button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+
+                        <div fxLayoutAlign="center">
+                            <button mat-raised-button fxFlex="65" [disable]="(update.value)? false: true"
+                                [color]="(SelOption === data.ans)? 'accent':''"
+                                (click)="onUpdate(data.qa,data.ans,'','')">
+                                <pre>Answer : {{data.ans}}</pre> </button>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center">
+                            <mat-form-field fxFlex="65">
+                                <mat-label> Update qa or ans or option at a time</mat-label>
+                                <textarea matInput formControlName="update"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                        <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">
+                            <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div [ngStyle]="{'width': deviceXS}" *ngIf="isPreview" fxLayoutAlign="center">
+                    <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+                </div>
+            </form>
         </mat-card>
     </div>
 </div>

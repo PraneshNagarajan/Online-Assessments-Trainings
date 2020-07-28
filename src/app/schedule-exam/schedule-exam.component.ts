@@ -48,7 +48,6 @@ export class ScheduleExamComponent implements OnInit {
       data.map(assessmentData => {
         this.assessmentSchduledData.push(assessmentData.payload.val());
       });
-      console.log(this.assessmentSchduledData.length);
     }, error => console.log(error));
   }
 
@@ -101,7 +100,6 @@ export class ScheduleExamComponent implements OnInit {
         let time = data['scheduled_info']['time'];
         let duration = data['scheduled_info']['duration'];
         if (data.status === "Unstarted") {
-          console.log("status :", data.status);
           this.isAvailable = true;
           if (Number(duration) < 3600) {
             addTime = moment(time, "HH:mm:ss").add("00:" + moment.duration(duration + 300, "seconds").format("HH:mm:ss")).format("HH:mm:ss");
@@ -117,9 +115,7 @@ export class ScheduleExamComponent implements OnInit {
           Users.map(user => {
             this.users.map(user1 => {
               if (user['id'] === user1['id']) {
-                console.log("id : ", user['id'])
                 if ((date === Sdate)) {
-                  console.log(date);
                   if (moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss"))) {
                     this.confirmed = false;
                     this.enagagedUsers = this.enagagedUsers + user['id'] + " ";

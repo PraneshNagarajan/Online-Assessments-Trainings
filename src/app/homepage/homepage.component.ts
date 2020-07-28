@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { DataService } from '../data.service';
+
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
@@ -17,6 +18,8 @@ export class HomepageComponent implements OnInit {
   sytle: string;
   style: string;
   userName: string;
+  datas = [];
+
   constructor(private router:Router, private mediaObserver: MediaObserver, private service: DataService) {
     if (sessionStorage.getItem('DomainUser')) {
       this.user = 'DomainUser';
@@ -26,7 +29,7 @@ export class HomepageComponent implements OnInit {
     }
     this.userName = sessionStorage.getItem('username');
   }
-
+  
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
       if(change.mqAlias === 'xs') {
@@ -58,6 +61,12 @@ export class HomepageComponent implements OnInit {
         this.bottom="100%"
       }
   });
+  }
+  navigation(url) {
+    this.router.navigateByUrl(url).then(() => location.reload());
+  }
+  call() {
+    this.datas = this.service.getAssessment("Assessment7");
   }
   signOut() {
     this.service.logOut();

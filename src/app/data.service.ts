@@ -46,6 +46,7 @@ ngOnInit() {
         this.oeloop(ques);
       }
     });
+    console.log(this.assessment);
     return this.assessment;
   }
 

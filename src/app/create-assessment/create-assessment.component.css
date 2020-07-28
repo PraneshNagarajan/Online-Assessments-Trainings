@@ -6,7 +6,7 @@ div .card{
     padding: 0px;
     margin-bottom: 100px;
 }
-div {
+.bkgclr {
     background-color: rgba(0, 0, 0 , 0.15);
 }
 

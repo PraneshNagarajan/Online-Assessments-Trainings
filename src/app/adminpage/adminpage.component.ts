@@ -40,7 +40,6 @@ export class AdminpageComponent implements OnInit {
 
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
-      console.log(change.mqAlias);
       if(change.mqAlias === 'xs') {
         this.deviceXs = true;
         this.deviceStyle = "column";
@@ -75,7 +74,6 @@ export class AdminpageComponent implements OnInit {
   onDelete(id) {
     this.db.object('/UserInfo/' + id).remove().then(() => {
       let index = this.userDatas.findIndex(user => user['id'] === id);
-      console.log(index);
       this.userDatas.splice(index, 1);
       alert('Successfully deleted')
     }, error => {

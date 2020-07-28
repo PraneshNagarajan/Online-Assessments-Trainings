@@ -11,14 +11,14 @@
         <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
     </mat-menu>
     <span class="example-spacer1"></span>
-    <button mat-button  routerLink="/video">Video</button>
+    <button mat-button routerLink="/video">Video</button>
     <span class="example-spacer"></span>
     <button mat-button>
         <mat-icon>account_circle</mat-icon>
         {{userName}}
     </button>
     <span class="example-spacer1"></span>
-    <button mat-button  (click)="signOut()">Logout
+    <button mat-button (click)="signOut()">Logout
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
@@ -27,7 +27,7 @@
     <span class="example-spacer1"></span>
     <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item color="primary" routerLink="/scheduleAssessment">Schedule Assessment</button>
+        <button mat-menu-item routerLink="/scheduleAssessment">Schedule Assessment</button>
         <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
     </mat-menu>
     <span class="example-spacer1"></span>
