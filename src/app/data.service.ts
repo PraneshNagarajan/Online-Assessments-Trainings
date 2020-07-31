@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Router } from '@angular/router';
@@ -7,23 +7,60 @@ import * as moment from 'moment';
 @Injectable({
   providedIn: 'root'
 })
-export class DataService implements OnInit {
+export class DataService {
   i = 0;
+  k;
   userdatas: any = [];
   assessmentlist = [];
   assessments: any = [];
   assessment: any = [];
+  loggedUser: string;
+  notification = [];
+  notifications = [];
+  notify: any;
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) {
-    this.db.list('/UserInfo').snapshotChanges()
-      .subscribe(user => {
-        user.map(data => {
-          this.userdatas.push({ id: data.key, value: data.payload.val() });
-        });
-      });
+    if (sessionStorage.getItem('DomainAdmin')) {
+      this.loggedUser = sessionStorage.getItem('DomainAdmin');
+    } else {
+      this.loggedUser = sessionStorage.getItem('DomainUser')
+    }      
   }
-ngOnInit() {
 
-}
+  getNotifications(count?: boolean) {
+    this.notification = [];
+    this.notifications = [];
+    this.db.list("/notification").snapshotChanges()
+      .subscribe( datas => {
+        datas.map( data => {
+          this.notifications.push({key: data.key, value: data.payload.val()});
+      });
+      this.notifications.map( data => {
+        this.notify = data['value']['users'];
+        let j = 0;
+          this.notify.map(user => {
+            if (user['id'] === this.loggedUser) {
+              if (user['status'] === "Unread") {
+                ++j;
+              }
+              this.notification.push({
+                status: user['status'],
+                date: data['value']['date'],
+                time: data['value']['time'],
+                duration: data['value']['duration'],
+                name: data['value']['name'],
+                assessment_key: data['value']['key'],
+                title: data['value']['title'],
+                scheduled_by: data['value']['scheduled_by'],
+                index: j,
+                table_key: data['key']
+              });
+            }
+          });
+      });
+      });
+      return this.notification;
+  }
+
   getAssessment(name) {
     this.assessment = [];
     this.db.list('/AssessmentsData/' + name).snapshotChanges().subscribe(ques => {
@@ -46,12 +83,8 @@ ngOnInit() {
         this.oeloop(ques);
       }
     });
-    console.log(this.assessment);
     return this.assessment;
   }
-
-
-
 
   eloop(ques) {
     for (let j = 0; j < ques.length; j++) {
@@ -80,38 +113,5 @@ ngOnInit() {
         this.assessment.push({ index: ++this.i, assessment: this.assessments[j]['data'] });
       }
     }
-  }
-
-
-  getData(id?) {
-    return this.userdatas;
-  }
-
-
-
-  loginAuth(id) {
-    this.userdatas.find(user => {
-      if (user.value['account']['userid'] === id) {
-        if (user.value['account']['role'] === "admin") {
-          sessionStorage.setItem('DomainAdmin', id);
-        } else {
-          sessionStorage.setItem('DomainUser', id);
-        }
-        sessionStorage.setItem('username', user.value['firstname']);
-        this.router.navigate(['/homePage']);
-      }
-      sessionStorage
-    });
-  }
-
-  logOut() {
-    this.afAuth.auth.signOut();
-    if (sessionStorage.getItem('DomainUser')) {
-      sessionStorage.removeItem('DomainUser');
-    } else {
-      sessionStorage.removeItem('DomainAdmin');
-    }
-    sessionStorage.removeItem('username');
-    this.router.navigate(['']);
   }
 }

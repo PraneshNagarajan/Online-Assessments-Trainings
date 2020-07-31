@@ -3,6 +3,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { DataService } from '../data.service';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../auth.service';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-sign-in-up',
@@ -12,7 +14,7 @@ import { Subscription } from 'rxjs';
 export class SignINUPComponent implements OnInit {
 mediaSubscribe: Subscription;
 deviceXs;
-  constructor(private afAuth: AngularFireAuth, private service: DataService, private mediaObserver: MediaObserver, private mediaChange: MediaChange) { 
+  constructor(private afAuth: AngularFireAuth, private auth: AuthService, private mediaObserver: MediaObserver, private mediaChange: MediaChange) { 
   }
 
   ngOnInit() {
@@ -20,14 +22,21 @@ deviceXs;
       this.deviceXs = device.mqAlias === 'xs' ? 80 : 28;
     })
   }
-  Authenticate(cred) {
-    let Uid = cred.value.id+'@domain.com';
-      this.afAuth.auth.signInWithEmailAndPassword(Uid, cred.value.password)
-      .then( () => {
-        this.service.loginAuth(Uid);  
+
+  form = new FormGroup({
+  id: new FormControl("", Validators.required),
+  password: new FormControl("", Validators.required)
+  });
+
+  Authenticate() {
+    let id = this.form.get('id').value +'@domain.com';
+      this.afAuth.auth.signInWithEmailAndPassword(id, this.form.get('password').value)
+      .then( (data) => {
+        this.auth.loginAuth(id);  
       }, error => {
          alert(error);
       });
+      this.form.reset();
 }
   }
 

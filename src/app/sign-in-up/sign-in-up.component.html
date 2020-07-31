@@ -1,22 +1,22 @@
 <div fxLayoutAlign="center center">
     <mat-card [fxFlex]="deviceXs">
         <mat-toolbar fxLayoutAlign="center center" color="primary">SignIN</mat-toolbar>
-        <form #f="ngForm" (ngSubmit)="Authenticate(f)" fxLayoutAlign="strecth" fxLayout="column">
+        <form #f="ngForm" [formGroup]="form" fxLayoutAlign="strecth" fxLayout="column">
             <mat-form-field>
-                <input ngModel name="id" #id="ngModel" matInput placeholder="Enter your UserID:" required>
+                <input  formControlName="id" matInput placeholder="Enter your UserID:" required>
                 <span matSuffix>@domain.com</span>
                 <mat-error>
                     UserId is Required.
                 </mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input ngModel name="password" #password="ngModel" type="password" matInput
+                <input formControlName="password" type="password" matInput
                     placeholder="Enter your Password:" required>
                 <mat-error>
                     Password is Required.
                 </mat-error>
             </mat-form-field>
-            <button mat-raised-button color="primary" [disabled]="f.invalid"> Submit </button>
+            <button mat-raised-button color="primary" (click)="Authenticate()" [disabled]="form.invalid"> Submit </button>
             <button mat-raised-button color="accent" routerLink="/signUp"> SignUp </button>
         </form>
     </mat-card>

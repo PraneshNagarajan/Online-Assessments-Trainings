@@ -5,6 +5,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { AuthService } from '../auth.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-adminpage',
@@ -27,15 +29,24 @@ export class AdminpageComponent implements OnInit {
   subscription: Subscription;
   deviceHeight: number;
   deviceWidth: number;
-
-  constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-    this.subscription = db.list('/UserInfo').snapshotChanges()
+  users = [];
+  loggedUser: string;
+  
+  constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private auth: AuthService) {
+    if (sessionStorage.getItem('DomainAdmin')) {
+      this.loggedUser = sessionStorage.getItem('DomainAdmin');
+    } else {
+      this.loggedUser = sessionStorage.getItem('DomainUser')
+    } 
+    db.list('/UserInfo').snapshotChanges()
     .subscribe(user => {
+      this.userDatas = [];
       this.userName = sessionStorage.getItem('username');
       user.map(data => {
         this.userDatas.push({ id: data.key, value: data.payload.val() });
       });
     });
+
   }
 
   ngOnInit() {
@@ -55,9 +66,6 @@ export class AdminpageComponent implements OnInit {
       else {
         this.device = 35;
       }
-
-      //this.deviceXs = device.mqAlias === 'xs' ? '90%' : '35%';
-      //this.deviceStyle = (device.mqAlias === 'xs') ? 'column' : 'row';
     });
   }
 
@@ -71,7 +79,12 @@ export class AdminpageComponent implements OnInit {
     });
   }
 
-  onDelete(id) {
+  onDelete(id, tid) {
+    this.db.object('/ManageUsers/'+tid).update({
+      status: 'Removed',
+      removed_by: this.loggedUser,
+      date_time: moment(moment.now()).format("MM/DD/YYYY HH:mm:ss")
+    });
     this.db.object('/UserInfo/' + id).remove().then(() => {
       let index = this.userDatas.findIndex(user => user['id'] === id);
       this.userDatas.splice(index, 1);
@@ -82,10 +95,7 @@ export class AdminpageComponent implements OnInit {
   }
 
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 }

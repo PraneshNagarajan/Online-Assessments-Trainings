@@ -37,6 +37,6 @@ form {
       justify-content: center;
       background: rgba(0, 0, 0, 0.15);
   }
-  .align {
-      white-space: pre-wrap;
+  .pre {
+      white-space: pre-line;
   }

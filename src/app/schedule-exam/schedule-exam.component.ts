@@ -6,6 +6,7 @@ import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import 'moment-duration-format';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-schedule-exam',
@@ -28,15 +29,21 @@ export class ScheduleExamComponent implements OnInit {
   confirmed: boolean = true;
   key: any = "";
 
-  constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
+  constructor(private auth: AuthService, private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
-    this.db.list('/UserList').snapshotChanges().subscribe(users => {
-      users.map(user => {
-        this.userList.push(user.payload.val());
+    this.db.list('/ManageUsers').snapshotChanges().subscribe(datas => {
+      let users =[]; 
+      datas.map(data => {
+        users.push(data.payload.val());
+      });
+      users.map( user => {
+        if(user['status'] !== 'Removed') {
+          this.userList.push(user['userid']);
+        }
       });
     });
     this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
@@ -48,7 +55,7 @@ export class ScheduleExamComponent implements OnInit {
       data.map(assessmentData => {
         this.assessmentSchduledData.push(assessmentData.payload.val());
       });
-    }, error => console.log(error));
+    });
   }
 
   ngOnInit() {
@@ -118,7 +125,7 @@ export class ScheduleExamComponent implements OnInit {
                 if ((date === Sdate)) {
                   if (moment(Stime, "HH:mm:ss").isBetween(moment(subTime, "HH:mm:ss"), moment(addTime, "HH:mm:ss"))) {
                     this.confirmed = false;
-                    this.enagagedUsers = this.enagagedUsers + user['id'] + " ";
+                    this.enagagedUsers = this.enagagedUsers +"Already " + user['id'] + " has been engagged " + Stype + " between " + moment(time, "HH:mm:ss").subtract("00:" + moment.duration('300', "seconds").format("HH:mm:ss")).format("HH:mm:ss") + " - " + addTime + ".\n";
                   }
                 }
               }
@@ -129,14 +136,16 @@ export class ScheduleExamComponent implements OnInit {
       if (this.confirmed || !this.isAvailable) {
         this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
       } else {
-        alert("Already " + this.enagagedUsers + " has been engagged " + Stype + " between " + subTime + " - " + addTime + "\nSo, you can't schedule exam for above mentioned users.");
+        alert(this.enagagedUsers);
         this.enagagedUsers = "";
+        this.users = [];
+        this.users1 = [];
       }
     } else {
       this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
     }
     this.schedule.reset();
-    this.users = [];
+    this.assessmentSchduledData = [];
   }
 
   onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
@@ -164,21 +173,34 @@ export class ScheduleExamComponent implements OnInit {
         users: this.users
       }
     }).then(data => {
-      this.key = data.key;
       alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key)
+      this.db.list("/notifications").push({
+        title: "Notification for Assessment Scheduled",
+        name: Stype,
+        date: Sdate,
+        time: Stime,
+        duration: (Sduration < 3600) ? '00:' + moment.duration(Sduration, 'seconds').format("HH:mm:ss") + " Minutes" : moment.duration(Sduration, 'seconds').format("HH:mm:ss") + " Hours",
+        users: this.users1,
+        key: data.key
+      });
+      this.users = [];
+      this.users1 = [];
     });
+
   }
 
   onAppend(input) {
-    let index = this.users.findIndex(fUser => fUser['id'] as string === input);
+    let index = this.users.findIndex(fUser => fUser === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
+      this.users1.push({ id: input, status: 'UnRead' });
     } else {
       this.users.splice(index, 1);
+      this.users1.splice(index, 1);
     }
   }
 
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 }

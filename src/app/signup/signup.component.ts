@@ -44,7 +44,6 @@ export class SignupComponent implements OnInit {
     this.mediaSubscribe = this.mediaObserver.media$.subscribe((device: MediaChange) => {
       this.deviceXs = device.mqAlias === 'xs' ? '100%' : '30%';
       this.deviceStyle = (device.mqAlias === 'xs') ? 'column' : 'row';
-      console.log(this.deviceStyle);
     })
   }  
   firstFormGroup = new FormGroup({
@@ -315,14 +314,15 @@ export class SignupComponent implements OnInit {
     return this.thirdFormGroup.get('answer2');
   }
   onSave() {
-    let Uid = this.userid.value + '@domain.com';
+    let id = this.userid.value + '@domain.com';
     let Upass = this.password.value;
     let Dob = moment(this.dob.value).format("DD/MM/YYYY");
-    this.afAuth.auth.createUserWithEmailAndPassword(Uid, Upass).then(() => {
+    this.afAuth.auth.createUserWithEmailAndPassword(id, Upass).then(() => {
       this.isSpinner = true;
-      this.db.list('/UserList').push({
-        id: Uid
-      });
+      this.db.list("/ManageUsers").push({
+        userid: id,
+        status: 'signup'
+      }).then( user => {
       this.db.list('/UserInfo').push({
         firstname: this.firstname.value,
         lastname: this.lastname.value,
@@ -352,7 +352,8 @@ export class SignupComponent implements OnInit {
           pincode: (this.isChecked) ? this.Ppincode.value : this.Cpincode.value
         },
         account: {
-          userid: Uid,
+          tid: user.key,
+          userid: id,
           password: this.password.value,
           securityQA1: this.qa1.value,
           securityQA2: this.qa2.value,
@@ -364,8 +365,9 @@ export class SignupComponent implements OnInit {
       this.isSpinner = false;
       alert("Saved data successfully");
       this.router.navigate(['']);
-    }).catch(error => {
-      alert(error);
-    })
+    });
+  }).catch(error => {
+    alert(error);
+  });
   }
 }

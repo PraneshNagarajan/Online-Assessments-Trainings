@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SpecialCharacterValidators } from '../Validators/specialCharacter.validators';
 import { Location } from "@angular/common/";
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-assessment',
@@ -50,8 +51,7 @@ export class AssessmentComponent implements OnInit {
   userAnswered = [];
 
 
-  constructor(location: Location, private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService) {
-
+  constructor(location: Location, private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private auth: AuthService) {
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
@@ -76,7 +76,6 @@ export class AssessmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("constructor");
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
         this.col = 1
@@ -263,7 +262,6 @@ export class AssessmentComponent implements OnInit {
     this.assessmentDatas.map(value => {
       ++k;
       this.userAnswered.map(userAns => {
-        console.log(value.assessment[k]['ans'])
         if (value.assessment[k]['ans'] === userAns.ans) {
           i = ++i;
         }
@@ -321,8 +319,6 @@ export class AssessmentComponent implements OnInit {
     } else {
       this.userAnswered.push({ index: this.Loop, qa: QA, ans: Uans });
     }
-    console.log("loop : ", this.Loop);
-    console.log("length : ",this.dbsize);
     if (this.Loop < this.dbsize - 1) {
       this.next = true;
     }
@@ -336,6 +332,6 @@ export class AssessmentComponent implements OnInit {
   }
 
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 }

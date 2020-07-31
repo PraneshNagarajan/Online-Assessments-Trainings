@@ -34,9 +34,9 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { RouterGuardService } from './router-guard.service';
 import { AdminRouterGuardService } from './admin-router-guard.service';
 import { DataService } from './data.service';
+import { AuthService } from './auth.service';
 import { SignupComponent } from './signup/signup.component';
 import { AssessmentComponent } from './assessment/assessment.component';
-import { TrainingComponent } from './training/training.component';
 import { AdminpageComponent } from './adminpage/adminpage.component';
 import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
@@ -44,6 +44,7 @@ import { CreateAssessmentComponent } from './create-assessment/create-assessment
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { FilterPipe } from './filter.pipe';
+import { NotificationComponent } from './notification/notification.component';
 
 
 @NgModule({
@@ -53,12 +54,12 @@ import { FilterPipe } from './filter.pipe';
     HomepageComponent,
     SignupComponent,
     AssessmentComponent,
-    TrainingComponent,
     AdminpageComponent,
     ScheduleExamComponent,
     VideoTutorialComponent,
     CreateAssessmentComponent,
-    FilterPipe
+    FilterPipe,
+    NotificationComponent
   ],
   imports: [
     MatGridListModule,
@@ -95,17 +96,18 @@ import { FilterPipe } from './filter.pipe';
       { path: 'signUp', component: SignupComponent },
       { path: 'adminPage', component: AdminpageComponent, canActivate:[AdminRouterGuardService] }, 
       { path: 'homePage', component: HomepageComponent, canActivate:[RouterGuardService] },
-      { path: 'scheduleAssessment', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
-      { path: 'training', component: TrainingComponent, canActivate:[RouterGuardService] },
+      { path: 'addAssessment', component: CreateAssessmentComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'scheduleAssessment', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'notification', component: NotificationComponent, canActivate:[RouterGuardService] },
       { path: 'video', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
-      { path: 'addAssessment', component: CreateAssessmentComponent}
     ])
   ],
   providers: [
     RouterGuardService,
     AdminRouterGuardService,
     DataService,
+    AuthService,
     MediaChange
   ],
   bootstrap: [AppComponent]

@@ -49,11 +49,11 @@
                         </button>
                     </div>
                     <div *ngFor="let data of assessmentDatas | filter:Loop ; let i = index;" fxFlex="100">
-                        <mat-label  fxLayoutAlign="space-evenly"><pre>{{i+1}}){{data.qa}}</pre> </mat-label>
+                        <mat-label  fxLayoutAlign="space-evenly">{{i+1}}){{data.qa}}</mat-label>
                         <mat-grid-list [cols]="col" rowHeight="100px">
                             <mat-grid-tile *ngFor="let option of data.options; let j = index;">
-                                <button class="align" fxFlex="65" mat-raised-button [color]="(SelOption === option)? 'accent':''"
-                                    (click)="onSave(data,option)"><pre>{{option}} </pre></button>
+                                <button class="pre" fxFlex="65" mat-raised-button [color]="(SelOption === option)? 'accent':''"
+                                    (click)="onSave(data,option)">{{option}}</button>
                             </mat-grid-tile>
                         </mat-grid-list>
                     </div>

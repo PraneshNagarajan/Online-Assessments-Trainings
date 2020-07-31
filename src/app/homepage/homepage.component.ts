@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { DataService } from '../data.service';
+import { AuthService } from '../auth.service';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @Component({
   selector: 'app-homepage',
@@ -9,7 +11,7 @@ import { DataService } from '../data.service';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-  user;
+  loggedUser;
   media: any;
   size: number;
   top: string;
@@ -19,15 +21,36 @@ export class HomepageComponent implements OnInit {
   style: string;
   userName: string;
   datas = [];
+  count = 0;
+  admin: boolean;
+  notification = [];
+  notifications = [];
 
-  constructor(private router:Router, private mediaObserver: MediaObserver, private service: DataService) {
-    if (sessionStorage.getItem('DomainUser')) {
-      this.user = 'DomainUser';
-    }
-    else if(sessionStorage.getItem('DomainAdmin')) {
-      this.user = 'DomainAdmin';
+  constructor( private db: AngularFireDatabase, private router:Router, private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService) {
+    if (sessionStorage.getItem('DomainAdmin')) {
+      this.loggedUser = sessionStorage.getItem('DomainAdmin');
+      this.admin = true;
+    } else {
+      this.loggedUser = sessionStorage.getItem('DomainUser')
     }
     this.userName = sessionStorage.getItem('username');
+
+    this.db.list("/notifications").snapshotChanges()
+      .subscribe( datas => {
+        datas.map( data => {
+          this.notifications.push({key: data.key, value: data.payload.val()});
+      });
+      this.notifications.map( data => {
+        let notify = data['value']['users'];
+          notify.map(user => {
+            if (user['id'] === this.loggedUser) {
+              if (user['status'] === "Unread") {
+                ++this.count;
+              }
+            }
+          });
+      });
+      });
   }
   
   ngOnInit() {
@@ -48,14 +71,14 @@ export class HomepageComponent implements OnInit {
       }
       else if (change.mqAlias === 'md') {
         this.mode ="row";
-        this.size = 30;
+        this.size = 35;
         this.style ="null"
         this.top="10%"
         this.bottom="100%"
       }
       else {
         this.mode ="row";
-        this.size = 30;
+        this.size = 35;
         this.style ="null"
         this.top="10%"
         this.bottom="100%"
@@ -65,10 +88,8 @@ export class HomepageComponent implements OnInit {
   navigation(url) {
     this.router.navigateByUrl(url).then(() => location.reload());
   }
-  call() {
-    this.datas = this.service.getAssessment("Assessment7");
-  }
+
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 }

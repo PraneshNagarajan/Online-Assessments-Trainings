@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Type } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { DataService } from '../data.service';
@@ -6,6 +6,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-create-assessment',
@@ -33,7 +34,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
   back: boolean;
   SelOption: string;
 
-  constructor(private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase, private router: Router) {
+  constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
@@ -140,19 +141,23 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
   onUpdate(qa, ans?, opt?, optindex?) {
     let index = this.combinedData.findIndex( data => data.qa === qa);
     if(!ans && !opt) {
-      this.combinedData[index]['qa'] = this.update.value;  
+      this.combinedData[index]['qa'] = (this.update.value as string);  
     } 
     else if(ans) {
-      this.combinedData[index]['ans'] = this.update.value;
+      this.combinedData[index]['ans'] =(this.update.value as string);
     } else {
-      this.combinedData[index]['options'][optindex] = this.update ;
+      this.combinedData[index]['options'][optindex] = (this.update.value as string);
     }
     this.SelOption = this.update.value;
     this.update.reset();
   }
 
+
   preview() {
     this.isPreview = true;
+    if (this.combinedData.length - 1 === this.Loop) {
+      this.next = true;
+    }
   }
 
   onNext() {
@@ -175,15 +180,29 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
     this.next = false;
   }
 
-  onDelete(input) {
-    let index = this.options.findIndex(option => option as string === input);
+  onDelete(input, flag) {
+    console.log(input);
+    if(flag === "option"){
+    let index = this.options.findIndex(option => option === input);
     if (index > -1) {
       this.options.splice(index, 1);
+    }} else {
+      this.combinedData.splice(input, 1);
+      alert("deleted sucessfully\n combineddata : "+this.combinedData.length  +"\n Loop : "+this.Loop);
+
+      if(this.combinedData.length  === 0) {
+        this.isPreview = false;
+        this.combinedData = []; 
+      } else if(this.combinedData.length  === this.Loop) {
+        --this.Loop;
+      } else {
+        ++this.Loop;
+      }
     }
   }
 
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 
   ngOnDestroy() {

@@ -5,6 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-video-tutorial',
@@ -29,13 +30,12 @@ export class VideoTutorialComponent implements OnInit {
   videoList = [];
   userName: string;
 
-  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private db: AngularFireDatabase) {
+  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private auth: AuthService, private db: AngularFireDatabase) {
     this.userName = sessionStorage.getItem('username');
     this.db.list('/videoTutorial').snapshotChanges().subscribe(video => {
       let i = 0;
       video.map( list => {
         this.videoList.push({id : ++i, playlist: list.payload.val()});
-        console.log(this.videoList);
       });
     });
    }
@@ -76,10 +76,6 @@ export class VideoTutorialComponent implements OnInit {
         this.top="10%"
         this.bottom="100%"
       }
-      //this.deviceXs = (change.mqAlias === 'xs') ? true: false;
-      //this.deviceWidth = (this.deviceXs)? 300: 880;
-      //this.deviceHeight = (this.deviceXs)? 100: 400;
-
     });
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
@@ -107,7 +103,7 @@ onBack() {
   this.next = false;
 }
   signOut() {
-    this.service.logOut();
+    this.auth.logOut();
   }
 
 
