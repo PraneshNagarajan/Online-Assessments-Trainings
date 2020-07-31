@@ -1,0 +1,43 @@
+<div class="example-loading-shadow" *ngIf="notify.length === 0">
+    <mat-spinner></mat-spinner>
+</div>
+<div fxLayout="column">
+    <mat-toolbar color="primary">
+        <span>Notification</span>
+        <span class="example-spacer"></span>
+        <button mat-button>
+            <mat-icon>account_circle</mat-icon>
+            {{userName}}
+        </button>
+        <span class="example-spacer2"></span>
+        <button mat-button (click)="signOut()">Logout
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div  class="form" *ngIf="notify.length > 0" [ngStyle]="{'width':size}">
+        <div fxLayout="column" *ngFor="let data of notify; let i = index;">
+            <mat-accordion>
+                <mat-expansion-panel (click)="onClick(i)">
+                    <mat-expansion-panel-header >
+                        <mat-panel-title fxLayout="row">
+                            <b>{{data.title}}</b> 
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <span class="example-spacer"></span>
+                            <span *ngIf="data.status === 'Unread'" [color]="yellow" class="glyphicon glyphicon-star"></span>
+                            <span *ngIf="data.status === 'Read'" class="glyphicon glyphicon-star-empty"></span>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" class="body">
+                        <span fxLayoutAlign="center"><b>Date : </b><p>{{data.date}}</p></span>
+                        <span fxLayoutAlign="center"><b>Time : </b><p>{{data.time}}</p></span>
+                        <span fxLayoutAlign="center"><b>Duration : </b><p>{{data.duration}}</p></span>
+                        <span fxLayoutAlign="center"><b>Name : </b><p>{{data.name}}</p></span>
+                        <span fxLayoutAlign="center"><b>key : </b><p>{{data.assessment_key}}</p></span>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
+
