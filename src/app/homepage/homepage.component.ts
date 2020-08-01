@@ -37,6 +37,7 @@ export class HomepageComponent implements OnInit {
 
     this.db.list("/notifications").snapshotChanges()
       .subscribe( datas => {
+        this.notifications = [];
         datas.map( data => {
           this.notifications.push({key: data.key, value: data.payload.val()});
       });

@@ -174,6 +174,7 @@ export class ScheduleExamComponent implements OnInit {
       }
     }).then(data => {
       alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key)
+      console.log(this.users1);
       this.db.list("/notifications").push({
         title: "Notification for Assessment Scheduled",
         name: Stype,
@@ -193,7 +194,7 @@ export class ScheduleExamComponent implements OnInit {
     let index = this.users.findIndex(fUser => fUser === input);
     if (index < 0) {
       this.users.push({ id: input, status: 'Unstarted' });
-      this.users1.push({ id: input, status: 'UnRead' });
+      this.users1.push({ id: input, status: 'Unread' });
     } else {
       this.users.splice(index, 1);
       this.users1.splice(index, 1);

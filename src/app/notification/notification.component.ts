@@ -41,7 +41,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
         datas.map( data => {
           this.notifications.push({key: data.key, value: data.payload.val()});
       });
-      if(this.notification.length > 0) {
+      if(this.notifications.length > 0) {
       this.notifications.map( data => {
         this.notify = data['value']['users'];
         let j = -1;
