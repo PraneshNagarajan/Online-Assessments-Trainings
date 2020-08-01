@@ -95,7 +95,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
    onClick(loc) {
      if(this.notify[loc]['status'] !== "Read") {
      this.notify[loc]['status'] = "Read";
-     let refDB = this.db.database.ref('/notification/' + this.notify[loc]['table_key']);
+     let refDB = this.db.database.ref('/notifications/' + this.notify[loc]['table_key']);
       refDB.child('users').child(this.notify[loc]['index']).update({
       status: "Read"
     });

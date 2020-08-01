@@ -29,7 +29,10 @@ export class SpecialCharacterValidators {
 
     static foundAsessmentKeyCharacter(control: AbstractControl): ValidationErrors | null {
         if (control.value !== null) {
-            if (!(control.value as string).match(/[-_]/) && control.value === null) {
+            if(!(control.value as string).substr(0,1).match(/[-]/)) {
+                return { foundAsessmentKeyCharacter: true };
+            }
+            if (!(control.value as string).match(/[-_]/)) {
                 return { foundAsessmentKeyCharacter: true };
             }
         }
