@@ -22,25 +22,23 @@
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
-<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '170px'}">
-    <span> Admin Page </span>
-    <span class="example-spacer1"></span>
+<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '120px'}">
+    <span fxLayout="row" fxLayoutAlign="space-between">
+        <span> Admin Page </span>
+        <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <button mat-button (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+    </span>
     <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/scheduleAssessment">Schedule Assessment</button>
         <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
     </mat-menu>
-    <span class="example-spacer1"></span>
     <button mat-button routerLink="/video">Video</button>
-    <span class="example-spacer1"></span>
-    <button mat-button>
-        <mat-icon>account_circle</mat-icon>
-        {{userName}}
-    </button>
-    <span class="example-spacer1"></span>
-    <button mat-button (click)="signOut()">Logout
-        <mat-icon>exit_to_app</mat-icon>
-    </button>
 </mat-toolbar>
 <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
     <mat-card [fxFlex]="device">

@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { AuthService } from '../auth.service';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification',
@@ -25,7 +26,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   loc;
 
-  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private navigation: Location ,private service: DataService, private db: AngularFireDatabase) {
+  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private navigation: Location ,private service: DataService, private db: AngularFireDatabase, private router: Router) {
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
       this.admin = true;
@@ -70,6 +71,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
       this.notification = [];
     } else {
       alert("you didn't get any notifications yet");
+      this.router.navigateByUrl('/homePage');
     }
     });
     

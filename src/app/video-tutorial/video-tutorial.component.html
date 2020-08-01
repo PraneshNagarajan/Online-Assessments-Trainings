@@ -12,7 +12,6 @@
 </mat-toolbar>
 <div  fxLayoutAlign="center" class="outer-form">
     <mat-card [fxFlex]="size" fxLayout="column" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
-        <mat-card >
             <form fxLayout="column" *ngFor="let video of videoList">
                 <div *ngIf="video.id === plist">
                     <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">{{video.playlist.title1}}</mat-toolbar>
@@ -44,6 +43,5 @@
                 </div>
                 </div>
             </form>
-    </mat-card>
     </mat-card>
 </div>
