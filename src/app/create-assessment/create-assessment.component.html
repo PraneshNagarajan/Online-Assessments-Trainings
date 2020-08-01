@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="space-between">
     <mat-toolbar color="primary">
-        <span *ngIf="!isPreview">Exam Scheduler Page : </span>
+        <span *ngIf="!isPreview">Add Assessment : </span>
         <span *ngIf="isPreview">Preview Assessment</span>
         <span class="example-spacer"></span>
         <button mat-flat-button color="primary" (click)="signOut()">Logout
@@ -10,7 +10,7 @@
     <div class="bkgclr" fxLayoutAlign="center" *ngIf="!isPreview">
         <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <mat-toolbar color="warn">
-                <span>Schedule exam : </span>
+                <span>Add Assessment </span>
             </mat-toolbar>
             <form fxLayout="column" fxLayoutAlign="center" [formGroup]="Submit">
                 <mat-form-field>
