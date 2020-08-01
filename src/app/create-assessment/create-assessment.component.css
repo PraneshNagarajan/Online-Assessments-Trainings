@@ -1,7 +1,9 @@
 .example-spacer {
     flex: 1 1 auto;
 }
-
+.example-spacer1 {
+    flex: 0.05 1 auto;
+}
 div .card{
     padding: 0px;
     margin-bottom: 100px;

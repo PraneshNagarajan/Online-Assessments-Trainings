@@ -11,7 +11,6 @@ export class FilterPipe implements PipeTransform {
       for (let i = 0; i < value.length; i++) {
         if (args === i) {
           array.push(value[i]);
-          console.log(array);
         }
       }
       return array;
@@ -19,7 +18,6 @@ export class FilterPipe implements PipeTransform {
       for (let i = 0; i < value[0]['assessment'].length; i++) {
         if (args === i) {
           array.push(value[0]['assessment'][i]);
-          console.log(array);
         }
       }
       return array;

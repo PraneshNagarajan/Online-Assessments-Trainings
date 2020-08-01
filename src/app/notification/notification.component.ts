@@ -40,6 +40,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
         datas.map( data => {
           this.notifications.push({key: data.key, value: data.payload.val()});
       });
+      if(this.notification.length > 0) {
       this.notifications.map( data => {
         this.notify = data['value']['users'];
         let j = -1;
@@ -67,6 +68,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
       this.notify = this.notification;
       this.notifications = [];
       this.notification = [];
+    } else {
+      alert("you didn't get any notifications yet");
+    }
     });
     
    }

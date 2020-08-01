@@ -33,6 +33,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
   next: boolean;
   back: boolean;
   SelOption: string;
+  isChecked:boolean;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
     if (sessionStorage.getItem('DomainAdmin')) {
@@ -53,7 +54,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
         this.size = 90;
-        this.top = "50%"
+        this.top = "5%"
         this.bottom = "100%"
         this.col = 1
         this.top1 = "50%"
@@ -61,7 +62,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
       }
       else if (change.mqAlias === 'sm') {
         this.size = 90;
-        this.top = "50%"
+        this.top = "5%"
         this.bottom = "100%"
         this.col = 1;
         this.top1 = "50%"
@@ -69,7 +70,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
       }
       else if (change.mqAlias === 'md') {
         this.size = 80;
-        this.top = "10%"
+        this.top = "5%"
         this.bottom = "100%"
         this.col = 2;
         this.top1 = "5%"
@@ -77,7 +78,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
       }
       else {
         this.size = 80;
-        this.top = "10%"
+        this.top = "5%"
         this.bottom = "100%"
         this.col = 2;
         this.top1 = "5%"
@@ -111,10 +112,14 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
         name: Stype
       }
     });
+    this.options.map( loc => {
+      this.combinedData.splice(loc, 1);
+    });
     this.db.list("/AssessmentList").push(Stype);
-    this.db.list("/AssessmentsData/" + Stype).push(this.combinedData).then(() =>
-    alert(Stype + " has been uploaded sucessfully.")).catch( error => alert(error));
+    this.db.list("/AssessmentsData/" + Stype).push(this.combinedData).then(() =>{
+    alert(Stype + " has been uploaded sucessfully.");
     this.router.navigateByUrl("/homePage").then(location.reload);
+  }).catch( error => alert(error));
   }
 
 
@@ -131,10 +136,12 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
   onSave() {
     this.ngOnDestroy();
     let ques = this.Submit.get('question');
-    let Ans = this.Submit.get('ans');
-    this.combinedData.push({ qa: ques.value, ans: ((Ans.value as string).trim()), options: this.options });
-    Ans.reset();
+    let ans = this.Submit.get('ans');
+    let option = this.Submit.get('option');
+    this.combinedData.push({ qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
     ques.reset();
+    ans.reset();
+    option.reset();
     this.options = [];
   }
   
@@ -155,6 +162,7 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
 
   preview() {
     this.isPreview = true;
+    this.options = [];
     if (this.combinedData.length - 1 === this.Loop) {
       this.next = true;
     }
@@ -168,6 +176,12 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
       this.next = false;
     }
     this.back = true;
+    let index = this.options.findIndex( qa => qa === this.Loop);
+    if( index > -1) {
+      this.isChecked = true;
+    } else {
+      this.isChecked = false;
+    }
   }
 
   onBack() {
@@ -178,27 +192,26 @@ export class CreateAssessmentComponent implements OnInit, OnDestroy {
       this.back = true;
     }
     this.next = false;
+    let index = this.options.findIndex( qa => qa === this.Loop);
+    if( index > -1) {
+      this.isChecked = true;
+    } else {
+      this.isChecked = false;
+    }
   }
 
   onDelete(input, flag) {
-    console.log(input);
-    if(flag === "option"){
     let index = this.options.findIndex(option => option === input);
+    if(flag === "option"){
     if (index > -1) {
       this.options.splice(index, 1);
     }} else {
-      this.combinedData.splice(input, 1);
-      alert("deleted sucessfully\n combineddata : "+this.combinedData.length  +"\n Loop : "+this.Loop);
-
-      if(this.combinedData.length  === 0) {
-        this.isPreview = false;
-        this.combinedData = []; 
-      } else if(this.combinedData.length  === this.Loop) {
-        --this.Loop;
+      if(index > -1){
+        this.options.splice(index, 1);
       } else {
-        ++this.Loop;
+        this.options.push(input);
       }
-    }
+    } 
   }
 
   signOut() {
