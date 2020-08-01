@@ -1,0 +1,49 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+    <mat-toolbar color="primary">
+        <span>Videos </span>
+        <span class="example-spacer"></span>
+    <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
+    <button mat-button (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+    </mat-toolbar>
+    <div class="bkgclr" fxLayoutAlign="center">
+        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+            <mat-toolbar color="warn">
+                <span>Add Videos :</span>
+            </mat-toolbar>
+            <form fxLayout="column" fxLayoutAlign="center" [formGroup]="Video">
+                <mat-form-field>
+                    <mat-label>Enter the Video title1:</mat-label>
+                    <input matInput formControlName="title1" required>
+                    <mat-hint>E.g What is Software Engineering?</mat-hint>
+                    <mat-error>
+                        Video title1 is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Enter the Video title2:</mat-label>
+                    <input matInput formControlName="title2" required>
+                    <mat-hint>E.g What is SE?</mat-hint>
+                    <mat-error>
+                        Video title2 is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Enter the youtube video id:</mat-label>
+                    <input matInput formControlName="videoid" required>
+                    <mat-error>
+                        Video id is Required.
+                    </mat-error>
+                </mat-form-field>
+                <div fxLayoutAlign="space-around">
+                    <button mat-raised-button color="primary" [disabled]="Video.invalid" (click)="onAdd()">Add</button>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>

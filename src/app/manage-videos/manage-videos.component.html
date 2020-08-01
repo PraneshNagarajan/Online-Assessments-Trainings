@@ -1,0 +1,45 @@
+<div class="example-loading-shadow" *ngIf="videoDatas.length === 0">
+    <mat-spinner></mat-spinner>
+</div>
+
+<mat-toolbar color=primary *ngIf="!deviceXs">
+    <span> Manage Videos</span>
+    <span class="example-spacer"></span>
+    <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
+    <button mat-button (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<div *ngFor="let data of videoDatas" fxLayoutAlign="space-evenly center">
+    <mat-card [fxFlex]="device">
+        <mat-toolbar color="primary">
+            <p><b>Video ID : </b>{{ data.value.videoid}}</p>
+        </mat-toolbar>
+        <div class="menu" fxLayout="column">
+            <div fxLayout="column">
+                <mat-form-field fxFlex="100">
+                    <input matInput placeholder="Title1:" [value]="data.value.title1" #T1>
+                </mat-form-field>
+                <mat-form-field fxFlex="100">
+                    <input matInput placeholder="Title2" [value]="data.value.title2" #T2>
+                </mat-form-field>
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                    <div class="example-button-container">
+                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, T1.value, T2.value )">
+                            <mat-icon>update</mat-icon>
+                        </button>
+                    </div>
+                    <div class="example-button-container">
+                        <button mat-mini-fab color="warn" (click)="onDelete(data.id, data.value.tid)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>
