@@ -14,8 +14,8 @@
     <mat-card [fxFlex]="size" fxLayout="column" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
             <form fxLayout="column" *ngFor="let video of videoList">
                 <div *ngIf="video.id === plist">
-                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">{{video.playlist.title1}}</mat-toolbar>
-                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="!deviceXs">{{video.playlist.title2}}</mat-toolbar>
+                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="!deviceXs">{{video.playlist.title1}}</mat-toolbar>
+                    <mat-toolbar color="warn" fxLayoutAlign="center" *ngIf="deviceXs">{{video.playlist.title2}}</mat-toolbar>
                 <div fxLayout="row" fxLayoutAlign="space-evenly" >
                     <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
                         <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
@@ -28,7 +28,7 @@
                         </button>
                       </div>
                       <div>
-                        <youtube-player [videoId]="video.playlist.name" suggestedQuality="highres" [height]="deviceHeight" [width]="deviceWidth">{{video.name}} </youtube-player>
+                        <youtube-player [videoId]="video.playlist.videoid" suggestedQuality="highres" [height]="deviceHeight" [width]="deviceWidth">{{video.name}} </youtube-player>
                     </div>
                       <div  fxLayoutAlign="space-around center" *ngIf="!deviceXs">
                         <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">

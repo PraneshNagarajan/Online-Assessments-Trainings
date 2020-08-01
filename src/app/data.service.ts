@@ -27,37 +27,7 @@ export class DataService {
   }
 
   getNotifications(count?: boolean) {
-    this.notification = [];
-    this.notifications = [];
-    this.db.list("/notification").snapshotChanges()
-      .subscribe( datas => {
-        datas.map( data => {
-          this.notifications.push({key: data.key, value: data.payload.val()});
-      });
-      this.notifications.map( data => {
-        this.notify = data['value']['users'];
-        let j = 0;
-          this.notify.map(user => {
-            if (user['id'] === this.loggedUser) {
-              if (user['status'] === "Unread") {
-                ++j;
-              }
-              this.notification.push({
-                status: user['status'],
-                date: data['value']['date'],
-                time: data['value']['time'],
-                duration: data['value']['duration'],
-                name: data['value']['name'],
-                assessment_key: data['value']['key'],
-                title: data['value']['title'],
-                scheduled_by: data['value']['scheduled_by'],
-                index: j,
-                table_key: data['key']
-              });
-            }
-          });
-      });
-      });
+    
       return this.notification;
   }
 

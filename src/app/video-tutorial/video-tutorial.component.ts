@@ -32,7 +32,7 @@ export class VideoTutorialComponent implements OnInit {
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private auth: AuthService, private db: AngularFireDatabase) {
     this.userName = sessionStorage.getItem('username');
-    this.db.list('/videoTutorial').snapshotChanges().subscribe(video => {
+    this.db.list('/Videos').snapshotChanges().subscribe(video => {
       let i = 0;
       video.map( list => {
         this.videoList.push({id : ++i, playlist: list.payload.val()});

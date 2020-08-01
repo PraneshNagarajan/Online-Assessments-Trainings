@@ -38,14 +38,19 @@ import { AuthService } from './auth.service';
 import { SignupComponent } from './signup/signup.component';
 import { AssessmentComponent } from './assessment/assessment.component';
 import { AdminpageComponent } from './adminpage/adminpage.component';
-import { ScheduleExamComponent } from './schedule-exam/schedule-exam.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
-import { CreateAssessmentComponent } from './create-assessment/create-assessment.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { FilterPipe } from './filter.pipe';
 import { NotificationComponent } from './notification/notification.component';
-
+import { AddAssessmentComponent } from './add-assessment/add-assessment.component';
+import { ScheduleAssessmentComponent } from './schedule-assessment/schedule-assessment.component';
+import { ManageAssessmentsComponent } from './manage-assessments/manage-assessments.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ResultsComponent } from './results/results.component';
+import { AddVideosComponent } from './add-videos/add-videos.component';
+import { ManageVideosComponent } from './manage-videos/manage-videos.component';
+import { InvalidPageComponent } from './invalid-page/invalid-page.component';
 
 @NgModule({
   declarations: [
@@ -55,11 +60,17 @@ import { NotificationComponent } from './notification/notification.component';
     SignupComponent,
     AssessmentComponent,
     AdminpageComponent,
-    ScheduleExamComponent,
     VideoTutorialComponent,
-    CreateAssessmentComponent,
     FilterPipe,
-    NotificationComponent
+    NotificationComponent,
+    AddAssessmentComponent,
+    ManageAssessmentsComponent,
+    ScheduleAssessmentComponent,
+    ProfileComponent,
+    ResultsComponent,
+    AddVideosComponent,
+    ManageVideosComponent,
+    InvalidPageComponent
   ],
   imports: [
     MatGridListModule,
@@ -97,10 +108,16 @@ import { NotificationComponent } from './notification/notification.component';
       { path: 'adminPage', component: AdminpageComponent, canActivate:[AdminRouterGuardService] }, 
       { path: 'homePage', component: HomepageComponent, canActivate:[RouterGuardService] },
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
-      { path: 'addAssessment', component: CreateAssessmentComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'scheduleAssessment', component: ScheduleExamComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'notification', component: NotificationComponent, canActivate:[RouterGuardService] },
-      { path: 'video', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
+      { path: 'addAssessments', component: AddAssessmentComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'scheduleAssessments', component: ScheduleAssessmentComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'manageAssessments', component: ManageAssessmentsComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'notifications', component: NotificationComponent, canActivate:[RouterGuardService] },
+      { path: 'profile', component: ProfileComponent, canActivate:[RouterGuardService] },
+      { path: 'results', component: ResultsComponent, canActivate:[RouterGuardService] },
+      { path: 'videos', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
+      { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'manageVideos', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
+      { path: '**', component: InvalidPageComponent}
     ])
   ],
   providers: [

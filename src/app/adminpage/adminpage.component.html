@@ -5,13 +5,18 @@
 <mat-toolbar color=primary *ngIf="!deviceXs">
     <span> AdminPage</span>
     <span class="example-spacer1"></span>
-    <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/scheduleAssessment">Schedule Assessment</button>
-        <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
+    <button mat-button [matMenuTriggerFor]="assessment">Assessment</button>
+    <mat-menu #assessment="matMenu">
+        <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
+        <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
+        <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
     </mat-menu>
     <span class="example-spacer1"></span>
-    <button mat-button routerLink="/video">Video</button>
+    <button mat-button [matMenuTriggerFor]="video">Video</button>
+    <mat-menu #video="matMenu">
+        <button mat-menu-item routerLink="/addVideos">Add Videos</button>
+        <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
+    </mat-menu>
     <span class="example-spacer"></span>
     <button mat-button>
         <mat-icon>account_circle</mat-icon>
@@ -33,12 +38,17 @@
         <mat-icon>exit_to_app</mat-icon>
     </button>
     </span>
-    <button mat-button [matMenuTriggerFor]="menu">Assessment</button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/scheduleAssessment">Schedule Assessment</button>
-        <button mat-menu-item routerLink="/addAssessment">Add Assessment</button>
+    <button mat-button [matMenuTriggerFor]="assessment">Assessment</button>
+    <mat-menu #assessment="matMenu">
+        <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
+        <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
+        <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
     </mat-menu>
-    <button mat-button routerLink="/video">Video</button>
+    <button mat-button [matMenuTriggerFor]="video">Video</button>
+    <mat-menu #video="matMenu">
+        <button mat-menu-item routerLink="/addVideos">Add Videos</button>
+        <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
+    </mat-menu>
 </mat-toolbar>
 <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
     <mat-card [fxFlex]="device">
