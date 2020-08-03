@@ -41,6 +41,7 @@ import { AdminpageComponent } from './adminpage/adminpage.component';
 import { VideoTutorialComponent } from './video-tutorial/video-tutorial.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { FilterPipe } from './filter.pipe';
 import { NotificationComponent } from './notification/notification.component';
 import { AddAssessmentComponent } from './add-assessment/add-assessment.component';
@@ -103,6 +104,7 @@ import { CatagoryComponent } from './catagory/catagory.component';
     YouTubePlayerModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
+    MatSidenavModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent },

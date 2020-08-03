@@ -5,13 +5,6 @@
 <mat-toolbar color=primary *ngIf="!deviceXs">
     <span> AdminPage</span>
     <span class="example-spacer1"></span>
-    <button mat-button [matMenuTriggerFor]="assessment">Assessment</button>
-    <mat-menu #assessment="matMenu">
-        <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
-        <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
-        <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
-    </mat-menu>
-    <span class="example-spacer1"></span>
     <button mat-button [matMenuTriggerFor]="video">Video</button>
     <mat-menu #video="matMenu">
         <button mat-menu-item routerLink="/addVideos">Add Videos</button>
@@ -22,6 +15,13 @@
     <mat-menu #catagory="matMenu">
         <button mat-menu-item routerLink="/addVideos">Add Catagories</button>
         <button mat-menu-item routerLink="/manageVideos">Manage Catagories</button>
+    </mat-menu>
+    <span class="example-spacer1"></span>
+    <button mat-button [matMenuTriggerFor]="assessment">Assessment</button>
+    <mat-menu #assessment="matMenu">
+        <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
+        <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
+        <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
     </mat-menu>
     <span class="example-spacer"></span>
     <button mat-button>
@@ -33,68 +33,97 @@
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
-<mat-toolbar fxLayout="column" color="primary" *ngIf="deviceXs" [ngStyle]="{'padding-bottom' : '120px'}">
-    <span fxLayout="row" fxLayoutAlign="space-between">
-        <span> Admin Page </span>
-        <button mat-button>
+<mat-toolbar color="primary" *ngIf="deviceXs">
+    <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="example-app-name">AdminPage</h1>
+    <span class="example-spacer"></span>
+    <button mat-button>
         <mat-icon>account_circle</mat-icon>
         {{userName}}
     </button>
+    <span class="example-spacer1"></span>
     <button mat-button (click)="signOut()">Logout
         <mat-icon>exit_to_app</mat-icon>
     </button>
-    </span>
-    <button mat-button [matMenuTriggerFor]="assessment">Assessment</button>
-    <mat-menu #assessment="matMenu">
-        <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
-        <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
-        <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
-    </mat-menu>
-    <button mat-button [matMenuTriggerFor]="video">Video</button>
-    <mat-menu #video="matMenu">
-        <button mat-menu-item routerLink="/addVideos">Add Videos</button>
-        <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
-    </mat-menu>
-    <button mat-button [matMenuTriggerFor]="catagory">catagory</button>
-    <mat-menu #catagory="matMenu">
-        <button mat-menu-item routerLink="/addVideos">Add Catagories</button>
-        <button mat-menu-item routerLink="/manageVideos">Manage Catagories</button>
-    </mat-menu>
 </mat-toolbar>
-<div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
-    <mat-card [fxFlex]="device">
-        <mat-toolbar color="primary">
-            <p><b>Name : </b>{{ data.value.firstname}}</p>
-        </mat-toolbar>
-        <div class="menu" fxLayout="column">
-            <p><b>Table ID : </b>{{ data.id}}</p>
-            <p><b>User ID : </b>{{ data.value.account.userid}}</p>
-            <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
-            <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
-            <p><b>Father Name : </b>{{ data.value.fathername}}</p>
-            <p><b>DOB : </b>{{ data.value.dob}}</p>
-            <p><b>Gender : </b>{{ data.value.gender}}</p>
-            <p><b>phone : </b>{{ data.value.phone}}</p>
-            <p><b>mail : </b>{{ data.value.email}}</p>
-            <div fxLayout="column">
-                <mat-form-field fxFlex="100">
-                    <mat-label>Assign Role : </mat-label>
-                    <mat-select ngModel name="role" #role="ngModel">
-                        <mat-option *ngFor="let role of roles" [value]="role.name">
-                            {{role.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div fxLayout="row" fxLayoutAlign="space-around center">
-                    <div class="example-button-container">
-                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)">
-                            <mat-icon>update</mat-icon>
-                        </button>
-                    </div>
-                    <div class="example-button-container">
-                        <button mat-mini-fab color="warn" (click)="onDelete(data.id, data.value.account.tid)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
+<mat-sidenav-container class="example-sidenav-container">
+    <mat-sidenav #snav mode="over">
+        <mat-nav-list fxLayout="column">
+            <button mat-button class="size" (click)="video.toggle()" fxLayoutAlign="stretch">
+                <b>Video </b>
+                <mat-icon>arrow_right</mat-icon>
+            </button>
+            <button mat-button class="size" (click)="catagory.toggle()" fxLayoutAlign="stretch">
+                <b>Catagory</b>
+                <mat-icon>arrow_right</mat-icon>
+            </button>
+            <button mat-button class="size" (click)="assessment.toggle()" fxLayoutAlign="stretch">
+                <b>Assessment</b>
+                <mat-icon>arrow_right</mat-icon>
+            </button>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav class="video" #video position="start" mode="over">
+        <mat-nav-list fxLayout="column">
+            <button mat-menu-item routerLink="/addVideos">Add Videos</button>
+            <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav class="catagory" #catagory position="start" mode="over">
+        <mat-nav-list fxLayout="column">
+            <button mat-menu-item routerLink="/addCatagory">Add Catagory</button>
+            <button mat-menu-item routerLink="/manageCatagory">Manage Catagory</button>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav class="assessment" #assessment position="start" mode="over">
+        <mat-nav-list fxLayout="column">
+            <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
+            <button mat-menu-item routerLink="/manageAssessments">Manage Assessments</button>
+            <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">
+            <mat-card [fxFlex]="device">
+                <mat-toolbar color="primary">
+                    <p><b>Name : </b>{{ data.value.firstname}}</p>
+                </mat-toolbar>
+                <div class="menu" fxLayout="column">
+                    <p><b>Table ID : </b>{{ data.id}}</p>
+                    <p><b>User ID : </b>{{ data.value.account.userid}}</p>
+                    <p *ngIf="data.value.account.role"><b>Role : </b>{{ data.value.account.role}}</p>
+                    <p *ngIf="!data.value.account.role"><b>Role : </b>Not Assign</p>
+                    <p><b>Father Name : </b>{{ data.value.fathername}}</p>
+                    <p><b>DOB : </b>{{ data.value.dob}}</p>
+                    <p><b>Gender : </b>{{ data.value.gender}}</p>
+                    <p><b>phone : </b>{{ data.value.phone}}</p>
+                    <p><b>mail : </b>{{ data.value.email}}</p>
+                    <div fxLayout="column">
+                        <mat-form-field fxFlex="100">
+                            <mat-label>Assign Role : </mat-label>
+                            <mat-select ngModel name="role" #role="ngModel">
+                                <mat-option *ngFor="let role of roles" [value]="role.name">
+                                    {{role.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div fxLayout="row" fxLayoutAlign="space-around center">
+                            <div class="example-button-container">
+                                <button mat-mini-fab color="accent" (click)="onUpdate(data.id, role.value)">
+                                    <mat-icon>update</mat-icon>
+                                </button>
+                            </div>
+                            <div class="example-button-container">
+                                <button mat-mini-fab color="warn" (click)="onDelete(data.id, data.value.account.tid)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </mat-card>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
