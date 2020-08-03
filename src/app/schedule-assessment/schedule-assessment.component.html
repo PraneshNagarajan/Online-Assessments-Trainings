@@ -1,6 +1,10 @@
+<div class="example-loading-shadow" *ngIf="catagoryList.length === 0">
+    <mat-spinner></mat-spinner>
+</div>
+
 <div fxLayout="column" fxLayoutAlign="space-between">
     <mat-toolbar color="primary">
-        <span>Exam Scheduler Page : </span>
+        <span>Assssment Scheduler Page : </span>
         <span class="example-spacer"></span>
         <button mat-flat-button color="primary" (click)="signOut()">Logout
             <mat-icon>exit_to_app</mat-icon>
@@ -12,10 +16,32 @@
                 <span>Schedule exam : </span>
             </mat-toolbar>
             <form fxLayout="column" fxLayoutAlign="center" [formGroup]="schedule">
-                <mat-form-field >
+                <mat-form-field>
+                    <mat-label>Catagory:</mat-label>
+                    <mat-select formControlName="catagory" required>
+                        <mat-option *ngFor="let data of catagoryList; let i = index;" [value]="data.catagory"
+                            (click)="getSubCatagory(i)">{{data.catagory}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Catagory is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Sub-Catagory:</mat-label>
+                    <mat-select formControlName="subcatagory" required>
+                        <mat-option (click)="getAssessmentName()"
+                            *ngFor="let subcatagory of catagoryList | filter:subIndex:'elseifloop'"
+                            [value]="subcatagory">{{subcatagory}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Sub-Catagory is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
                     <mat-label>Select the assesment:</mat-label>
                     <mat-select formControlName="assessment" required>
-                        <mat-option *ngFor="let assessment of assessmentList" [value]="assessment">{{assessment}}</mat-option>
+                        <mat-option *ngFor="let assessment of assessmentList" [value]="assessment">{{assessment}}
+                        </mat-option>
                     </mat-select>
                     <mat-error>
                         Assessment is required.
@@ -23,11 +49,11 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Schedule Date:</mat-label>
-                    <input formControlName="date" matInput [matDatepicker]="picker" required>
+                    <input formControlName="date" [min]="minDate" matInput [matDatepicker]="picker" required>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker touchUi #picker></mat-datepicker>
                     <mat-error>
-                      Date is Required.
+                        Date is Required.
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
@@ -46,14 +72,15 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Select the users:</mat-label>
-                    <mat-select  multiple required formControlName="users">
-                        <mat-option *ngFor="let user of userList"  (click)="onAppend(user)">{{user}}</mat-option>
+                    <mat-select multiple required formControlName="users">
+                        <mat-option *ngFor="let user of userList" (click)="onAppend(user)">{{user}}</mat-option>
                     </mat-select>
                     <mat-error>
                         Users is Required.
                     </mat-error>
                 </mat-form-field>
-                <button mat-raised-button color="primary" (click)="onSchedule()"  [disabled]="schedule.invalid">Schedule</button>
+                <button mat-raised-button color="primary" (click)="onSchedule()"
+                    [disabled]="schedule.invalid || catagoryList.length === 0">Schedule</button>
             </form>
         </mat-card>
     </div>

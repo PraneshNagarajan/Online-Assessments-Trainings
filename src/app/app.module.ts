@@ -121,7 +121,7 @@ import { CatagoryComponent } from './catagory/catagory.component';
       { path: 'videos', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'manageVideos', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'catagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'addCatagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: '**', component: InvalidPageComponent}
     ])
   ],

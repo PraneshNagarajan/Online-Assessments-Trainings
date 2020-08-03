@@ -56,10 +56,12 @@ export class NotificationComponent implements OnInit, OnDestroy {
                 date: data['value']['date'],
                 time: data['value']['time'],
                 duration: data['value']['duration'],
+                catagory:  data['value']['catagory'],
+                subcatagory:  data['value']['subcatagory'],
+                topic:  data['value']['topic'],
                 name: data['value']['name'],
                 assessment_key: data['value']['key'],
                 title: data['value']['title'],
-                scheduled_by: data['value']['scheduled_by'],
                 index: this.loc,
                 table_key: data['key']
               });

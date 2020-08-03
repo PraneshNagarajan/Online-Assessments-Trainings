@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import 'moment-duration-format';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service'
+import * as firebase from 'firebase'
 
 @Component({
   selector: 'app-schedule-assessment',
@@ -28,6 +29,9 @@ export class ScheduleAssessmentComponent implements OnInit {
   users1 = [];
   confirmed: boolean = true;
   key: any = "";
+  catagoryList = [];
+  subIndex;
+  minDate: Date;
 
   constructor(private auth: AuthService, private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
     if (sessionStorage.getItem('DomainAdmin')) {
@@ -35,6 +39,7 @@ export class ScheduleAssessmentComponent implements OnInit {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
+    this.minDate = new Date(moment().year(), moment().month(), moment().date());
     this.db.list('/ManageUsers').snapshotChanges().subscribe(datas => {
       let users =[]; 
       datas.map(data => {
@@ -46,9 +51,10 @@ export class ScheduleAssessmentComponent implements OnInit {
         }
       });
     });
-    this.db.list('/AssessmentList').snapshotChanges().subscribe(assessments => {
-      assessments.map(assessment => {
-        this.assessmentList.push(assessment.payload.val());
+    this.db.list("/Catagories").snapshotChanges().subscribe( datas => {
+      this.catagoryList = [];
+      datas.map( data => {
+        this.catagoryList.push(data.payload.val());
       });
     });
     this.db.list("/AssessmentUserStatusTracker").snapshotChanges().subscribe(data => {
@@ -84,13 +90,34 @@ export class ScheduleAssessmentComponent implements OnInit {
   }
 
   schedule = new FormGroup({
+    catagory: new FormControl("", Validators.required),
+    subcatagory:new FormControl("", Validators.required),
     assessment: new FormControl("", Validators.required),
     date: new FormControl("", Validators.required),
     time: new FormControl("", Validators.required),
     duration: new FormControl("", Validators.required),
     users: new FormControl("", Validators.required)
   });
-
+  get catagory() {
+    return this.schedule.get("catagory");
+  }
+  get subcatagory() {
+    return this.schedule.get("subcatagory");
+  }
+  getSubCatagory(index) {
+    this.subIndex = index;
+  }
+  getAssessmentName() {
+    this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value).snapshotChanges().subscribe(datas => {
+     this.assessmentList = [];
+      datas.map(data => {
+        this.assessmentList.push(data.key);
+      });
+      if( this.assessmentList.length === 0) {
+        alert("No Assessment Found under " + this.subcatagory.value+"\nPlease add assessment under "+ this.subcatagory.value+" and then try.");
+      }
+    });
+  }
   onSchedule() {
     let i = 0;
     let addTime, subTime;
@@ -134,7 +161,8 @@ export class ScheduleAssessmentComponent implements OnInit {
         }
       });
       if (this.confirmed || !this.isAvailable) {
-        this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+        console.log( this.catagory.value, "  ",this.subcatagory.value);
+        this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration, this.catagory.value, this.subcatagory.value);
       } else {
         alert(this.enagagedUsers);
         this.enagagedUsers = "";
@@ -142,13 +170,13 @@ export class ScheduleAssessmentComponent implements OnInit {
         this.users1 = [];
       }
     } else {
-      this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration);
+      this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration, this.catagory.value, this.subcatagory.value);
     }
     this.schedule.reset();
     this.assessmentSchduledData = [];
   }
 
-  onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration) {
+  onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration, Scatagory, Ssubcatagory) {
     this.db.list('/AssessmentSchedulerTracker').push({
       scheduler_info: {
         id: sessionStorage.getItem('DomainAdmin'),
@@ -166,18 +194,20 @@ export class ScheduleAssessmentComponent implements OnInit {
       assessment_id: Sdate + "_" + Stime + "_" + Sduration + "_" + Stype,
       status: 'Unstarted',
       scheduled_info: {
-        name: Stype,
+        name: Scatagory+ '/' + Ssubcatagory+'/'+Stype,
         date: Sdate,
         time: Stime,
         duration: Sduration,
         users: this.users
       }
     }).then(data => {
-      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key)
-      console.log(this.users1);
+      alert(Stype + " has been scheduled on " + Sdate + " " + Stime + " sucessfully.\n Please find the Assessment Key :  " + data.key);
       this.db.list("/notifications").push({
         title: "Notification for Assessment Scheduled",
-        name: Stype,
+        catagory: Scatagory,
+        subcatagory: Ssubcatagory,
+        topic: (Stype as string).split(':-')[1],
+        name: (Stype as string).split(':-')[0],
         date: Sdate,
         time: Stime,
         duration: (Sduration < 3600) ? '00:' + moment.duration(Sduration, 'seconds').format("HH:mm:ss") + " Minutes" : moment.duration(Sduration, 'seconds').format("HH:mm:ss") + " Hours",

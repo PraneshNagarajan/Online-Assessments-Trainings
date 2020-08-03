@@ -143,7 +143,7 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
       this.combinedData.splice(loc, 1);
     });
     this.db.list("/AssessmentList").push(Stype);
-    this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value + '/' + Stype).push(this.combinedData).then(() => {
+    this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value + '/' + Stype+":-"+this.topic.value).push(this.combinedData).then(() => {
       alert(Stype + " has been uploaded sucessfully.");
       this.isPreview = false;
       this.Submit.reset();
@@ -170,7 +170,7 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
     let ques = this.Submit.get('question');
     let ans = this.Submit.get('ans');
     let option = this.Submit.get('option');
-    this.combinedData.push({ topic: this.topic.value, qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
+    this.combinedData.push({ qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
     ques.reset();
     ans.reset();
     option.reset();
