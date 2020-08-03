@@ -1,0 +1,48 @@
+<div fxLayout="column" fxLayoutAlign="space-between">
+    <mat-toolbar color="primary">
+        <span>Videos </span>
+        <span class="example-spacer"></span>
+    <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
+    <button mat-button (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+    </mat-toolbar>
+    <div class="bkgclr" fxLayoutAlign="center">
+        <mat-card [fxFlex]="size" [ngStyle]="{'margin-top': top, 'margin-bottom': bottom}">
+            <mat-toolbar color="warn">
+                <span>Add catagory :</span>
+            </mat-toolbar>
+            <form fxLayout="column" fxLayoutAlign="center" [formGroup]="form">
+                <mat-form-field>
+                    <mat-label>Enter the catagory name:</mat-label>
+                    <input matInput formControlName="catagory">
+                    <mat-hint>Programming-languages</mat-hint>
+                    <mat-error *ngIf="catagory.invalid && catagory.touched">
+                        <li *ngIf="catagory.errors.required">Catagory is required.</li>
+                        <li *ngIf="catagory.errors.firstCaps">First Character should be upperCase.</li>
+                        <li *ngIf="catagory.errors.foundText">All Characters should be LowerCase except 1st character.</li>
+                        <li *ngIf="catagory.errors.noSpace">use '-' character instaed of space</li>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Enter the sub-catagory name:</mat-label>
+                    <input matInput formControlName="subcatagory">
+                    <mat-hint>Java</mat-hint>
+                    <mat-error *ngIf="subcatagory.invalid && subcatagory.touched">
+                        <li *ngIf="subcatagory.errors.required">SubCatagory is required.</li>
+                        <li *ngIf="subcatagory.errors.firstCaps">First Character should be upperCase.</li>
+                        <li *ngIf="subcatagory.errors.foundText">All Characters should be LowerCase except 1st character.</li>
+                        <li *ngIf="subcatagory.errors.noSpace">use '-' character instaed of space</li>
+                    </mat-error>
+                </mat-form-field>
+                <div fxLayoutAlign="space-around">
+                    <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onAdd()">Add</button>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>

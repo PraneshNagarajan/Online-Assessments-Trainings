@@ -12,12 +12,14 @@ div .card{
 .bkgclr {
     background-color: rgba(0, 0, 0 , 0.15);
 }
-
 .mat-card {
     margin-top: 10px;
 }
 form {
     padding: 20px;
+}
+.mat-form-field ~ .mat-form-field {
+    margin-top: 15px;
 }
  button {
      margin-top: 20px;

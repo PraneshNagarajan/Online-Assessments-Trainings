@@ -17,6 +17,12 @@
         <button mat-menu-item routerLink="/addVideos">Add Videos</button>
         <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
     </mat-menu>
+    <span class="example-spacer1"></span>
+    <button mat-button [matMenuTriggerFor]="catagory">catagory</button>
+    <mat-menu #catagory="matMenu">
+        <button mat-menu-item routerLink="/addVideos">Add Catagories</button>
+        <button mat-menu-item routerLink="/manageVideos">Manage Catagories</button>
+    </mat-menu>
     <span class="example-spacer"></span>
     <button mat-button>
         <mat-icon>account_circle</mat-icon>
@@ -48,6 +54,11 @@
     <mat-menu #video="matMenu">
         <button mat-menu-item routerLink="/addVideos">Add Videos</button>
         <button mat-menu-item routerLink="/manageVideos">Manage Videos</button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="catagory">catagory</button>
+    <mat-menu #catagory="matMenu">
+        <button mat-menu-item routerLink="/addVideos">Add Catagories</button>
+        <button mat-menu-item routerLink="/manageVideos">Manage Catagories</button>
     </mat-menu>
 </mat-toolbar>
 <div *ngFor="let data of userDatas" fxLayoutAlign="space-evenly center">

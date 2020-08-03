@@ -34,6 +34,8 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
   back: boolean;
   SelOption: string;
   isChecked: boolean;
+  catagoryList = [];
+  subIndex;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
     if (sessionStorage.getItem('DomainAdmin')) {
@@ -41,12 +43,11 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
-    this.subscribe = this.db.list('/AssessmentList').snapshotChanges().subscribe(options => {
-      let i = 1;
-      options.map(user => {
-        ++i;
+    this.db.list("/Catagories").snapshotChanges().subscribe( datas => {
+      this.catagoryList = [];
+      datas.map( data => {
+        this.catagoryList.push(data.payload.val());
       });
-      this.Submit.get('assessment').setValue("Assessment" + i);
     });
   }
 
@@ -88,6 +89,9 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
   }
 
   Submit = new FormGroup({
+    catagory: new FormControl("", Validators.required),
+    subcatagory:new FormControl("", Validators.required),
+    topic: new FormControl("", Validators.required),
     assessment: new FormControl({ value: "", disabled: true }),
     question: new FormControl("", Validators.required),
     ans: new FormControl("", Validators.required),
@@ -98,8 +102,31 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
     update: new FormControl("")
   })
 
+  get catagory() {
+    return this.Submit.get('catagory');
+  }
+  get subcatagory() {
+    return this.Submit.get('subcatagory');
+  }
+  get topic() {
+    return this.Submit.get('topic');
+  }
   get update() {
     return this.Update.get('update');
+  }
+
+  get assessment() {
+    return this.Submit.get("assessment");
+  }
+
+  getAssessmentName() {
+    this.subscribe = this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value).snapshotChanges().subscribe(options => {
+      let i = 1;
+      options.map(user => {
+        ++i;
+      });
+      this.Submit.get('assessment').setValue("Assessment" + i);
+    });
   }
 
   onSubmit() {
@@ -116,12 +143,17 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
       this.combinedData.splice(loc, 1);
     });
     this.db.list("/AssessmentList").push(Stype);
-    this.db.list("/AssessmentsData/" + Stype).push(this.combinedData).then(() => {
+    this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value + '/' + Stype).push(this.combinedData).then(() => {
       alert(Stype + " has been uploaded sucessfully.");
-      this.router.navigateByUrl("/homePage").then(location.reload);
-    }).catch(error => alert(error));
+      this.isPreview = false;
+      this.Submit.reset();
+      this.combinedData = [];
+    });
   }
 
+  getSubCatagory(index) {
+    this.subIndex = index;
+  }
 
   onAppend(input: string) {
     let index = this.options.findIndex(option => option === input.trim());
@@ -138,7 +170,7 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
     let ques = this.Submit.get('question');
     let ans = this.Submit.get('ans');
     let option = this.Submit.get('option');
-    this.combinedData.push({ qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
+    this.combinedData.push({ topic: this.topic.value, qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
     ques.reset();
     ans.reset();
     option.reset();

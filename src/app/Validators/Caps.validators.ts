@@ -1,9 +1,9 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 export class CapsValidators {
     static firstCaps(control: AbstractControl): ValidationErrors | null {
-        let value = (control.value as string).substring(0,1);
-        if( value.length > 0) {
-            if(!(value.match(/[A-Z]/))) {
+        let value = (control.value as string);
+        if(value) {
+            if(!(value.substring(0,1).match(/[A-Z]/))) {
                 return {firstCaps: true};
             }
         } 

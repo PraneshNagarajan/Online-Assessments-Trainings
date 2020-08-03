@@ -51,6 +51,7 @@ import { ResultsComponent } from './results/results.component';
 import { AddVideosComponent } from './add-videos/add-videos.component';
 import { ManageVideosComponent } from './manage-videos/manage-videos.component';
 import { InvalidPageComponent } from './invalid-page/invalid-page.component';
+import { CatagoryComponent } from './catagory/catagory.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { InvalidPageComponent } from './invalid-page/invalid-page.component';
     ResultsComponent,
     AddVideosComponent,
     ManageVideosComponent,
-    InvalidPageComponent
+    InvalidPageComponent,
+    CatagoryComponent
   ],
   imports: [
     MatGridListModule,
@@ -117,6 +119,7 @@ import { InvalidPageComponent } from './invalid-page/invalid-page.component';
       { path: 'videos', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'manageVideos', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'catagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: '**', component: InvalidPageComponent}
     ])
   ],

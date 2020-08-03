@@ -1,3 +1,6 @@
+<div class="example-loading-shadow" *ngIf="catagoryList.length === 0">
+    <mat-spinner></mat-spinner>
+</div>
 <div fxLayout="column" fxLayoutAlign="space-between">
     <mat-toolbar color="primary">
         <span *ngIf="!isPreview">Add Assessment : </span>
@@ -13,6 +16,32 @@
                 <span>Add Assessment </span>
             </mat-toolbar>
             <form fxLayout="column" fxLayoutAlign="center" [formGroup]="Submit">
+                <mat-form-field>
+                    <mat-label>Catagory:</mat-label>
+                    <mat-select  formControlName="catagory" required>
+                        <mat-option *ngFor="let data of catagoryList; let i = index;" [value]="data.catagory" (click)="getSubCatagory(i)">{{data.catagory}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Catagory is required.
+                    </mat-error>
+                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Sub-Catagory:</mat-label>
+                        <mat-select  formControlName="subcatagory"  required>
+                            <mat-option (click)="getAssessmentName()" *ngFor="let subcatagory of catagoryList | filter:subIndex:'elseifloop'" [value]="subcatagory">{{subcatagory}}</mat-option>
+                        </mat-select>
+                        <mat-error>
+                            Sub-Catagory is required.
+                        </mat-error>
+                    </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Enter the assesment topic</mat-label>
+                    <input matInput formControlName="topic" required>
+                    <mat-hint>OOPS Concepts</mat-hint>
+                    <mat-error>
+                        Assessment topic is required.
+                    </mat-error>
+                </mat-form-field>
                 <mat-form-field>
                     <mat-label>Enter the assesment title:</mat-label>
                     <input matInput formControlName="assessment" required>
