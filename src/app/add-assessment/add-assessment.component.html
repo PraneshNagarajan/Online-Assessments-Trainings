@@ -84,7 +84,7 @@
                     <button mat-raised-button color="primary" [disabled]="Submit.invalid" (click)="onSave()">Save</button>
                 </div>
             </form>
-            <div [ngStyle]="{'width': deviceXS}" *ngIf="!isPreview" fxLayoutAlign="center">
+            <div *ngIf="!isPreview" fxLayoutAlign="center">
                 <button mat-raised-button color="primary" (click)="preview()">preview</button>
             </div>
         </mat-card>
@@ -94,7 +94,7 @@
         <mat-card fxFlex="85" [ngStyle]="{'margin-top': top1, 'margin-bottom': bottom1}">
             <form fxLayout="column" [formGroup]="Update">
                 <div fxLayout="row" fxLayoutAlign="space-between">
-                    <div fxLayout="row" fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                    <div fxLayout="row" fxLayoutAlign="space-around center">
                         <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="!back" (click)="onBack()">
                             <mat-icon>arrow_back_ios</mat-icon>
                         </button>
@@ -132,13 +132,13 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div fxLayoutAlign="space-around center" *ngIf="!deviceXs">
+                    <div fxLayoutAlign="space-around center">
                         <button mat-fab color="accent" fxLayoutAlign="center" [disabled]="next" (click)="onNext()">
                             <mat-icon>arrow_forward_ios</mat-icon>
                         </button>
                     </div>
                 </div>
-                <div [ngStyle]="{'width': deviceXS}" fxLayoutAlign="space-around center">
+                <div fxLayoutAlign="space-around center">
                     <button mat-raised-button  *ngIf="combinedData.length -1 === Loop" color="primary" (click)="onSubmit()">Submit</button>
                 </div>
             </form>

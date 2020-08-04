@@ -1,0 +1,42 @@
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+.example-spacer2 {
+    flex: 0.1 1 auto;
+}
+.example-spacer1 {
+    flex: 0.5 1 auto;
+}
+.form {
+margin-top: 30px;        
+margin-left: auto;
+margin-right: auto;
+align-items: center;
+}
+.mat-accordion{
+    margin-top: 20px;
+}
+.example-loading-shadow {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 56px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.15);
+}
+.body{
+    background :rgba(0, 0, 0, 0.15);
+}
+
+.mat-raised-button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}

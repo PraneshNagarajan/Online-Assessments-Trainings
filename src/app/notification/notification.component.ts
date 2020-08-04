@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements OnInit, OnDestroy {
+export class NotificationComponent implements OnInit {
   datas = [];
   isClicked;
   loggedUser: string;
@@ -36,7 +36,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.userName = sessionStorage.getItem('username');
     navigation.subscribe(() => location.reload());
 
-   this.subscription = this.db.list("/notifications").snapshotChanges()
+    this.db.list("/notifications").snapshotChanges()
       .subscribe( datas => {
         datas.map( data => {
           this.notifications.push({key: data.key, value: data.payload.val()});
@@ -107,7 +107,5 @@ export class NotificationComponent implements OnInit, OnDestroy {
    signOut() {
     this.auth.logOut();
   }
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+
 }

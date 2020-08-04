@@ -1,0 +1,37 @@
+<div class="example-loading-shadow" *ngIf="catagoryData.length === 0">
+    <mat-spinner></mat-spinner>
+</div>
+<div fxLayout="column">
+    <mat-toolbar color="primary">
+        <span>View Catagories</span>
+        <span class="example-spacer"></span>
+        <button mat-button>
+            <mat-icon>account_circle</mat-icon>
+            {{userName}}
+        </button>
+        <span class="example-spacer2"></span>
+        <button mat-button (click)="signOut()">Logout
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </mat-toolbar>
+    <div class="form" *ngIf="catagoryData.length > 0" [ngStyle]="{'width':size}">
+        <div fxLayout="column" *ngFor="let data of catagoryData">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <b>Catagory : {{data.catagory}}</b>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div fxLayout="column" class="body" *ngFor="let subcatagory of data.subcatagory"
+                        fxLayoutAlign="stretch">
+                        <button mat-raised-button color="primary"
+                            [routerLink]="['/viewSubcatagories', data.catagory, subcatagory]">{{subcatagory}}</button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

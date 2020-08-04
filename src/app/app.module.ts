@@ -53,6 +53,9 @@ import { AddVideosComponent } from './add-videos/add-videos.component';
 import { ManageVideosComponent } from './manage-videos/manage-videos.component';
 import { InvalidPageComponent } from './invalid-page/invalid-page.component';
 import { CatagoryComponent } from './catagory/catagory.component';
+import { ViewCatagoryComponent } from './view-catagory/view-catagory.component';
+import { ViewSubcatagoryComponent } from './view-subcatagory/view-subcatagory.component';
+import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +76,10 @@ import { CatagoryComponent } from './catagory/catagory.component';
     AddVideosComponent,
     ManageVideosComponent,
     InvalidPageComponent,
-    CatagoryComponent
+    CatagoryComponent,
+    ViewCatagoryComponent,
+    ViewSubcatagoryComponent,
+    ViewAssessmentComponent
   ],
   imports: [
     MatGridListModule,
@@ -114,7 +120,9 @@ import { CatagoryComponent } from './catagory/catagory.component';
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
       { path: 'addAssessments', component: AddAssessmentComponent, canActivate:[AdminRouterGuardService] },
       { path: 'scheduleAssessments', component: ScheduleAssessmentComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'manageAssessments', component: ManageAssessmentsComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'viewCatagories', component: ViewCatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'viewSubcatagories/:catagory/:subcatagory', component: ViewSubcatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'viewAssessments/:catagory/:subcatagory/:topic', component: ViewAssessmentComponent, canActivate:[AdminRouterGuardService] },
       { path: 'notifications', component: NotificationComponent, canActivate:[RouterGuardService] },
       { path: 'profile', component: ProfileComponent, canActivate:[RouterGuardService] },
       { path: 'results', component: ResultsComponent, canActivate:[RouterGuardService] },

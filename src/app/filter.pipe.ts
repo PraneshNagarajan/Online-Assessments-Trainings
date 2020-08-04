@@ -8,6 +8,7 @@ export class FilterPipe implements PipeTransform {
 
   transform(value: any[], args: any, args1?: any) {
     let array = [];
+
     if (args1 === 'ifloop') {
       for (let i = 0; i < value.length; i++) {
         if (args === i) {
