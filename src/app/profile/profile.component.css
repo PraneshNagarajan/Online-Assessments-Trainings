@@ -1,0 +1,34 @@
+.example-loading-shadow {
+    position: absolute;
+    display: flex;
+    top: 0px;
+    bottom: 56px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+  .mat-form-field {
+      margin-top: 28px;
+    }
+  
+   .mat-radio-button ~ .mat-radio-button {
+      margin-left: 100px;
+    }
+  
+  .mat-raised-button {
+      margin-top: 30px;
+  }
+  
+  .mat-card ~ .mat-card {
+    margin-top: 20px;
+  }
+  
+  
+  .space {
+  margin-bottom: 30px;
+  }
+  

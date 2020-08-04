@@ -37,6 +37,20 @@ form {
       justify-content: center;
       background: rgba(0, 0, 0, 0.15);
   }
+ 
+  .key{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    top: 0px;
+    bottom: 56px;
+    left: 0px;
+    right: 0px;
+    align-items: center;
+    align-content: center;
+  }
+
   .pre {
       white-space: pre-line;
   }

@@ -192,7 +192,7 @@
                 <li *ngIf="Cflat.errors.foundDashCharacter"> Only '-/' Characters allowed.</li>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Street:" formControlName="street" required>
               <mat-error *ngIf="Cstreet.touched && Cstreet.invalid">
                 <li *ngIf="Cstreet.errors.required">StreetName is Required.</li>
@@ -209,7 +209,7 @@
                 <li *ngIf="Clandmark.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="City:" formControlName="city" required>
               <mat-error *ngIf="Ccity.touched && Ccity.invalid">
                 <li *ngIf="Ccity.errors.required">CityName is Required.</li>
@@ -232,7 +232,7 @@
                 <li *ngIf="Cdistrict.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="State:" formControlName="state" required>
               <mat-error *ngIf="Cstate.touched && Cstate.invalid">
                 <li *ngIf="Cstate.errors.required">StateName is Required.</li>
@@ -255,7 +255,7 @@
                 <li *ngIf="Ccountry.errors.notFoundCharacter"> SpecialCharacters not allowed.</li>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Pincode:" formControlName="pincode" required>
               <mat-error *ngIf="Cpincode.touched && Cpincode.invalid">
                 <li *ngIf="Cpincode.errors.required">CountryName is Required.</li>
@@ -301,7 +301,7 @@
             <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Country:" formControlName="country" [value]="Pcountry.value">
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field [ngStyle]="{'width': deviceXs}">
               <input matInput placeholder="Pincode:" formControlName="pincode" [value]="Ppincode.value">
             </mat-form-field>
             <div></div>
