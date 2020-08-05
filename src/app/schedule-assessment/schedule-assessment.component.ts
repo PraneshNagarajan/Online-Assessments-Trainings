@@ -42,6 +42,7 @@ export class ScheduleAssessmentComponent implements OnInit {
     this.minDate = new Date(moment().year(), moment().month(), moment().date());
     this.db.list('/ManageUsers').snapshotChanges().subscribe(datas => {
       let users =[]; 
+      this.userList = [];
       datas.map(data => {
         users.push(data.payload.val());
       });

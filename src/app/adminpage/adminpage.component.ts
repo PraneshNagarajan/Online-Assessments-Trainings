@@ -38,10 +38,10 @@ export class AdminpageComponent implements OnInit {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     } 
+    this.userName = sessionStorage.getItem('username');
     db.list('/UserInfo').snapshotChanges()
     .subscribe(user => {
       this.userDatas = [];
-      this.userName = sessionStorage.getItem('username');
       user.map(data => {
         this.userDatas.push({ id: data.key, value: data.payload.val() });
       });

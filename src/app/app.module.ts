@@ -56,6 +56,9 @@ import { CatagoryComponent } from './catagory/catagory.component';
 import { ViewCatagoryComponent } from './view-catagory/view-catagory.component';
 import { ViewSubcatagoryComponent } from './view-subcatagory/view-subcatagory.component';
 import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
+import { ChartsModule } from 'ng2-charts';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -79,9 +82,11 @@ import { ViewAssessmentComponent } from './view-assessment/view-assessment.compo
     CatagoryComponent,
     ViewCatagoryComponent,
     ViewSubcatagoryComponent,
-    ViewAssessmentComponent
+    ViewAssessmentComponent,
   ],
   imports: [
+    ChartsModule,
+    MatTableModule,
     MatGridListModule,
     BrowserModule,
     AppRoutingModule,
@@ -111,6 +116,7 @@ import { ViewAssessmentComponent } from './view-assessment/view-assessment.compo
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     MatSidenavModule,
+    MatPaginatorModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent },

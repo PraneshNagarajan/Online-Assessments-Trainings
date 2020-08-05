@@ -87,7 +87,7 @@ export class AssessmentComponent implements OnInit {
         this.col = 1;
         this.top = "50%"
         this.bottom = "100%"
-      }
+      } 
       else if (change.mqAlias === 'md') {
         this.col = 2;
         this.top = (this.key.value as string).length > 0? "5%": "30%";
@@ -272,6 +272,10 @@ export class AssessmentComponent implements OnInit {
       id: this.loggedUser,
       assessent_id: this.Sdate + "_" + this.Stime + "_" + this.Sname,
       result: {
+        catagory: this.Sname.split('/')[0],
+        subcatagory: this.Sname.split('/')[1],
+        topic: this.Sname.split('/')[2].split(':-')[1],
+        assessment: this.Sname.split('/')[2].split(':-')[0],
         date: moment().format("MM/DD/YYYY"),
         mark: i + '/' + this.dbsize
       }

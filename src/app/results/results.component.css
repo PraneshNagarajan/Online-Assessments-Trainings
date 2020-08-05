@@ -1,0 +1,43 @@
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.example-spacer1 {
+    flex: 0.1 1 auto;
+}
+
+.example-loading-shadow {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 56px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+mat-toolbar {
+    position: sticky;
+}
+
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    width: 10%;
+  }
+  .body{
+      width: 100%;
+      height:100%
+  }
+  
