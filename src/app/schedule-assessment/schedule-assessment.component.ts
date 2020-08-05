@@ -8,6 +8,7 @@ import 'moment-duration-format';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service'
 import * as firebase from 'firebase'
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-schedule-assessment',
@@ -33,7 +34,12 @@ export class ScheduleAssessmentComponent implements OnInit {
   subIndex;
   minDate: Date;
 
-  constructor(private auth: AuthService, private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase) {
+  constructor(private auth: AuthService, private mediaObserver: MediaObserver, private service: DataService, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/adminPage')
+      }
+      });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {

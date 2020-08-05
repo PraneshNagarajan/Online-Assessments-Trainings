@@ -52,8 +52,6 @@ export class ResultsComponent implements OnInit {
   media: Subscription;
   width: string;
   userList= [];
-  size;
-  top: string;
 
   constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private auth: AuthService) {
     if (sessionStorage.getItem('DomainAdmin')) {
@@ -62,9 +60,6 @@ export class ResultsComponent implements OnInit {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
-    window.addEventListener('resize', ev => {
-      location.reload();
-    });
     this.db.list('/ManageUsers').snapshotChanges().subscribe(datas => {
       let users =[]; 
       this.userList = [];
@@ -84,21 +79,16 @@ export class ResultsComponent implements OnInit {
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
       if(change.mqAlias === 'xs') {
-        this.top = '5%';
         this.width="100%"
-        this.size = 10;
       } 
       else if(change.mqAlias === 'sm') {
         this.width="100%"
-        this.size = 10;
       }
       else if (change.mqAlias === 'md') {
         this.width="50%";
-        this.size = 5;
       }
       else {
         this.width="50%";
-        this.size = 5;
       }
   });
   }
@@ -117,7 +107,6 @@ export class ResultsComponent implements OnInit {
         if(user) {
         if (datas['id'] === user) {
           this.result.push(datas);
-          console.log(this.results);
         }
       } else {
         if (datas['id'] === this.loggedUser) {
@@ -125,6 +114,7 @@ export class ResultsComponent implements OnInit {
         }
       }
       });
+      if(this.result.length > 0) {
       let i = 0;
       this.result.map( datas => {
         this.marks = [datas['result']];
@@ -141,14 +131,23 @@ export class ResultsComponent implements OnInit {
           let tmark = Number((data['mark'] as string).split('/')[1]);
           let gmark = Number((data['mark'] as string).split('/')[0]);
           let percentage = (gmark/tmark)*100;
-          scores.push(percentage);
+          scores.push(Math.round(percentage));
           label.push(data['date']);
         });
         this.isSelected = true;
         this.getChart((user)? user:this.loggedUser, label, [{data: scores, label: 'marks'}]);
         this.dataSource = new MatTableDataSource(this.combinedData);
+        this.dataSource.paginator = this.paginator;
       });
-      this.dataSource.paginator = this.paginator;
+    } else {
+      alert("No record found for this user : "+ user);
+      if(user) {
+      location.reload();  
+      } else {
+        this.router.navigateByUrl('/adminPage');
+      }
+    }
+      
     });
     
   }

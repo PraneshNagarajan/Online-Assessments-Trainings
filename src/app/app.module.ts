@@ -46,7 +46,6 @@ import { FilterPipe } from './filter.pipe';
 import { NotificationComponent } from './notification/notification.component';
 import { AddAssessmentComponent } from './add-assessment/add-assessment.component';
 import { ScheduleAssessmentComponent } from './schedule-assessment/schedule-assessment.component';
-import { ManageAssessmentsComponent } from './manage-assessments/manage-assessments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ResultsComponent } from './results/results.component';
 import { AddVideosComponent } from './add-videos/add-videos.component';
@@ -72,7 +71,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     FilterPipe,
     NotificationComponent,
     AddAssessmentComponent,
-    ManageAssessmentsComponent,
     ScheduleAssessmentComponent,
     ProfileComponent,
     ResultsComponent,

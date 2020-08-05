@@ -94,5 +94,5 @@
 </div>
 <!-- place paginator outside of div && don't use *ngIf-->
 <div [hidden]="!isSelected">
-  <mat-paginator  [length]="combinedData.length" [pageSize]="size" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  <mat-paginator  [length]="combinedData.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

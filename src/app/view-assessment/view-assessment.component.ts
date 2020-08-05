@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { FormGroup, FormControl} from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -38,6 +38,11 @@ export class ViewAssessmentComponent implements OnInit {
       this.routeBack= param.get('catagory')+'/'+param.get('subcatagory');
       this.routeParameters = param.get('catagory')+'/'+param.get('subcatagory')+'/'+param.get('topic');
     });
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/subcatagories/'+this.routeBack);
+      }
+      });
     this.db.list('AssessmentsData/'+this.routeParameters).snapshotChanges().subscribe( datas => {
       this.assessmentData = [];
       this.assessmentDatas = [];

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AuthService } from '../auth.service';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { Router, NavigationStart } from '@angular/router';
 
 
 @Component({
@@ -16,7 +17,12 @@ export class ViewCatagoryComponent implements OnInit {
   size;
   media: any;
 
-  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private db: AngularFireDatabase) {
+  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/adminPage');
+      }
+      });
     this.userName = sessionStorage.getItem('username');
     this.db.list("/AssessmentsData").snapshotChanges().subscribe(catagories => {
       this.catagoryDatas = [];

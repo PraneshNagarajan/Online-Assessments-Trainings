@@ -4,7 +4,7 @@ import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CapsValidators } from '../Validators/Caps.validators';
 import { LowerCaseValidators } from '../Validators/lower-case.validators';
@@ -33,6 +33,11 @@ export class CatagoryComponent implements OnInit, OnDestroy {
   isFound1: boolean = true;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/adminPage');
+      }
+      });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {

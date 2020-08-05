@@ -5,7 +5,7 @@ import { DataService } from '../data.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as moment from 'moment';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -38,6 +38,11 @@ export class AddAssessmentComponent implements OnInit, OnDestroy {
   subIndex;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+    if(event.navigationTrigger === 'popstate') {
+      router.navigateByUrl('/adminPage');
+    }
+    });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {

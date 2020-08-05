@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AuthService } from '../auth.service';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-view-subcatagory',
@@ -18,7 +18,13 @@ export class ViewSubcatagoryComponent implements OnInit {
   catagory: string;
   subcatagory: string;
 
-  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private route: ActivatedRoute, private db: AngularFireDatabase) {
+  constructor(private mediaObserver: MediaObserver, private auth: AuthService, private route: ActivatedRoute, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl("/catagories");
+      }
+      });
+   
     route.paramMap.subscribe(param => {
       this.catagory = param.get('catagory');
       this.subcatagory = param.get('subcatagory');

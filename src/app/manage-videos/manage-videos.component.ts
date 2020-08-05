@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 
@@ -25,6 +25,11 @@ export class ManageVideosComponent implements OnInit {
   loggedUser: string;
   
   constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private auth: AuthService) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/adminPage');
+      }
+      });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
