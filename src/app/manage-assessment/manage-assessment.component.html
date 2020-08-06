@@ -1,0 +1,57 @@
+<div class="example-loading-shadow" *ngIf="0 > topics.length">
+    <mat-spinner></mat-spinner>
+</div>
+
+<mat-toolbar color=primary>
+    <span> Manage Videos</span>
+    <span class="example-spacer"></span>
+    <button mat-button>
+        <mat-icon>account_circle</mat-icon>
+        {{userName}}
+    </button>
+    <span class="example-spacer1"></span>
+    <button mat-button (click)="signOut()">Logout
+        <mat-icon>exit_to_app</mat-icon>
+    </button>
+</mat-toolbar>
+<div *ngIf="topics.length > 0" fxLayoutAlign="space-evenly center">
+    <mat-card [fxFlex]="device">
+        <mat-toolbar color="primary">
+            <p><b> Delete Assessment :</b></p>
+        </mat-toolbar>
+        <div class="menu" fxLayout="column">
+            <form fxLayout="column" [formGroup]="assessment">
+                <mat-radio-group fxLayout="column" formControlName="catagory" >
+                    <mat-radio-button  [value]="1">Catagory : {{catagory}}</mat-radio-button>
+                    <mat-radio-button  [value]="2">Sub-Catagory : {{subcatagory}}</mat-radio-button>
+                  </mat-radio-group>
+                <mat-form-field>
+                    <mat-label>Select the topic:</mat-label>
+                    <mat-select formControlName="topic">
+                        <mat-option *ngFor="let topic of topics" [value]="topic" >{{topic}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Topic is required.
+                    </mat-error>
+                </mat-form-field>
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                    <div class="example-button-container" >
+                        <button [disabled]="assessment.invalid" mat-mini-fab color="accent" [routerLink]="['/viewAssessments', schema ,catagory, subcatagory, Topic]" [queryParams]="{flag: 'manage'}">
+                            <mat-icon>update</mat-icon>
+                        </button>
+                    </div>
+                    <div class="example-button-container" >
+                        <button  mat-mini-fab color="primary" (click)="onReset()">
+                            <mat-icon>autorenew</mat-icon>
+                        </button>
+                    </div>
+                    <div class="example-button-container">
+                        <button mat-mini-fab color="warn" (click)="onDelete()">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>    
+    </mat-card>
+</div>
