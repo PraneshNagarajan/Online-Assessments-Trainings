@@ -46,11 +46,11 @@ export class ViewSubcatagoryComponent implements OnInit {
       subcatagories.map(topic => {
         this.topicData.push(topic.key);
       });
-      if (this.topicData.length > 0) {
+      this.topicDatas.push({ catagory: this.catagory, subcatagory: this.subcatagory, topics: this.topicData });
+      if (this.topicDatas.length > 0) {
         alert("No data found..");
         router.navigateByUrl('/adminPage');
       }
-      this.topicDatas.push({ catagory: this.catagory, subcatagory: this.subcatagory, topics: this.topicData });
     });
   }
   ngOnInit() {

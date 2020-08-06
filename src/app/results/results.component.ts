@@ -32,7 +32,7 @@ export class ResultsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  displayedColumns: string[] = ['no', 'date', 'catagory', 'subcatagory', 'topic', 'assessment', 'mark'];
+  displayedColumns: string[];
   dataSource: MatTableDataSource<UserData>;
 
   public barChartPlugins = [pluginDataLabels];
@@ -50,6 +50,7 @@ export class ResultsComponent implements OnInit {
   admin: boolean;
   isSelected: boolean;
   media: Subscription;
+  deviceXs:boolean;
   width: string;
   userList= [];
 
@@ -80,15 +81,19 @@ export class ResultsComponent implements OnInit {
     this.media = this.mediaObserver.media$.subscribe( (change: MediaChange) => {
       if(change.mqAlias === 'xs') {
         this.width="100%"
+        this.deviceXs = true;
       } 
       else if(change.mqAlias === 'sm') {
         this.width="100%"
+        this.deviceXs = true;
       }
       else if (change.mqAlias === 'md') {
         this.width="50%";
+        this.deviceXs = false;
       }
       else {
         this.width="50%";
+        this.deviceXs = true;
       }
   });
   }
@@ -136,6 +141,7 @@ export class ResultsComponent implements OnInit {
         });
         this.isSelected = true;
         this.getChart((user)? user:this.loggedUser, label, [{data: scores, label: 'marks'}]);
+        this.displayedColumns = (this.deviceXs)? ['no', 'date', 'subcatagory', 'assessment', 'mark']: ['no', 'date', 'catagory', 'subcatagory', 'topic', 'assessment', 'mark'];
         this.dataSource = new MatTableDataSource(this.combinedData);
         this.dataSource.paginator = this.paginator;
       });

@@ -45,11 +45,11 @@ export class ViewCatagoryComponent implements OnInit {
           data.map(value => {
             subcatagoryData.push(value.key);
           });
+          this.catagoryData.push({ catagory: datas.key, subcatagory: subcatagoryData });
           if (this.catagoryData.length === 0) {
             alert('No data found..');
             router.navigateByUrl('/adminPage');
           }
-          this.catagoryData.push({ catagory: datas.key, subcatagory: subcatagoryData });
         });
       });
     });
