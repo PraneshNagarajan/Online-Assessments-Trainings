@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
@@ -27,6 +27,11 @@ export class HomepageComponent implements OnInit {
   notifications = [];
 
   constructor( private db: AngularFireDatabase, private router:Router, private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService) {
+    router.events.subscribe( (event : NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
+        this.signOut();
+      }
+      });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
       this.admin = true;

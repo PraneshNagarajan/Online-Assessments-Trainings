@@ -38,7 +38,7 @@
                 <span class="text" (click)="navigation('/assessment')">Assessment</span>
             </div>
         </mat-card>
-        <mat-card [fxFlex]="size">
+        <mat-card [fxFlex]="size" *ngIf="false">
             <div fxLayout="row" fxLayoutAlign="stretch">
                 <mat-icon class="icon">psychology</mat-icon>
                 <span class="example-spacer1"></span>
@@ -51,7 +51,7 @@
             <div fxLayout="row">
                 <mat-icon class="icon">video_library</mat-icon>
                 <span class="example-spacer1"></span>
-                <span class="text" routerLink='/videos'>Videos</span>
+                <span class="text" [routerLink]="['/viewCatagories', 'Videos']" [queryParams]="{flag: 'viewVideos'}">Videos</span>
             </div>
         </mat-card>
         <mat-card [fxFlex]="size">
@@ -70,7 +70,7 @@
                 <span class="text" routerLink='/notifications' >Notifications ({{count}})</span>
             </div>
         </mat-card>
-        <mat-card [fxFlex]="size">
+        <mat-card [fxFlex]="size" *ngIf="false">
             <div fxLayout="row" fxLayoutAlign="stretch">
                 <mat-icon class="icon">support</mat-icon>
                 <span class="example-spacer1"></span>

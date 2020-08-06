@@ -25,6 +25,8 @@ export class AddVideosComponent implements OnInit, OnDestroy {
   loggedUser: string;
   videoList = [];
   userName: string;
+  catagoryList: any[];
+  subIndex: any;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
     router.events.subscribe( (event : NavigationStart) => {
@@ -37,6 +39,12 @@ export class AddVideosComponent implements OnInit, OnDestroy {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
+    this.db.list("/Catagories").snapshotChanges().subscribe( datas => {
+      this.catagoryList = [];
+      datas.map( data => {
+        this.catagoryList.push(data.payload.val());
+      });
+    });
     this.userName = sessionStorage.getItem('username');
     this.DB = this.db.list('/Videos').valueChanges().subscribe(datas => {
       this.videoList = [];
@@ -84,13 +92,28 @@ export class AddVideosComponent implements OnInit, OnDestroy {
   }
 
   Video = new FormGroup({
+    catagory: new FormControl("", Validators.required),
+    subcatagory:new FormControl("", Validators.required),
+    topic: new FormControl("", Validators.required),
     title1: new FormControl("", Validators.required),
     title2: new FormControl("", Validators.required),
     videoid: new FormControl("", Validators.required),
   });
 
+  get catagory() {
+    return this.Video.get('catagory');
+  }
+  get subcatagory() {
+    return this.Video.get('subcatagory');
+  }
+  get topic() {
+    return this.Video.get('topic');
+  }
+  getSubCatagory(index) {
+    this.subIndex = index;
+  }
   onUpload(id, t1, t2) {
-     this.db.list('/Videos').push({
+     this.db.list('/Videos/'+this.catagory.value + '/' + this.subcatagory.value + '/' +this.topic.value).push({
       title1: t1,
       title2: t2,
       videoid: id

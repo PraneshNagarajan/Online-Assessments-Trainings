@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service';
@@ -29,10 +29,14 @@ export class VideoTutorialComponent implements OnInit {
   plist = 1;
   videoList = [];
   userName: string;
+  routerParameters;
 
-  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private auth: AuthService, private db: AngularFireDatabase) {
+  constructor(private route: ActivatedRoute,private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private auth: AuthService, private db: AngularFireDatabase) {
+    this.route.paramMap.subscribe(param => {
+      this.routerParameters = param.get('catagory')+'/'+ param.get('subcatagory')+'/'+param.get('topic');
+    });
     this.userName = sessionStorage.getItem('username');
-    this.db.list('/Videos').snapshotChanges().subscribe(video => {
+    this.db.list('/Videos/'+ this.routerParameters).snapshotChanges().subscribe(video => {
       let i = 0;
       video.map( list => {
         this.videoList.push({id : ++i, playlist: list.payload.val()});

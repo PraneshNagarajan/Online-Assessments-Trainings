@@ -23,9 +23,13 @@
                     </button>
                 </div>
                 <div *ngFor="let data of assessmentData | filter:Loop:'ifloop'; let i = index;" fxFlex="100">
-                    <div fxLayout="row" fxLayoutAlign="space-around center">
-                        <mat-checkbox [checked]="isChecked" (click)="onDelete(Loop)"></mat-checkbox>
-                        <button class="pre"  mat-raised-button [disabled]="(update.value)? fa: true"
+                    <span></span>
+                    <span></span>
+                    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                        <span></span>
+                        <span></span>
+                        <mat-checkbox [checked]="isChecked" (click)="onDelete(Loop)" *ngIf="queryParam"></mat-checkbox>
+                        <button class="pre" mat-raised-button [disabled]="(update.value)? fa: true"
                             [color]="(SelOption === data.qa)? 'accent':''" (click)="onUpdate(data.qa,'','','')">
                             Question : {{Loop+1}}){{data.qa}} </button>
                         <span></span>
@@ -33,21 +37,18 @@
                     </div>
                     <mat-grid-list [cols]="col" rowHeight="100px">
                         <mat-grid-tile *ngFor="let option of data.options; let j = index;">
-                            <button class="pre"  fxFlex="65" mat-raised-button
-                                [disabled]="(update.value)? false: true"
-                                [color]="(SelOption === option)? 'accent':''"
-                                (click)="onUpdate(data.qa,'' ,option,j)">
+                            <button class="pre" fxFlex="65" mat-raised-button [disabled]="(update.value)? false: true"
+                                [color]="(SelOption === option)? 'accent':''" (click)="onUpdate(data.qa,'' ,option,j)">
                                 Option {{j}} : {{option}} </button>
                         </mat-grid-tile>
                     </mat-grid-list>
 
                     <div fxLayoutAlign="center">
-                        <button class="pre"  mat-raised-button fxFlex="65" [disabled]="(update.value)? false: true"
-                            [color]="(SelOption === data.ans)? 'accent':''"
-                            (click)="onUpdate(data.qa,data.ans,'','')">
+                        <button class="pre" mat-raised-button fxFlex="65" [disabled]="(update.value)? false: true"
+                            [color]="(SelOption === data.ans)? 'accent':''" (click)="onUpdate(data.qa,data.ans,'','')">
                             Answer : {{data.ans}} </button>
                     </div>
-                    <div fxLayout="row" fxLayoutAlign="center">
+                    <div fxLayout="row" fxLayoutAlign="center" *ngIf="queryParam">
                         <mat-form-field fxFlex="65">
                             <mat-label> Update qa or ans or option at a time</mat-label>
                             <textarea matInput formControlName="update"></textarea>
@@ -60,8 +61,9 @@
                     </button>
                 </div>
             </div>
-            <div  fxLayoutAlign="space-around center">
-                <button mat-raised-button  *ngIf="assessmentData.length -1 === Loop" color="primary" (click)="onSubmit()">Submit</button>
+            <div fxLayoutAlign="space-around center" *ngIf="queryParam">
+                <button mat-raised-button *ngIf="assessmentData.length -1 === Loop" color="primary"
+                    (click)="onSubmit()">Submit</button>
             </div>
         </form>
     </mat-card>

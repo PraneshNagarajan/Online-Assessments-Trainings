@@ -27,8 +27,12 @@
                     </mat-expansion-panel-header>
                     <div fxLayout="column" class="body" *ngFor="let subcatagory of data.subcatagory"
                         fxLayoutAlign="stretch">
-                        <button mat-raised-button color="primary"
-                            [routerLink]="['/viewSubcatagories', data.catagory, subcatagory]">{{subcatagory}}</button>
+                        <button mat-raised-button color="primary" *ngIf="Flag !== 'manageAssessments'"
+                            [routerLink]="['/viewSubcatagories', schema, data.catagory, subcatagory]"
+                            [queryParams]='{flag: Flag}'>{{subcatagory}}</button>
+                        <button mat-raised-button color="primary" *ngIf="Flag === 'manageAssessments'"
+                            [routerLink]="['/manageAssessments', schema,data.catagory, subcatagory]"
+                            [queryParams]='{flag: Flag}'>{{subcatagory}}</button>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>

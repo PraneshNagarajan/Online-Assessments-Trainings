@@ -58,6 +58,7 @@ import { ViewAssessmentComponent } from './view-assessment/view-assessment.compo
 import { ChartsModule } from 'ng2-charts';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ManageAssessmentComponent } from './manage-assessment/manage-assessment.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ViewCatagoryComponent,
     ViewSubcatagoryComponent,
     ViewAssessmentComponent,
+    ManageAssessmentComponent,
   ],
   imports: [
     ChartsModule,
@@ -124,15 +126,16 @@ import { MatPaginatorModule } from '@angular/material/paginator';
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
       { path: 'addAssessments', component: AddAssessmentComponent, canActivate:[AdminRouterGuardService] },
       { path: 'scheduleAssessments', component: ScheduleAssessmentComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'viewCatagories', component: ViewCatagoryComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'viewSubcatagories/:catagory/:subcatagory', component: ViewSubcatagoryComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'viewAssessments/:catagory/:subcatagory/:topic', component: ViewAssessmentComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'manageAssessments/:schema/:catagory/:subcatagory', component: ManageAssessmentComponent, canActivate:[AdminRouterGuardService]},
+      { path: 'viewCatagories/:schema', component: ViewCatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'viewSubcatagories/:schema/:catagory/:subcatagory', component: ViewSubcatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'viewAssessments/:schema/:catagory/:subcatagory/:topic', component: ViewAssessmentComponent, canActivate:[AdminRouterGuardService] },
       { path: 'notifications', component: NotificationComponent, canActivate:[RouterGuardService] },
       { path: 'profile', component: ProfileComponent, canActivate:[RouterGuardService] },
       { path: 'results', component: ResultsComponent, canActivate:[RouterGuardService] },
-      { path: 'videos', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
+      { path: 'videos/:catagory/:subcatagory/:topic', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'manageVideos', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'manageVideos/:schema/:catagory/:subcatagory/:topic', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'addCatagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: '**', component: InvalidPageComponent}
     ])

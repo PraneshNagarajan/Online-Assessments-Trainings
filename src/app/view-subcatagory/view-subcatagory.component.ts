@@ -17,36 +17,49 @@ export class ViewSubcatagoryComponent implements OnInit {
   media: any;
   catagory: string;
   subcatagory: string;
+  schema: string;
+  routerName;
+  routerParams;
+  Flag: string;
+  Flag1: string;
 
   constructor(private mediaObserver: MediaObserver, private auth: AuthService, private route: ActivatedRoute, private db: AngularFireDatabase, private router: Router) {
-    router.events.subscribe( (event : NavigationStart) => {
-      if(event.navigationTrigger === 'popstate') {
-        router.navigateByUrl("/catagories");
-      }
-      });
-   
     route.paramMap.subscribe(param => {
+      this.schema = param.get('schema');
       this.catagory = param.get('catagory');
       this.subcatagory = param.get('subcatagory');
+      this.routerName = (this.schema === '/Videos') ? '/videos' : '/viewAssessments';
     });
-
+    route.queryParamMap.subscribe(qparam => {
+      this.Flag = qparam.get('flag');
+      this.Flag1 = (this.Flag.match('manage')) ? 'manage' : 'view';
+    });
+    router.events.subscribe((event: NavigationStart) => {
+      if (event.navigationTrigger === 'popstate') {
+        router.navigateByUrl("/viewCatagories/" + this.schema + '?flag=' + this.Flag);
+      }
+    });
     this.userName = sessionStorage.getItem('username');
-    this.db.list("/AssessmentsData/" + this.catagory + "/" + this.subcatagory).snapshotChanges().subscribe(subcatagories => {
+    this.db.list("/" + this.schema + "/" + this.catagory + "/" + this.subcatagory).snapshotChanges().subscribe(subcatagories => {
       this.topicData = [];
       this.topicDatas = [];
       subcatagories.map(topic => {
         this.topicData.push(topic.key);
       });
+      if (this.topicData.length > 0) {
+        alert("No data found..");
+        router.navigateByUrl('/adminPage');
+      }
       this.topicDatas.push({ catagory: this.catagory, subcatagory: this.subcatagory, topics: this.topicData });
     });
   }
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
-        this.size = '100%';
+        this.size = '90%';
       }
       else if (change.mqAlias === 'sm') {
-        this.size = '100%';
+        this.size = '90%';
       }
       else if (change.mqAlias === 'md') {
         this.size = '70%';

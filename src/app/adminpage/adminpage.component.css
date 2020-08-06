@@ -37,41 +37,6 @@ div mat-card {
       justify-content: center;
       background: rgba(0, 0, 0, 0.15);
   }
-  .example-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
   
-  .mat-sidenav {
-      width :50%;
-  }
-  .video{
-      height: 7%;
-      width :70%;
-      margin-left: 50%;
-  }
-  .catagory{
-    margin-top: 50px;
-    height: 7%;
-    width :70%;
-    margin-left: 50%;
-}
-.assessment{
-  margin-top: 80px;
-  height: 7%;
-  width :70%;
-  margin-left: 50%;
-}
   
-  h1.example-app-name {
-    margin-left: 20px;
-  }
   
-  .example-sidenav-container {
-    flex: 1 0 auto;
-  }

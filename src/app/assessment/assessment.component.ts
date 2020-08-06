@@ -90,12 +90,12 @@ export class AssessmentComponent implements OnInit {
       } 
       else if (change.mqAlias === 'md') {
         this.col = 2;
-        this.top = (this.key.value as string).length > 0? "5%": "30%";
+        this.top = (this.key.value as string).length > 0? "5%": "25%";
         this.bottom = "100%"
       }
       else {
         this.col = 2;
-        this.top = (this.key.value as string).length > 0? "5%": "30%";
+        this.top = (this.key.value as string).length > 0? "5%": "25%";
         this.bottom = "100%"
       }
     });

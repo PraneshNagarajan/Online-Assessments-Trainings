@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { FormGroup, FormControl} from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { AuthService } from '../auth.service';
 
@@ -29,30 +29,41 @@ export class ViewAssessmentComponent implements OnInit {
   isChecked: boolean;
   routeParameters;
   routeBack;
-  options =[];
+  options = [];
   userName: string;
+  queryParam: boolean;
+  Flag: string;
 
-  constructor(private mediaObserver: MediaObserver, private router: Router, private auth: AuthService, private db: AngularFireDatabase, private route:ActivatedRoute) {
+  constructor(private mediaObserver: MediaObserver, private router: Router, private auth: AuthService, private db: AngularFireDatabase, private route: ActivatedRoute) {
     this.userName = sessionStorage.getItem('username');
-    this.route.paramMap.subscribe( param => {
-      this.routeBack= param.get('catagory')+'/'+param.get('subcatagory');
-      this.routeParameters = param.get('catagory')+'/'+param.get('subcatagory')+'/'+param.get('topic');
+    this.route.paramMap.subscribe(param => {
+      this.routeBack = param.get('schema') + '/' + param.get('catagory') + '/' + param.get('subcatagory');
+      this.routeParameters = param.get('catagory') + '/' + param.get('subcatagory') + '/' + param.get('topic');
     });
-    router.events.subscribe( (event : NavigationStart) => {
-      if(event.navigationTrigger === 'popstate') {
-        router.navigateByUrl('/subcatagories/'+this.routeBack);
+
+    this.route.queryParamMap.subscribe(qparam => {
+      this.Flag = qparam.get('flag');
+      this.queryParam = (qparam.get('flag') as string).match('manage') ? true : false;
+    });
+    router.events.subscribe((event: NavigationStart) => {
+      if (event.navigationTrigger === 'popstate') {
+        if (this.Flag === 'manage') {
+          router.navigateByUrl('/manageAssessments/' + this.routeBack + "?flag='manageAssessments'");
+        } else {
+          router.navigateByUrl('/viewSubcatagories/' + this.routeBack + '?flag=' + this.Flag);
+        }
       }
-      });
-    this.db.list('AssessmentsData/'+this.routeParameters).snapshotChanges().subscribe( datas => {
+    });
+    this.db.list('AssessmentDatas/' + this.routeParameters).snapshotChanges().subscribe(datas => {
       this.assessmentData = [];
       this.assessmentDatas = [];
-      datas.map( data => {
-        this.assessmentDatas.push({key: data.key, value: data.payload.val()});
-        this.routeParameters = this.routeParameters+'/'+data.key;
+      datas.map(data => {
+        this.assessmentDatas.push({ key: data.key, value: data.payload.val() });
+        this.routeParameters = this.routeParameters + '/' + data.key;
       });
-      this.assessmentDatas.map( datas => {
+      this.assessmentDatas.map(datas => {
         let data: any[] = datas['value'];
-        data.map( values => {
+        data.map(values => {
           this.assessmentData.push(values);
         });
       });
@@ -121,10 +132,10 @@ export class ViewAssessmentComponent implements OnInit {
     this.options.map(loc => {
       this.assessmentData.splice(loc, 1);
     });
-    this.db.object("/AssessmentsData/" +this.routeParameters).set(this.assessmentData).then(() => {
+    this.db.object("/AssessmentsData/" + this.routeParameters).set(this.assessmentData).then(() => {
       alert("Updated sucessfully.");
       this.assessmentData = [];
-      this.router.navigateByUrl("/viewSubcatagories/"+this.routeBack);
+      this.router.navigateByUrl("/viewSubcatagories/" + this.routeBack);
     });
   }
 
@@ -163,12 +174,11 @@ export class ViewAssessmentComponent implements OnInit {
 
   onDelete(input) {
     let index = this.options.findIndex(option => option === input);
-      if (index > -1) {
-        this.options.splice(index, 1);
-      } else {
-        this.options.push(input);
-      }
-      console.log(this.options);
+    if (index > -1) {
+      this.options.splice(index, 1);
+    } else {
+      this.options.push(input);
+    }
   }
 
   signOut() {

@@ -75,12 +75,12 @@ export class ScheduleAssessmentComponent implements OnInit {
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
         this.size = 90;
-        this.top = "50%";
+        this.top = "5%";
         this.bottom = "100%";
       }
       else if (change.mqAlias === 'sm') {
         this.size = 90;
-        this.top = "50%"
+        this.top = "5%"
         this.bottom = "100%"
       }
       else if (change.mqAlias === 'md') {

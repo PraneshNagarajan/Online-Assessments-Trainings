@@ -25,9 +25,18 @@
                         <mat-panel-description>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <div fxLayout="column" class="body" *ngFor="let topic of data.topics" fxLayoutAlign="stretch">
-                        <button mat-raised-button color="primary"
-                            [routerLink]="['/viewAssessments', data.catagory, data.subcatagory, topic]">{{topic}}</button>
+                    <div *ngIf="Flag1 === 'view'">
+                        <div fxLayout="column" class="body" *ngFor="let topic of data.topics" fxLayoutAlign="stretch">
+                            <button mat-raised-button color="primary"
+                                [routerLink]="[routerName, schema, data.catagory, data.subcatagory, topic]"
+                                [queryParams]="{flag: 'view'}">{{topic}}</button>
+                        </div>
+                    </div>
+                    <div *ngIf="Flag1 === 'manage'">
+                        <div fxLayout="column" class="body" *ngFor="let topic of data.topics" fxLayoutAlign="stretch">
+                            <button mat-raised-button color="primary"
+                                [routerLink]="[Flag,  schema, data.catagory, data.subcatagory, topic]">{{topic}}</button>
+                        </div>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>

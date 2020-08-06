@@ -18,6 +18,32 @@
             </mat-toolbar>
             <form fxLayout="column" fxLayoutAlign="center" [formGroup]="Video">
                 <mat-form-field>
+                    <mat-label>Catagory:</mat-label>
+                    <mat-select  formControlName="catagory" required>
+                        <mat-option *ngFor="let data of catagoryList; let i = index;" [value]="data.catagory" (click)="getSubCatagory(i)">{{data.catagory}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Catagory is required.
+                    </mat-error>
+                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Sub-Catagory:</mat-label>
+                        <mat-select  formControlName="subcatagory"  required>
+                            <mat-option (click)="getAssessmentName()" *ngFor="let subcatagory of catagoryList | filter:subIndex:'elseifloop'" [value]="subcatagory">{{subcatagory}}</mat-option>
+                        </mat-select>
+                        <mat-error>
+                            Sub-Catagory is required.
+                        </mat-error>
+                    </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Enter the assesment topic</mat-label>
+                    <input matInput formControlName="topic" required>
+                    <mat-hint>OOPS Concepts</mat-hint>
+                    <mat-error>
+                        Assessment topic is required.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
                     <mat-label>Enter the Video title1:</mat-label>
                     <input matInput formControlName="title1" required>
                     <mat-hint>E.g What is Software Engineering?</mat-hint>

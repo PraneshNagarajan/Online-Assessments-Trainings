@@ -33,7 +33,7 @@ export class DataService {
 
   getAssessment(name) {
     this.assessment = [];
-    this.db.list('/AssessmentsData/' + name).snapshotChanges().subscribe(ques => {
+    this.db.list('/AssessmentDatas/' + name).snapshotChanges().subscribe(ques => {
       let oFlag = 0;
       let eFlag = 0;
       let shuffle = moment().format("mm:ss");
