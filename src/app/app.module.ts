@@ -133,7 +133,7 @@ import { ManageAssessmentComponent } from './manage-assessment/manage-assessment
       { path: 'notifications', component: NotificationComponent, canActivate:[RouterGuardService] },
       { path: 'profile', component: ProfileComponent, canActivate:[RouterGuardService] },
       { path: 'results', component: ResultsComponent, canActivate:[RouterGuardService] },
-      { path: 'videos/:catagory/:subcatagory/:topic', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
+      { path: 'videoTutorial/:schema/:catagory/:subcatagory/:topic', component: VideoTutorialComponent, canActivate:[RouterGuardService] },
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'manageVideos/:schema/:catagory/:subcatagory/:topic', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'addCatagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },

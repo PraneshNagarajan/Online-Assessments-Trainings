@@ -35,7 +35,7 @@
                     <div *ngIf="Flag1 === 'manage'">
                         <div fxLayout="column" class="body" *ngFor="let topic of data.topics" fxLayoutAlign="stretch">
                             <button mat-raised-button color="primary"
-                                [routerLink]="[Flag,  schema, data.catagory, data.subcatagory, topic]">{{topic}}</button>
+                                [routerLink]="['/'+Flag,  schema, data.catagory, data.subcatagory, topic]">{{topic}}</button>
                         </div>
                     </div>
                 </mat-expansion-panel>

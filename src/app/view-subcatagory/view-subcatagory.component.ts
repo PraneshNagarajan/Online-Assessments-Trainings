@@ -28,7 +28,7 @@ export class ViewSubcatagoryComponent implements OnInit {
       this.schema = param.get('schema');
       this.catagory = param.get('catagory');
       this.subcatagory = param.get('subcatagory');
-      this.routerName = (this.schema === '/Videos') ? '/videos' : '/viewAssessments';
+      this.routerName = (this.schema === 'Videos') ? '/videoTutorial' : '/viewAssessments';
     });
     route.queryParamMap.subscribe(qparam => {
       this.Flag = qparam.get('flag');
@@ -47,7 +47,7 @@ export class ViewSubcatagoryComponent implements OnInit {
         this.topicData.push(topic.key);
       });
       this.topicDatas.push({ catagory: this.catagory, subcatagory: this.subcatagory, topics: this.topicData });
-      if (this.topicDatas.length > 0) {
+      if (this.topicDatas.length === 0) {
         alert("No data found..");
         router.navigateByUrl('/adminPage');
       }

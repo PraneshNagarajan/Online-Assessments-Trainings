@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 
@@ -23,12 +23,18 @@ export class ManageVideosComponent implements OnInit {
   media: Subscription;
   DB: Subscription;
   loggedUser: string;
+  routeBack: string;
+  routeParameters: string;
   
-  constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private auth: AuthService) {
+  constructor(private mediaObserver: MediaObserver,private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private service: DataService, private route:ActivatedRoute,private auth: AuthService) {
     router.events.subscribe( (event : NavigationStart) => {
       if(event.navigationTrigger === 'popstate') {
-        router.navigateByUrl('/adminPage');
+        router.navigateByUrl('/viewSubcatagories/'+this.routeBack+'?flag=manageVideos');
       }
+      });
+      this.route.paramMap.subscribe(param => {
+        this.routeBack = param.get('schema') + '/' + param.get('catagory') + '/' + param.get('subcatagory');
+        this.routeParameters = param.get('catagory') + '/' + param.get('subcatagory') + '/' + param.get('topic');
       });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
@@ -36,7 +42,7 @@ export class ManageVideosComponent implements OnInit {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     } 
     this.userName = sessionStorage.getItem('username');
-    db.list('/Videos').snapshotChanges()
+    db.list('/Videos/'+this.routeParameters).snapshotChanges()
     .subscribe(video => {
       this.videoDatas = [];
       video.map(data => {
