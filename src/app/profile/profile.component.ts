@@ -9,7 +9,7 @@ import { TextValidators } from '../Validators/text.validators';
 import { CommonValidators } from '../Validators/common.validators';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { DataService } from '../data.service';
 import { MediaObserver, MediaChange} from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
@@ -41,6 +41,9 @@ export class ProfileComponent implements OnInit {
         this.loggedUser = sessionStorage.getItem('DomainUser')
       }
       this.userName = sessionStorage.getItem('username')
+      this.router.events.subscribe((event: NavigationStart) => {
+        this.router.navigateByUrl('/homePage');
+      });
       this.db.list('/UserInfo').snapshotChanges().subscribe(datas => {
         datas.map(data => {
           this.profileDatas.push({key: data.key, value: data.payload.val()});
