@@ -83,7 +83,7 @@
                         (click)="onSave()">Save</button>
                 </div>
             </form>
-            <div fxLayout="row" *ngIf="!isPreview" fxLayoutAlign="space-evenly center">
+            <div [fxLayout]="align" *ngIf="!isPreview" fxLayoutAlign="space-evenly center">
                 <button [disabled]="topic.invalid" mat-raised-button color="accent" (click)="onPreview()">Preview
                     Assessment</button>
                 <button [disabled]="subcatagory.invalid" mat-raised-button color="primary" (click)="onReset()">Reset

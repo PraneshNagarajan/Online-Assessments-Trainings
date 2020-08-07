@@ -38,6 +38,7 @@ export class ManageAssessmentComponent implements OnInit, OnDestroy {
   catagoryList = [];
   topicsList = [];
   subIndex;
+  align: string;
 
   constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
     router.events.subscribe( (event : NavigationStart) => {
@@ -67,6 +68,7 @@ export class ManageAssessmentComponent implements OnInit, OnDestroy {
         this.col = 1
         this.top1 = "50%"
         this.bottom1 = "100%"
+        this.align = "column";
       }
       else if (change.mqAlias === 'sm') {
         this.size = 90;
@@ -75,6 +77,7 @@ export class ManageAssessmentComponent implements OnInit, OnDestroy {
         this.col = 1;
         this.top1 = "50%"
         this.bottom1 = "100%"
+        this.align = "column";
       }
       else if (change.mqAlias === 'md') {
         this.size = 80;
@@ -83,6 +86,7 @@ export class ManageAssessmentComponent implements OnInit, OnDestroy {
         this.col = 2;
         this.top1 = "5%"
         this.bottom1 = "100%"
+        this.align = "row";
       }
       else {
         this.size = 80;
@@ -91,6 +95,7 @@ export class ManageAssessmentComponent implements OnInit, OnDestroy {
         this.col = 2;
         this.top1 = "5%"
         this.bottom1 = "100%"
+        this.align = "row";
       }
     });
   }
