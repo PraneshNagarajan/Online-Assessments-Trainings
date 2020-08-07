@@ -71,25 +71,33 @@ export class ManageVideosComponent implements OnInit {
     });
   }
 
-  onUpdate(id, T1, T2) {
-    this.db.object('/Videos/' + id).update({ 
+  onUpdate(id, T1, T2, V) {
+    this.db.object('/Videos/'+this.routeParameters+'/'+id).update({ 
       title1: T1,
-      title2: T2
+      title2: T2,
+      videoid: V
      }).then(() => {
-      alert("Updated Sucessfully.\nTitle1: "+T1+"\nTitle2 :"+T2);
+      this.db.object('/ManageVideos/'+this.routeParameters).update({
+        status: 'Updated',
+        removed_by: this.loggedUser,
+        date_time: moment(moment.now()).format("MM/DD/YYYY HH:mm:ss"),
+        tid: id
+      });
+      alert("Updated Sucessfully.\nTitle1 : "+T1+"\nTitle2 : "+T2+"\nVideoId : "+V);
     }, error => {
       alert(error);
     });
   }
 
-  onDelete(id, tid) {
-    this.db.object('/ManageVideos/'+tid).update({
+  onDelete(id) {
+    this.db.object('/ManageVideos/'+this.routeParameters).update({
       status: 'Removed',
       removed_by: this.loggedUser,
-      date_time: moment(moment.now()).format("MM/DD/YYYY HH:mm:ss")
+      date_time: moment(moment.now()).format("MM/DD/YYYY HH:mm:ss"),
+      tid: id
     });
-    this.db.object('/Videos/' + id).remove().then(() => {
-      let index = this.videoDatas.findIndex(video => ['videoid'] === id);
+    this.db.object('/Videos/'+this.routeParameters+'/'+id).remove().then(() => {
+      let index = this.videoDatas.findIndex(video => video['videoid'] === id);
       this.videoDatas.splice(index, 1);
       alert('Successfully deleted')
     }, error => {

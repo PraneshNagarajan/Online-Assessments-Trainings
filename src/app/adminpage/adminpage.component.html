@@ -21,7 +21,7 @@
     <mat-menu #assessment="matMenu">
         <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
         <button mat-menu-item [routerLink]="['/viewCatagories', 'AssessmentDatas']" [queryParams]="{flag: 'viewAssessments'}">View Assessments</button>
-        <button mat-menu-item [routerLink]="['/viewCatagories', 'AssessmentDatas']" [queryParams]="{flag: 'manageAssessments'}">Manage Assessments</button>
+        <button mat-menu-item routerLink = "/manageAssessments">Manage Assessments</button>
         <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
     </mat-menu>
     <span class="example-spacer"></span>
@@ -61,7 +61,7 @@
     <mat-menu #assessment="matMenu">
         <button mat-menu-item routerLink="/addAssessments">Add Assessments</button>
         <button mat-menu-item [routerLink]="['/viewCatagories', 'AssessmentDatas']" [queryParams]="{flag: 'viewAssessments'}">View Assessments</button>
-        <button mat-menu-item [routerLink]="['/viewCatagories', 'AssessmentDatas']" [queryParams]="{flag: 'manageAssessments'}">Manage Assessments</button>
+        <button mat-menu-item routerLink = "/manageAssessments">Manage Assessments</button>
         <button mat-menu-item routerLink="/scheduleAssessments">Schedule Assessments</button>
     </mat-menu>
     <h1 class="example-app-name">AdminPage</h1>

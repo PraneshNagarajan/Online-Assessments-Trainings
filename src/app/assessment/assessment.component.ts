@@ -76,7 +76,6 @@ export class AssessmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log((this.key.value as string).length > 0? "5%": "30%");
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
         this.col = 1

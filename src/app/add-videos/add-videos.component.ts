@@ -119,7 +119,7 @@ export class AddVideosComponent implements OnInit, OnDestroy {
       videoid: id
      })
      .then((data) => {
-       this.db.list('/ManageVideos').push({
+       this.db.list('/ManageVideos/'+this.catagory.value + '/' + this.subcatagory.value + '/' +this.topic.value).push({
         tid: data.key,
         status: 'Added',
         removed_by: this.loggedUser,

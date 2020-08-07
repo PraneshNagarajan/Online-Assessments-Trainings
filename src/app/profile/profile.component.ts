@@ -51,7 +51,6 @@ export class ProfileComponent implements OnInit {
           }
         });
         this.profileData.map(user => {
-          console.log(user['value']['firstname']);
           this.firstname.setValue(user['value']['firstname']);
           this.lastname.setValue(user['value']['lastname']);
           this.fathername.setValue(user['value']['fathername']);
@@ -268,7 +267,6 @@ export class ProfileComponent implements OnInit {
     }
     
     onSave() {
-      console.log(this.profileData['key']);
         this.db.object('/UserInfo/' + this.profileData[0]['key']).update({
           phone: this.phone.value,
           email: this.email.value,

@@ -59,6 +59,7 @@ import { ChartsModule } from 'ng2-charts';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ManageAssessmentComponent } from './manage-assessment/manage-assessment.component';
+import { ManageCatagoryComponent } from './manage-catagory/manage-catagory.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { ManageAssessmentComponent } from './manage-assessment/manage-assessment
     ViewSubcatagoryComponent,
     ViewAssessmentComponent,
     ManageAssessmentComponent,
+    ManageCatagoryComponent,
   ],
   imports: [
     ChartsModule,
@@ -126,7 +128,7 @@ import { ManageAssessmentComponent } from './manage-assessment/manage-assessment
       { path: 'assessment', component: AssessmentComponent, canActivate:[RouterGuardService] }, 
       { path: 'addAssessments', component: AddAssessmentComponent, canActivate:[AdminRouterGuardService] },
       { path: 'scheduleAssessments', component: ScheduleAssessmentComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'manageAssessments/:schema/:catagory/:subcatagory', component: ManageAssessmentComponent, canActivate:[AdminRouterGuardService]},
+      { path: 'manageAssessments', component: ManageAssessmentComponent, canActivate:[AdminRouterGuardService]},
       { path: 'viewCatagories/:schema', component: ViewCatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: 'viewSubcatagories/:schema/:catagory/:subcatagory', component: ViewSubcatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: 'viewAssessments/:schema/:catagory/:subcatagory/:topic', component: ViewAssessmentComponent, canActivate:[AdminRouterGuardService] },
@@ -137,6 +139,7 @@ import { ManageAssessmentComponent } from './manage-assessment/manage-assessment
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'manageVideos/:schema/:catagory/:subcatagory/:topic', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'addCatagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
+      { path: 'manageCatagory', component: ManageCatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: '**', component: InvalidPageComponent}
     ])
   ],

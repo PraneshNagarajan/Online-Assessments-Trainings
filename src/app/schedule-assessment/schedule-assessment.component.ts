@@ -168,7 +168,6 @@ export class ScheduleAssessmentComponent implements OnInit {
         }
       });
       if (this.confirmed || !this.isAvailable) {
-        console.log( this.catagory.value, "  ",this.subcatagory.value);
         this.onUpdateDB(Ctime, Stype, Sdate, Stime, Sduration, this.catagory.value, this.subcatagory.value);
       } else {
         alert(this.enagagedUsers);

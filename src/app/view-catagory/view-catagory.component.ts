@@ -46,7 +46,6 @@ export class ViewCatagoryComponent implements OnInit {
             subcatagoryData.push(value.key);
           });
           this.catagoryData.push({ catagory: datas.key, subcatagory: subcatagoryData });
-          console.log(this.catagoryData);
           if (this.catagoryData.length === 0) {
             alert('No data found..');
             router.navigateByUrl('/adminPage');

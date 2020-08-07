@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -14,44 +14,46 @@ import * as moment from 'moment';
   templateUrl: './manage-assessment.component.html',
   styleUrls: ['./manage-assessment.component.css']
 })
-export class ManageAssessmentComponent implements OnInit {
-  routerParams: string;
-  loggedUser: string;
-  userName: string;
+export class ManageAssessmentComponent implements OnInit, OnDestroy {
   media: Subscription;
-  deviceXs: boolean;
-  deviceStyle: string;
-  device: number;
-  catagory;
-  subcatagory;
-  topics = [];
-  schema;
+  top;
+  top1;
+  bottom: string;
+  bottom1;
+  col;
+  Loop = 0;
+  size: number;
+  listSize;
+  options = [];
+  loggedUser;
+  subscribe: Subscription;
+  combinedData = [];
+  assessmentName: any;
+  isPreview: boolean;
+  isSelceted: boolean;
+  next: boolean;
+  back: boolean;
+  SelOption: string;
+  isChecked: boolean;
+  catagoryList = [];
+  topicsList = [];
+  subIndex;
 
-
-  constructor(private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router, private route: ActivatedRoute, private service: DataService, private auth: AuthService) {
+  constructor(private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService, private db: AngularFireDatabase, private router: Router) {
+    router.events.subscribe( (event : NavigationStart) => {
+    if(event.navigationTrigger === 'popstate') {
+      router.navigateByUrl('/adminPage');
+    }
+    });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
-    this.userName = sessionStorage.getItem('username');
-    router.events.subscribe((event: NavigationStart) => {
-      if (event.navigationTrigger === 'popstate') {
-        router.navigateByUrl('/viewCatagories/AssessmentDatas' + '?flag=manageAssessments');
-      }
-    });
-    route.paramMap.subscribe(param => {
-      this.routerParams = param.get('catagory') + '/' + param.get('subcatagory');
-      this.schema = param.get('schema');
-      this.catagory = param.get('catagory');
-      this.subcatagory = param.get('subcatagory');
-    });
-
-
-    db.list('/AssessmentDatas/' + this.routerParams).snapshotChanges().subscribe(datas => {
-      this.topics = [];
-      datas.map(data => {
-        this.topics.push(data.key);
+    this.db.list("/Catagories").snapshotChanges().subscribe( datas => {
+      this.catagoryList = [];
+      datas.map( data => {
+        this.catagoryList.push(data.payload.val());
       });
     });
   }
@@ -59,69 +61,228 @@ export class ManageAssessmentComponent implements OnInit {
   ngOnInit() {
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
-        this.deviceXs = true;
-        this.deviceStyle = "column";
-        this.device = 90;
+        this.size = 90;
+        this.top = "5%"
+        this.bottom = "100%"
+        this.col = 1
+        this.top1 = "50%"
+        this.bottom1 = "100%"
       }
       else if (change.mqAlias === 'sm') {
-        this.device = 60;
-        this.deviceXs = false;
+        this.size = 90;
+        this.top = "5%"
+        this.bottom = "100%"
+        this.col = 1;
+        this.top1 = "50%"
+        this.bottom1 = "100%"
       }
       else if (change.mqAlias === 'md') {
-        this.device = 35;
+        this.size = 80;
+        this.top = "5%"
+        this.bottom = "100%"
+        this.col = 2;
+        this.top1 = "5%"
+        this.bottom1 = "100%"
       }
       else {
-        this.device = 35;
+        this.size = 80;
+        this.top = "5%"
+        this.bottom = "100%"
+        this.col = 2;
+        this.top1 = "5%"
+        this.bottom1 = "100%"
       }
     });
   }
 
-  assessment = new FormGroup({
-    catagory: new FormControl(""),
-    topic: new FormControl("", Validators.required)
+  Submit = new FormGroup({
+    catagory: new FormControl("", Validators.required),
+    subcatagory:new FormControl("", Validators.required),
+    topic: new FormControl("", Validators.required),
+    assessment: new FormControl({ value: "", disabled: true }),
+    question: new FormControl("", Validators.required),
+    ans: new FormControl("", Validators.required),
+    option: new FormControl("", Validators.required)
   });
 
-get Catagories() {
-return this.assessment.get('catagory');
-} 
+  Update = new FormGroup({
+    update: new FormControl("")
+  })
 
-get Topic() {
-  return this.assessment.get('topic').value;
-}
-  onReset() {
-    this.Catagories.reset();
+  get catagory() {
+    return this.Submit.get('catagory');
+  }
+  get subcatagory() {
+    return this.Submit.get('subcatagory');
+  }
+  get topic() {
+    return this.Submit.get('topic');
+  }
+  get update() {
+    return this.Update.get('update');
   }
 
-  onDelete() {
-    let path = (this.Catagories.value === 1)? this.catagory: this.catagory+'/'+this.subcatagory;
-    if(this.Catagories.value > 0){
-      this.db.object('/AssessmentDatas/'+ path).remove()
-      .then(() => {
-        this.db.list('/ManageAssessments').push({
-          deleted_by : this.loggedUser,
-          date: moment().format("MM/DD/YYYY HH:mm:ss"),
-          name: path
-        });
-        alert('Deleted Successully.');
+  get assessment() {
+    return this.Submit.get("assessment");
+  }
+
+
+
+  getTopic() {
+    this.subscribe = this.db.list("/AssessmentDatas/" +this.catagory.value + '/' + this.subcatagory.value).snapshotChanges().subscribe(options => {
+      this.topicsList = [];
+      options.map(user => {
+        this.topicsList.push({key: user.key, value: user.payload.val()});
       });
+      if(this.topicsList.length === 0) {
+        alert("No Assessmet found.\nPlease first add assessment under subcatagory: "+ this.subcatagory.value);
+        this.Submit.reset();
+      }
+    });
+  }
+getAssessmentName() {
+  this.subscribe = this.db.list("/AssessmentDatas/" +this.catagory.value + '/' + this.subcatagory.value +'/' + this.topic.value).snapshotChanges().subscribe(options => {
+    this.combinedData = [];
+    options.map(user => {
+      this.combinedData.push(user.payload.val());
+    });
+  });
+}
+
+  onSubmit() {
+    let Ctime = moment().format("MM/DD/YYYY HH:mm:ss");
+    let Stype = this.Submit.get('assessment').value;
+    this.db.list('/AssessmentSubmissionTracker').push({
+      add_info: {
+        id: sessionStorage.getItem('DomainAdmin'),
+        time: Ctime,
+        name: Stype
+      }
+    });
+    this.options.map(loc => {
+      this.combinedData.splice(loc, 1);
+    });
+    this.db.list("/AssessmentList").push(Stype);
+    this.db.object("/AssessmentDatas/" +this.catagory.value + '/' + this.subcatagory.value + '/' + this.topic.value).set(this.combinedData).then(() => {
+      alert(Stype + " has been uploaded sucessfully.");
+      this.isPreview = false;
+      this.Submit.reset();
+      this.combinedData = [];
+    });
+  }
+
+  getSubCatagory(index) {
+    this.subIndex = index;
+  }
+
+  onAppend(input: string) {
+    let index = this.options.findIndex(option => option === input.trim());
+    if (index < 0) {
+      this.options.push(input.trim());
     } else {
-      this.db.object('AssessmentDatas/'+this.routerParams+'/'+this.Topic).remove()
+      alert("Duplicate Entry");
+    }
+    this.Submit.get('option').reset(" ");
+  }
+
+  onSave() {
+    this.ngOnDestroy();
+    let ques = this.Submit.get('question');
+    let ans = this.Submit.get('ans');
+    let option = this.Submit.get('option');
+    this.combinedData.push({ qa: ques.value, ans: ((ans.value as string).trim()), options: this.options });
+    ques.reset();
+    ans.reset();
+    option.reset();
+    this.options = [];
+  }
+
+  onUpdate(qa, ans?, opt?, optindex?) {
+    let index = this.combinedData.findIndex(data => data.qa === qa);
+    if (!ans && !opt) {
+      this.combinedData[index]['qa'] = (this.update.value as string);
+    }
+    else if (ans) {
+      this.combinedData[index]['ans'] = (this.update.value as string);
+    } else {
+      this.combinedData[index]['options'][optindex] = (this.update.value as string);
+    }
+    this.SelOption = this.update.value;
+    this.update.reset();
+  }
+
+
+  onPreview() {
+    this.isPreview = true;
+    this.options = [];
+    if (this.combinedData.length - 1 === this.Loop) {
+      this.next = true;
+    }
+  }
+
+  onNext() {
+    ++this.Loop;
+    if (this.combinedData.length - 1 === this.Loop) {
+      this.next = true;
+    } else {
+      this.next = false;
+    }
+    this.back = true;
+    let index = this.options.findIndex(qa => qa === this.Loop);
+    if (index > -1) {
+      this.isChecked = true;
+    } else {
+      this.isChecked = false;
+    }
+  }
+
+  onBack() {
+    --this.Loop;
+    if (this.Loop === 0) {
+      this.back = false;
+    } else {
+      this.back = true;
+    }
+    this.next = false;
+    let index = this.options.findIndex(qa => qa === this.Loop);
+    if (index > -1) {
+      this.isChecked = true;
+    } else {
+      this.isChecked = false;
+    }
+  }
+
+  onDelete(flag:string, input?) {
+    let index = this.options.findIndex(option => option === input);
+    if (flag === "option") {
+      if (index > -1) {
+        this.options.splice(index, 1);
+      }
+    } else if( flag === "delete") {
+      let path = (this.topic.value as string).length > 0 ? this.subcatagory.value+'/'+this.topic.value : this.subcatagory.value;
+      this.db.object('/AssessmentDatas/'+path).remove()
       .then(() => {
-        this.db.list('/ManageAssessments').push({
-          deleted_by : this.loggedUser,
-          date: moment().format("MM/DD/YYYY HH:mm:ss"),
-          name: 'AssessmentDatas/'+this.routerParams+'/'+this.Topic.value
-        });
-        alert('Deleted Successully.');
-      });
+        alert("Deleted Successfully.");
+        if(this.topicsList.length === 0) {
+          this.router.navigateByUrl('/adminPage');
+        }
+      });    
     }
-    if(this.topics.length === 0){
-      this.router.navigateByUrl('/viewCatagories/AssessmentDatas' + '?flag=manageAssessments');
+    else {
+      if (index > -1) {
+        this.options.splice(index, 1);
+      } else {
+        this.options.push(input);
+      }
     }
-    location.reload();
   }
 
   signOut() {
     this.auth.logOut();
   }
+
+  ngOnDestroy() {
+    this.subscribe.unsubscribe();
+  }
 }
+

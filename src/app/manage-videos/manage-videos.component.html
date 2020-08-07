@@ -14,27 +14,30 @@
         <mat-icon>exit_to_app</mat-icon>
     </button>
 </mat-toolbar>
-<div *ngFor="let data of videoDatas" fxLayoutAlign="space-evenly center">
+<div *ngFor="let data of videoDatas; let i = index;" fxLayoutAlign="space-evenly center">
     <mat-card [fxFlex]="device">
         <mat-toolbar color="primary">
-            <p><b>Video ID : </b>{{ data.value.videoid}}</p>
+            <p><b>Video No : </b>i</p>
         </mat-toolbar>
         <div class="menu" fxLayout="column">
             <div fxLayout="column">
                 <mat-form-field fxFlex="100">
                     <input matInput placeholder="Title1:" [value]="data.value.title1" #T1>
                 </mat-form-field>
-                <mat-form-field fxFlex="100">
+                <mat-form-field >
                     <input matInput placeholder="Title2" [value]="data.value.title2" #T2>
+                </mat-form-field>
+                <mat-form-field fxFlex="100">
+                    <input matInput placeholder="VideoId" [value]="data.value.videoid" #V>
                 </mat-form-field>
                 <div fxLayout="row" fxLayoutAlign="space-around center">
                     <div class="example-button-container">
-                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, T1.value, T2.value )">
+                        <button mat-mini-fab color="accent" (click)="onUpdate(data.id, T1.value, T2.value, V.value )">
                             <mat-icon>update</mat-icon>
                         </button>
                     </div>
                     <div class="example-button-container">
-                        <button mat-mini-fab color="warn" (click)="onDelete(data.id, data.value.tid)">
+                        <button mat-mini-fab color="warn" (click)="onDelete(data.id)">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>

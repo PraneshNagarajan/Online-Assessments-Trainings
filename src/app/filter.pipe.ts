@@ -24,7 +24,17 @@ export class FilterPipe implements PipeTransform {
         });
       }
         return array;
-    } else {
+    } else if(args1 === "elseifloop1") {
+      if(args >= 0) {
+        let datas:any[] = value[args]['value']['subcatagory'];
+        datas.map( data =>{
+        array.push(data);
+        });
+      }
+        return array;
+    } 
+    
+    else {
       for (let i = 0; i < value[0]['assessment'].length; i++) {
         if (args === i) {
           array.push(value[0]['assessment'][i]);

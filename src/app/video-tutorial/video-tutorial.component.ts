@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { DataService } from '../data.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service';
@@ -34,6 +34,9 @@ export class VideoTutorialComponent implements OnInit {
   constructor(private route: ActivatedRoute,private mediaObserver: MediaObserver, private afAuth: AngularFireAuth, private router: Router, private service: DataService, private auth: AuthService, private db: AngularFireDatabase) {
     this.route.paramMap.subscribe(param => {
       this.routerParameters = param.get('catagory')+'/'+ param.get('subcatagory')+'/'+param.get('topic');
+    });
+    this.router.events.subscribe((event: NavigationStart) => {
+      router.navigateByUrl('/viewSubcatagories/'+this.routerParameters+'l?flag=viewVideos');
     });
     this.userName = sessionStorage.getItem('username');
     this.db.list('/Videos/'+ this.routerParameters).snapshotChanges().subscribe(video => {
