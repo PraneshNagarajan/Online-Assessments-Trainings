@@ -17,7 +17,7 @@
 <div *ngFor="let data of videoDatas; let i = index;" fxLayoutAlign="space-evenly center">
     <mat-card [fxFlex]="device">
         <mat-toolbar color="primary">
-            <p><b>Video No : </b>i</p>
+            <p><b>Video No : </b>{{i+1}}</p>
         </mat-toolbar>
         <div class="menu" fxLayout="column">
             <div fxLayout="column">

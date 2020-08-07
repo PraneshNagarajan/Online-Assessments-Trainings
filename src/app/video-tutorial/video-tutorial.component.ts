@@ -36,7 +36,9 @@ export class VideoTutorialComponent implements OnInit {
       this.routerParameters = param.get('catagory')+'/'+ param.get('subcatagory')+'/'+param.get('topic');
     });
     this.router.events.subscribe((event: NavigationStart) => {
+      if(event.navigationTrigger === 'popstate') {
       router.navigateByUrl('/viewSubcatagories/'+this.routerParameters+'l?flag=viewVideos');
+      }
     });
     this.userName = sessionStorage.getItem('username');
     this.db.list('/Videos/'+ this.routerParameters).snapshotChanges().subscribe(video => {

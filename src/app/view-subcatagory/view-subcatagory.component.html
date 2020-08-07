@@ -32,12 +32,12 @@
                                 [queryParams]="{flag: 'view'}">{{topic}}</button>
                         </div>
                     </div>
-                    <div *ngIf="Flag1 === 'manage'">
+                    <!-- <div *ngIf="Flag1 === 'manage'">
                         <div fxLayout="column" class="body" *ngFor="let topic of data.topics" fxLayoutAlign="stretch">
                             <button mat-raised-button color="primary"
                                 [routerLink]="['/'+Flag,  schema, data.catagory, data.subcatagory, topic]">{{topic}}</button>
                         </div>
-                    </div>
+                    </div> -->
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
