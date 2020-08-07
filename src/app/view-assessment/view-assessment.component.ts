@@ -62,10 +62,7 @@ export class ViewAssessmentComponent implements OnInit {
         this.routeParameters = this.routeParameters + '/' + data.key;
       });
       this.assessmentDatas.map(datas => {
-        let data: any[] = datas['value'];
-        data.map(values => {
-          this.assessmentData.push(values);
-        });
+          this.assessmentData.push(datas['value']);
       });
     });
   }
@@ -74,7 +71,7 @@ export class ViewAssessmentComponent implements OnInit {
     this.media = this.mediaObserver.media$.subscribe((change: MediaChange) => {
       if (change.mqAlias === 'xs') {
         this.size = 90;
-        this.top = "5%"
+        this.top = "2%"
         this.bottom = "100%"
         this.col = 1
         this.top1 = "50%"
@@ -82,7 +79,7 @@ export class ViewAssessmentComponent implements OnInit {
       }
       else if (change.mqAlias === 'sm') {
         this.size = 90;
-        this.top = "5%"
+        this.top = "2%"
         this.bottom = "100%"
         this.col = 1;
         this.top1 = "50%"

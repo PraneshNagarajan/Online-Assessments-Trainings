@@ -15,6 +15,9 @@ export class SignINUPComponent implements OnInit {
 mediaSubscribe: Subscription;
 deviceXs;
   constructor(private afAuth: AngularFireAuth, private auth: AuthService, private mediaObserver: MediaObserver, private mediaChange: MediaChange) { 
+    if(sessionStorage.getItem('username')) {
+      this.auth.logOut();
+    }
   }
 
   ngOnInit() {

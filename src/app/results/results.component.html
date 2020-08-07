@@ -13,16 +13,16 @@
 <div class="example-loading-shadow" *ngIf="combinedData.length === 0">
     <mat-spinner></mat-spinner>
 </div>
-<div fxLayout="column"  fxLayoutAlign="center" *ngIf="combinedData.length > 0" class="body">
+<div fxLayout="column"  fxLayoutAlign="center" [hidden]="!isSelected" class="body">
     <div fxLayoutAlign="center">
-      <div style="display: block" [ngStyle]="{'width': width, 'height' : height, 'margin-top': top}" >
+      <div style="display: block" [ngStyle]="{'width': width}" >
         <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
           [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
         </canvas>
       </div>
     </div>
     <div fxLayoutAlign="center">
-      <mat-form-field appearance="fill" *ngIf="admin" [ngStyle]="{width: '30%'}" >
+      <mat-form-field appearance="fill"  *ngIf="admin && isSelected" [ngStyle]="{width: '30%'}" >
         <mat-label>Select the user: </mat-label>
         <mat-select >
           <mat-option *ngFor="let user of userList" (click)="getResult(user)" [value]="user">
@@ -32,11 +32,11 @@
       </mat-form-field>
     </div>
   <div>
-    <mat-form-field>
+    <mat-form-field *ngIf="isSelected">
         <mat-label>Filter</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ex. java" #input>
     </mat-form-field>
-    <div class="mat-elevation-z8" class="table">
+    <div class="mat-elevation-z8" class="table" >
       <table mat-table [dataSource]="dataSource" matSort>
 
         <!-- No Column -->

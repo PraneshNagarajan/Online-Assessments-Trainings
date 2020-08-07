@@ -139,11 +139,12 @@ export class ResultsComponent implements OnInit {
           scores.push(Math.round(percentage));
           label.push(data['date']);
         });
-        this.isSelected = true;
         this.getChart((user)? user:this.loggedUser, label, [{data: scores, label: 'marks'}]);
         this.displayedColumns = (this.deviceXs)? ['no', 'date', 'subcatagory', 'assessment', 'mark']: ['no', 'date', 'catagory', 'subcatagory', 'topic', 'assessment', 'mark'];
         this.dataSource = new MatTableDataSource(this.combinedData);
+        this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.isSelected = true;
       });
     } else {
       alert("No record found for this user : "+ user);
