@@ -59,7 +59,6 @@ import { ChartsModule } from 'ng2-charts';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ManageAssessmentComponent } from './manage-assessment/manage-assessment.component';
-import { ManageCatagoryComponent } from './manage-catagory/manage-catagory.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +83,6 @@ import { ManageCatagoryComponent } from './manage-catagory/manage-catagory.compo
     ViewSubcatagoryComponent,
     ViewAssessmentComponent,
     ManageAssessmentComponent,
-    ManageCatagoryComponent,
   ],
   imports: [
     ChartsModule,
@@ -139,7 +137,6 @@ import { ManageCatagoryComponent } from './manage-catagory/manage-catagory.compo
       { path: 'addVideos', component: AddVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'manageVideos/:schema/:catagory/:subcatagory/:topic', component: ManageVideosComponent, canActivate:[AdminRouterGuardService] },
       { path: 'addCatagory', component: CatagoryComponent, canActivate:[AdminRouterGuardService] },
-      { path: 'manageCatagory', component: ManageCatagoryComponent, canActivate:[AdminRouterGuardService] },
       { path: '**', component: InvalidPageComponent}
     ])
   ],
