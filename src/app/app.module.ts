@@ -57,6 +57,7 @@ import { ViewSubcatagoryComponent } from './view-subcatagory/view-subcatagory.co
 import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
 import { ChartsModule } from 'ng2-charts';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ManageAssessmentComponent } from './manage-assessment/manage-assessment.component';
 
@@ -117,6 +118,7 @@ import { ManageAssessmentComponent } from './manage-assessment/manage-assessment
     AngularFireDatabaseModule,
     MatSidenavModule,
     MatPaginatorModule,
+    MatSortModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     RouterModule.forRoot([
       { path: '', component: SignINUPComponent },
