@@ -27,11 +27,6 @@ export class HomepageComponent implements OnInit {
   notifications = [];
 
   constructor( private db: AngularFireDatabase, private router:Router, private mediaObserver: MediaObserver, private service: DataService, private auth: AuthService) {
-    router.events.subscribe( (event : NavigationStart) => {
-      if(event.navigationTrigger === 'popstate') {
-        this.signOut();
-      }
-      });
     if (sessionStorage.getItem('DomainAdmin')) {
       this.loggedUser = sessionStorage.getItem('DomainAdmin');
       this.admin = true;
