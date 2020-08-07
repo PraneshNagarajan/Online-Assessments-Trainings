@@ -41,9 +41,6 @@ export class ProfileComponent implements OnInit {
         this.loggedUser = sessionStorage.getItem('DomainUser')
       }
       this.userName = sessionStorage.getItem('username')
-      this.router.events.subscribe((event: NavigationStart) => {
-        this.router.navigateByUrl('/homePage');
-      });
       this.db.list('/UserInfo').snapshotChanges().subscribe(datas => {
         datas.map(data => {
           this.profileDatas.push({key: data.key, value: data.payload.val()});
