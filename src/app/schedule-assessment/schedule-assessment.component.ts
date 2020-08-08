@@ -115,7 +115,7 @@ export class ScheduleAssessmentComponent implements OnInit {
     this.subIndex = index;
   }
   getAssessmentName() {
-    this.db.list("/AssessmentsData/" +this.catagory.value + '/' + this.subcatagory.value).snapshotChanges().subscribe(datas => {
+    this.db.list("/AssessmentDatas/" +this.catagory.value + '/' + this.subcatagory.value).snapshotChanges().subscribe(datas => {
      this.assessmentList = [];
       datas.map(data => {
         this.assessmentList.push(data.key);
