@@ -31,7 +31,7 @@ export class ViewSubcatagoryComponent implements OnInit {
       this.routerName = (this.schema === 'Videos') ? '/videoTutorial' : '/viewAssessments';
     });
     route.queryParamMap.subscribe(qparam => {
-      console.log(this.Flag);
+      this.Flag = qparam.get('flag');
       this.Flag1 = (this.Flag.match('manage')) ? 'manage' : 'view';
     });
     router.events.subscribe((event: NavigationStart) => {
