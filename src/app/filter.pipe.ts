@@ -25,9 +25,9 @@ export class FilterPipe implements PipeTransform {
       }
         return array;
     } else {
-      for (let i = 0; i < value[0]['assessment'].length; i++) {
+      for (let i = 0; i < value.length; i++) {
         if (args === i) {
-          array.push(value[0]['assessment'][i]);
+          array.push(value[i]['assessment']);
         }
       }
       return array;

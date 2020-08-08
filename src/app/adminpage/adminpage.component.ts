@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 import * as moment from 'moment';
@@ -39,6 +39,11 @@ export class AdminpageComponent implements OnInit {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     } 
     this.userName = sessionStorage.getItem('username');
+    router.events.subscribe((event:NavigationStart) =>{
+      if(event.navigationTrigger === 'popstate') {
+        router.navigateByUrl('/homePage');
+      }
+    })
     db.list('/UserInfo').snapshotChanges()
     .subscribe(user => {
       this.userDatas = [];

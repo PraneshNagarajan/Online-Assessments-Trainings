@@ -57,7 +57,6 @@ export class AssessmentComponent implements OnInit {
     } else {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
-    location.subscribe(() => window.location.reload());
     document.addEventListener("keydown", key => {
       if ((key.altKey || key.key === "Tab") && this.assessmentDatas.length > 0) {
         if (this.k === 0) {
@@ -262,7 +261,7 @@ export class AssessmentComponent implements OnInit {
     this.assessmentDatas.map(value => {
       ++k;
       this.userAnswered.map(userAns => {
-        if (value.assessment[k]['ans'] === userAns.ans) {
+        if (value.assessment['ans'] === userAns.ans) {
           i = ++i;
         }
       });
@@ -314,7 +313,7 @@ export class AssessmentComponent implements OnInit {
   }
 
   onSave(Uqa: any[], Uans) {
-    this.dbsize = this.assessmentDatas[0]['assessment'].length;
+    this.dbsize = this.assessmentDatas.length;
     this.SelOption = Uans;
     let QA = Uqa['qa']
     let index = this.userAnswered.findIndex(x => x.qa === QA);
@@ -325,6 +324,8 @@ export class AssessmentComponent implements OnInit {
     }
     if (this.Loop < this.dbsize - 1) {
       this.next = true;
+    } else {
+      this.next = false;
     }
   }
 

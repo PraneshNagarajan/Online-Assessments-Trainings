@@ -34,7 +34,6 @@ export class NotificationComponent implements OnInit {
       this.loggedUser = sessionStorage.getItem('DomainUser')
     }
     this.userName = sessionStorage.getItem('username');
-    navigation.subscribe(() => location.reload());
 
     this.db.list("/notifications").snapshotChanges()
       .subscribe( datas => {
