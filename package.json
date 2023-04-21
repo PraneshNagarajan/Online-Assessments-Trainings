@@ -30,7 +30,7 @@
     "chartjs-plugin-datalabels": "^0.7.0",
     "chrome": "^0.1.0",
     "firebase": "^7.15.5",
-    "firebase-admin": "^9.0.0",
+    "firebase-admin": "^11.7.0",
     "flex-layout": "^1.0.1",
     "http": "0.0.1-security",
     "moment": "^2.27.0",
